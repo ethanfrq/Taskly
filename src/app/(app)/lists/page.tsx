@@ -1,4 +1,4 @@
-import { IconChevronRight, IconInbox } from "@tabler/icons-react";
+import { IconChevronRight, IconInbox, IconUsers } from "@tabler/icons-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Group, GroupList } from "@/components/ui/group";
@@ -16,11 +16,14 @@ export default async function ListsPage() {
   const { db, user, t, locale } = await getAppContext();
   const [lists, inbox] = await Promise.all([getLists(db, user.id), countInbox(db, user.id)]);
 
-  const row = (href: string, icon: React.ReactNode, name: string, open: number) => (
+  const row = (href: string, icon: React.ReactNode, name: string, open: number, shared = false) => (
     <li key={href}>
       <Link href={href} className="flex items-center gap-3 px-4 py-3">
         {icon}
-        <span className="flex-1 text-[16px]">{name}</span>
+        <span className="flex flex-1 items-center gap-1.5 text-[16px]">
+          {name}
+          {shared ? <IconUsers size={16} stroke={1.8} className="text-text-secondary" aria-label={t.sharing.shared} /> : null}
+        </span>
         <span className="text-[15px] text-text-secondary">{plural(locale, open, t.lists.openCount)}</span>
         <IconChevronRight size={18} stroke={1.8} className="text-text-secondary" aria-hidden />
       </Link>
@@ -46,6 +49,7 @@ export default async function ListsPage() {
               <span className="size-7 rounded-full" style={{ background: list.color ?? "var(--accent)" }} aria-hidden />,
               list.name,
               list.openCount,
+              !list.isOwner || list.memberCount > 0,
             ),
           )}
         </GroupList>

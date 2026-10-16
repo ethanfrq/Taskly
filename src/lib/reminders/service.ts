@@ -1,4 +1,4 @@
-import { and, eq, inArray, isNotNull, isNull, lte } from "drizzle-orm";
+import { and, eq, inArray, isNotNull, isNull, lte, or } from "drizzle-orm";
 import type { Database } from "@/db";
 import { type Reminder, type ReminderKind, reminders, tasks } from "@/db/schema";
 import type { Dictionary } from "@/i18n/dictionaries/fr";
@@ -38,7 +38,7 @@ async function insertReminder(
   return row;
 }
 
-async function cancelPending(deps: ReminderDeps, where: ReturnType<typeof and>) {
+async function cancelPending(deps: ReminderDeps, where: ReturnType<typeof and> | ReturnType<typeof eq>) {
   await deps.db
     .update(reminders)
     .set({ cancelledAt: nowOf(deps) })
@@ -49,14 +49,16 @@ async function cancelPending(deps: ReminderDeps, where: ReturnType<typeof and>) 
  * Makes a task's pending reminders match the task: called after every change.
  * An open task with a day and a time gets one reminder; anything else gets none.
  */
-export async function syncTaskReminders(deps: ReminderDeps, userId: string, taskId: string): Promise<void> {
-  await cancelPending(deps, and(eq(reminders.userId, userId), eq(reminders.taskId, taskId)));
-  const [task] = await deps.db.select().from(tasks).where(and(eq(tasks.id, taskId), eq(tasks.userId, userId)));
+export async function syncTaskReminders(deps: ReminderDeps, _userId: string, taskId: string): Promise<void> {
+  // Callers have already checked access; the reminder goes to whoever should do the task.
+  await cancelPending(deps, eq(reminders.taskId, taskId));
+  const [task] = await deps.db.select().from(tasks).where(eq(tasks.id, taskId));
   if (!task || task.completedAt || task.parentId) return;
-  const prefs = await getPreferences(deps.db, userId);
+  const recipient = task.assigneeId ?? task.userId;
+  const prefs = await getPreferences(deps.db, recipient);
   const at = taskReminderAt(task.dueDate, task.dueTime, prefs.timeZone);
   if (!at || at.getTime() < nowOf(deps).getTime() - 60_000) return;
-  await insertReminder(deps, { userId, taskId, kind: "task", dueAt: at });
+  await insertReminder(deps, { userId: recipient, taskId, kind: "task", dueAt: at });
 }
 
 /** Re-plans every open timed task, e.g. after a time zone change. */
@@ -64,7 +66,13 @@ export async function syncAllTaskReminders(deps: ReminderDeps, userId: string): 
   const rows = await deps.db
     .select({ id: tasks.id })
     .from(tasks)
-    .where(and(eq(tasks.userId, userId), isNull(tasks.completedAt), isNotNull(tasks.dueTime)));
+    .where(
+      and(
+        or(eq(tasks.assigneeId, userId), and(isNull(tasks.assigneeId), eq(tasks.userId, userId))),
+        isNull(tasks.completedAt),
+        isNotNull(tasks.dueTime),
+      ),
+    );
   for (const row of rows) await syncTaskReminders(deps, userId, row.id);
 }
 

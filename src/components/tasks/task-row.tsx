@@ -72,6 +72,16 @@ export function TaskRow({
     );
   }
   if (task.recurrence) meta.push(<IconRepeat key="rec" size={13} stroke={1.8} aria-hidden />);
+  if (task.assignee) {
+    meta.push(
+      <span key="assignee" className="inline-flex items-center gap-1" title={`${t.sharing.assignee} ${task.assignee.name}`}>
+        <span className="flex size-4 items-center justify-center rounded-full bg-fill text-[9px] font-semibold uppercase" aria-hidden>
+          {task.assignee.name.slice(0, 1)}
+        </span>
+        {task.assignee.name}
+      </span>,
+    );
+  }
   for (const tag of task.tagNames) meta.push(<span key={`#${tag}`}>#{tag}</span>);
 
   return (

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { NotFoundError, getLists, getTask } from "@/lib/tasks/service";
+import { NotFoundError, getLists, getParticipants, getTask } from "@/lib/tasks/service";
 import { getAppContext } from "../../context";
 import { TaskEditor } from "./task-editor";
 
@@ -22,5 +22,13 @@ export default async function TaskPage({ params }: PageProps<"/tasks/[id]">) {
     throw error;
   });
   const [task, lists] = data;
-  return <TaskEditor task={task} lists={lists.map(({ id, name, color }) => ({ id, name, color }))} today={today} />;
+  const participants = task.listId ? await getParticipants(db, user.id, task.listId).catch(() => []) : [];
+  return (
+    <TaskEditor
+      task={task}
+      lists={lists.map(({ id, name, color }) => ({ id, name, color }))}
+      today={today}
+      participants={participants.length > 1 ? participants.map((p) => ({ id: p.id, name: p.name || p.email })) : []}
+    />
+  );
 }

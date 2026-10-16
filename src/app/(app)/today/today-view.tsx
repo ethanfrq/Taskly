@@ -36,7 +36,6 @@ export function TodayView({ tasks, today, dateLabel, next, latestImport, listNam
       op.kind === "create" && op.input.dueDate === today
         ? [
             {
-              ...tasks[0],
               id: op.id,
               title: op.input.title,
               dueDate: op.input.dueDate,
@@ -46,6 +45,8 @@ export function TodayView({ tasks, today, dateLabel, next, latestImport, listNam
               list: null,
               listId: null,
               parentId: null,
+              assigneeId: null,
+              assignee: null,
               notes: null,
               recurrence: op.input.recurrence,
               source: "manual" as const,
