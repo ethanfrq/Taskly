@@ -22,6 +22,12 @@ npm run dev
 
 Then open http://localhost:3000.
 
+No external service is needed locally:
+
+- **Database:** without `DATABASE_URL`, Taskly uses [PGlite](https://pglite.dev), an embedded Postgres stored in `.data/pglite`. `npm run dev` applies the migrations first. Delete `.data/` to start from scratch.
+- **Sign-in codes:** without `RESEND_API_KEY`, emails are printed in the terminal running `npm run dev`.
+- **Configuration:** copy `.env.example` to `.env.local` to set any variable.
+
 | Command | What it does |
 |---|---|
 | `npm run dev` | Development server with hot reload |
@@ -29,6 +35,8 @@ Then open http://localhost:3000.
 | `npm run typecheck` | Generates Next.js route types, then runs `tsc` |
 | `npm test` | Unit tests with Vitest |
 | `npm run build` | Production build |
+| `npm run db:generate` | Creates a SQL migration in `drizzle/` after a schema change in `src/db/schema` |
+| `npm run db:migrate` | Applies migrations to `DATABASE_URL`, or to the local PGlite database |
 
 Run lint, type check, tests and build locally before pushing. GitHub Actions will run the same checks on every pull request.
 
