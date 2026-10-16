@@ -1,10 +1,15 @@
 import type { Metadata, Viewport } from "next";
+import { I18nProvider } from "@/i18n/client";
+import { getI18n } from "@/i18n/server";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  title: "Taskly",
-  description: "Ta journée, triée par Claude. Open-source daily to-do app with real reminders.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getI18n();
+  return {
+    title: "Taskly",
+    description: t.meta.description,
+  };
+}
 
 export const viewport: Viewport = {
   themeColor: [
@@ -13,10 +18,15 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const { locale, t } = await getI18n();
   return (
-    <html lang="fr" className="h-full antialiased">
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang={locale} className="h-full antialiased">
+      <body className="min-h-full flex flex-col">
+        <I18nProvider locale={locale} dictionary={t}>
+          {children}
+        </I18nProvider>
+      </body>
     </html>
   );
 }
