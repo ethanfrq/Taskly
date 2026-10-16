@@ -6,6 +6,7 @@ import { NotificationSetup } from "@/components/setup/notification-setup";
 import { SignOutButton } from "@/components/sign-out-button";
 import { Group } from "@/components/ui/group";
 import { getAppContext } from "../context";
+import { DataSection } from "./data-section";
 import { PreferencesForm } from "./preferences-form";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -65,6 +66,17 @@ export default async function SettingsPage() {
       </Group>
 
       <SignOutButton />
+
+      <DataSection />
+
+      <p className="flex justify-center gap-4 text-[13px]">
+        <Link href="/privacy" className="text-accent-text">
+          {t.privacy.policy}
+        </Link>
+        <Link href="/terms" className="text-accent-text">
+          {t.privacy.terms}
+        </Link>
+      </p>
     </div>
   );
 }

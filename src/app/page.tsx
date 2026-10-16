@@ -8,8 +8,9 @@ import { getI18n } from "@/i18n/server";
 import { getSession } from "@/lib/auth/session";
 
 /** The public web page (prototype screen 1). Signed-in visitors go straight to Today. */
-export default async function Landing() {
+export default async function Landing({ searchParams }: PageProps<"/">) {
   if (await getSession()) redirect("/today");
+  const deleted = (await searchParams).deleted === "1";
   const { t } = await getI18n();
   const points = [
     { Icon: IconMail, text: t.landing.point1 },
@@ -20,6 +21,11 @@ export default async function Landing() {
   return (
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col px-6 pt-[max(3rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))]">
       <Logo className="h-9 w-auto self-start" />
+      {deleted ? (
+        <p role="status" className="mt-6 rounded-xl bg-card px-4 py-3 text-[15px]">
+          {t.privacy.deleted}
+        </p>
+      ) : null}
       <h1 className="mt-10 text-[34px] leading-[1.1] font-bold tracking-tight whitespace-pre-line">{t.landing.title}</h1>
       <p className="mt-4 text-[17px] leading-relaxed text-text-secondary">{t.landing.body}</p>
       <ul className="mt-8 flex flex-col gap-4">
