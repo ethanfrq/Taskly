@@ -7,7 +7,7 @@ import {
   IconLink,
   IconMail,
 } from "@tabler/icons-react";
-import type { SourceKind } from "@/db/schema";
+import type { SourceKind } from "@/lib/tasks/sources";
 
 const ICONS = {
   gmail: IconBrandGmail,

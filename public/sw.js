@@ -70,6 +70,15 @@ self.addEventListener("push", (event) => {
       actions: data.actions || [],
     }),
   ];
+  // The onboarding test: tell the server this device really received it.
+  if (data.tag === "test") {
+    tasks.push(
+      fetch("/api/push/ack", { method: "POST", credentials: "include" })
+        .catch(() => undefined)
+        .then(() => self.clients.matchAll({ type: "window", includeUncontrolled: true }))
+        .then((windows) => windows.forEach((w) => w.postMessage({ type: "taskly:test-received" }))),
+    );
+  }
   if (typeof data.badge === "number" && "setAppBadge" in self.navigator) {
     tasks.push(data.badge > 0 ? self.navigator.setAppBadge(data.badge) : self.navigator.clearAppBadge());
   }

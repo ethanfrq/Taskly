@@ -1,8 +1,8 @@
 import { type AnyPgColumn, index, integer, pgTable, primaryKey, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
+import { SOURCE_KINDS } from "../../lib/tasks/sources";
 import { user } from "./auth";
 
-export const SOURCE_KINDS = ["gmail", "outlook", "calendar", "slack", "teams", "notion", "other"] as const;
-export type SourceKind = (typeof SOURCE_KINDS)[number];
+export { SOURCE_KINDS, type SourceKind } from "../../lib/tasks/sources";
 
 export const lists = pgTable(
   "lists",
