@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+/* Design tokens, see docs/design/README.md. The accent is replaced per user once onboarding exists. */
+:root {
+  --bg: #f2f2f7;
+  --card: #ffffff;
+  --text: #000000;
+  --text-secondary: #6e6e73;
+  --separator: #e5e5ea;
+  --fill: #e3e3e8;
+  --accent: #007aff;
+  --accent-text: #007aff;
+  --on-accent: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #000000;
+    --card: #1c1c1e;
+    --text: #ffffff;
+    --text-secondary: #98989d;
+    --separator: #38383a;
+    --fill: #2c2c2e;
+    --accent: #0a84ff;
+    --accent-text: #0a84ff;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-card: var(--card);
+  --color-text: var(--text);
+  --color-text-secondary: var(--text-secondary);
+  --color-separator: var(--separator);
+  --color-fill: var(--fill);
+  --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text);
+  --color-on-accent: var(--on-accent);
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, system-ui, sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+}

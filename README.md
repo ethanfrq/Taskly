@@ -103,7 +103,11 @@ Each milestone ships as a series of small pull requests. See the [milestones](ht
 
 ## 🛠️ Tech stack
 
-Planned: [Next.js](https://nextjs.org) (React, TypeScript), Tailwind CSS, Neon Postgres with Drizzle ORM, Better Auth (passkeys and email codes), an MCP server with OAuth, Web Push with Upstash QStash, hosted on Vercel.
+In place: [Next.js](https://nextjs.org) (React, TypeScript), Tailwind CSS, Vitest.
+
+Planned: Neon Postgres with Drizzle ORM, Better Auth (passkeys and email codes), an MCP server with OAuth, Web Push with Upstash QStash, hosted on Vercel.
+
+Each choice and its trade-offs are recorded in [docs/adr](docs/adr/README.md).
 
 ## 🎨 Design
 
