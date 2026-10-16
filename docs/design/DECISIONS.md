@@ -93,3 +93,16 @@ Every failing item says how to fix it, for example "Slack connector missing in C
 ## D-011 · Open question: who starts Claude in the morning?
 
 With the MCP architecture, Taskly can't trigger Claude. The current idea is that the 07:30 briefing notification opens Claude with "Prepare my day in Taskly" already typed, so it takes one tap. This has to be verified in v0.2 before it's promised anywhere.
+
+## D-012 · A monochrome brand: the color belongs to the user
+
+**Context.** Users pick their accent color during onboarding (D-002), but the app icon is fixed when the app is added to the home screen, before onboarding starts (D-003).
+
+**Decision.** The logo only exists in graphite (`#171717`) and ivory (`#F5F3ED`). The app icon is an ivory monogram on graphite. The accent color is used for the interface, never for the logo.
+
+**Why.**
+- The icon can't follow a color the user hasn't picked yet, so a colored icon would mismatch most users' accent.
+- A neutral logo sits well next to any of the 11 accents and any custom color.
+- Graphite and ivory read well on both light and dark home screens.
+
+See [docs/brand](../brand/README.md) for the files and usage rules.

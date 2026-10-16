@@ -7,6 +7,7 @@ Mockups and design decisions for Taskly, validated on 2026-10-16.
 | [prototype.html](prototype.html) | Clickable prototype of the full iPhone flow, 13 screens: web page, install, onboarding, Claude connection, health check, Today, evening review |
 | [directions.html](directions.html) | The three visual directions explored on the Today screen, plus notifications on iPhone and Android |
 | [DECISIONS.md](DECISIONS.md) | Every design decision and the reason behind it |
+| [../brand](../brand/README.md) | Logo files, brand colors and usage rules |
 
 ## How to open the prototype
 
