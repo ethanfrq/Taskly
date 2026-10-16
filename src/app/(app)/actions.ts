@@ -6,6 +6,8 @@ import { getDb } from "@/db";
 import { requireUser } from "@/lib/auth/session";
 import * as service from "@/lib/tasks/service";
 import { getPreferences } from "@/lib/preferences";
+import { reminderDeps } from "@/lib/reminders/runtime";
+import { moveTaskToTomorrow, snoozeTask, syncTaskReminders } from "@/lib/reminders/service";
 import { isRecurrence } from "@/lib/tasks/recurrence";
 import { isValidDay, isValidTime, todayIn } from "@/lib/time";
 
@@ -37,12 +39,26 @@ function refresh() {
   revalidatePath("/", "layout");
 }
 
+/** Keeps reminders in line with tasks. A scheduler hiccup must not lose the user's change. */
+async function syncReminders(userId: string, ...taskIds: (string | undefined)[]) {
+  const deps = reminderDeps();
+  for (const taskId of taskIds) {
+    if (!taskId) continue;
+    try {
+      await syncTaskReminders(deps, userId, taskId);
+    } catch (error) {
+      console.error(`Reminder sync failed for task ${taskId}`, error);
+    }
+  }
+}
+
 export async function createTaskAction(input: z.input<typeof createSchema>) {
   const user = await requireUser();
   const { listName, ...data } = createSchema.parse(input);
   const db = getDb();
   if (listName && !data.listId) data.listId = (await service.findListByName(db, user.id, listName))?.id ?? null;
   const task = await service.createTask(db, user.id, data);
+  await syncReminders(user.id, task.id);
   refresh();
   return { id: task.id };
 }
@@ -50,6 +66,7 @@ export async function createTaskAction(input: z.input<typeof createSchema>) {
 export async function updateTaskAction(taskId: string, patch: z.input<typeof patchSchema>) {
   const user = await requireUser();
   await service.updateTask(getDb(), user.id, id.parse(taskId), patchSchema.parse(patch));
+  await syncReminders(user.id, taskId);
   refresh();
 }
 
@@ -57,7 +74,8 @@ export async function toggleTaskAction(taskId: string, done: boolean) {
   const user = await requireUser();
   const db = getDb();
   const { timeZone } = await getPreferences(db, user.id);
-  await service.setCompleted(db, user.id, id.parse(taskId), z.boolean().parse(done), new Date(), todayIn(timeZone));
+  const { next } = await service.setCompleted(db, user.id, id.parse(taskId), z.boolean().parse(done), new Date(), todayIn(timeZone));
+  await syncReminders(user.id, taskId, next?.id);
   refresh();
 }
 
@@ -99,5 +117,28 @@ export async function updateListAction(listId: string, patch: Partial<z.input<ty
 export async function deleteListAction(listId: string) {
   const user = await requireUser();
   await service.deleteList(getDb(), user.id, id.parse(listId));
+  refresh();
+}
+
+const snoozePreset = z.enum(["15", "60", "tomorrow"]);
+
+/** "Remind me in 15 min / 1 h / tomorrow" from the task screen. */
+export async function snoozeTaskAction(taskId: string, preset: z.input<typeof snoozePreset>) {
+  const user = await requireUser();
+  const choice = snoozePreset.parse(preset);
+  const deps = reminderDeps();
+  if (choice === "tomorrow") {
+    await moveTaskToTomorrow(deps, user.id, id.parse(taskId));
+  } else {
+    await snoozeTask(deps, user.id, id.parse(taskId), new Date(Date.now() + Number(choice) * 60_000));
+  }
+  refresh();
+}
+
+/** Evening review: carry tasks over to tomorrow. */
+export async function moveToTomorrowAction(taskIds: string[]) {
+  const user = await requireUser();
+  const deps = reminderDeps();
+  for (const taskId of z.array(id).max(200).parse(taskIds)) await moveTaskToTomorrow(deps, user.id, taskId);
   refresh();
 }
