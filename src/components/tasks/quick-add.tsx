@@ -6,6 +6,7 @@ import { createTaskAction } from "@/app/(app)/actions";
 import { useI18n } from "@/i18n/client";
 import { dayLabel } from "@/lib/date-label";
 import { parseTask } from "@/lib/nlp/parse";
+import { enqueue, isNetworkError } from "@/lib/offline/outbox";
 
 type Props = {
   /** Day given to tasks that name none: today in Today, null in a list. */
@@ -44,17 +45,23 @@ export function QuickAdd({ dueDate, today, listId, listNames = [] }: Props) {
     const title = parsed.title || text.trim();
     if (!title) return;
     setText("");
+    const input = {
+      title,
+      dueDate: parsed.dueDate ?? dueDate,
+      dueTime: parsed.dueTime ?? null,
+      priority: parsed.priority,
+      tags: parsed.tags,
+      recurrence: parsed.recurrence ?? null,
+      listId: parsed.listName ? null : (listId ?? null),
+      listName: parsed.listName,
+    };
     startTransition(async () => {
-      await createTaskAction({
-        title,
-        dueDate: parsed.dueDate ?? dueDate,
-        dueTime: parsed.dueTime ?? null,
-        priority: parsed.priority,
-        tags: parsed.tags,
-        recurrence: parsed.recurrence ?? null,
-        listId: parsed.listName ? null : (listId ?? null),
-        listName: parsed.listName,
-      });
+      try {
+        await createTaskAction(input);
+      } catch (error) {
+        if (!isNetworkError(error)) throw error;
+        enqueue({ kind: "create", id: crypto.randomUUID(), at: Date.now(), input });
+      }
     });
   };
 

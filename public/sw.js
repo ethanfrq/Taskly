@@ -1,8 +1,11 @@
 // Taskly service worker: offline fallback, static asset cache, push notifications.
 // Plain JavaScript on purpose: it is served as-is from /sw.js.
 
-const VERSION = "taskly-v1";
+const VERSION = "taskly-v2";
+// The user's own pages, kept per device so the app opens offline with the last known day.
+const PAGES = "taskly-pages";
 const SHELL = ["/offline", "/icons/icon-192.png", "/brand/taskly-monogram-graphite.svg"];
+const APP_PAGES = ["/today", "/agenda", "/lists", "/stats", "/review"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(VERSION).then((cache) => cache.addAll(SHELL)));
@@ -13,7 +16,7 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches
       .keys()
-      .then((keys) => Promise.all(keys.filter((key) => key !== VERSION).map((key) => caches.delete(key))))
+      .then((keys) => Promise.all(keys.filter((key) => key !== VERSION && key !== PAGES).map((key) => caches.delete(key))))
       .then(() => self.clients.claim()),
   );
 });
@@ -27,9 +30,21 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
-  // Pages: always the network, the offline page when there is none.
+  // Pages: the network first. App pages are kept so they open offline
+  // with the last known content; anything else falls back to /offline.
   if (request.mode === "navigate") {
-    event.respondWith(fetch(request).catch(() => caches.match("/offline")));
+    const keep = APP_PAGES.some((path) => url.pathname === path || url.pathname.startsWith(`${path}/`));
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (keep && response.ok && !response.redirected) {
+            const copy = response.clone();
+            caches.open(PAGES).then((cache) => cache.put(url.pathname, copy));
+          }
+          return response;
+        })
+        .catch(async () => (keep && (await caches.match(url.pathname, { cacheName: PAGES }))) || caches.match("/offline")),
+    );
     return;
   }
 
@@ -112,4 +127,9 @@ self.addEventListener("notificationclick", (event) => {
       return self.clients.openWindow(url);
     }),
   );
+});
+
+// Sign-out: forget the pages kept for offline use.
+self.addEventListener("message", (event) => {
+  if (event.data?.type === "taskly:clear-pages") event.waitUntil(caches.delete(PAGES));
 });
