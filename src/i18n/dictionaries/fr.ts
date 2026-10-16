@@ -156,10 +156,37 @@ export const fr = {
   errors: {
     generic: "Quelque chose n'a pas marché. Réessaie.",
   },
-  home: {
-    status: "En construction · v0.1 en cours",
-    viewPrototype: "Voir le prototype",
-    sourceCode: "Code source sur GitHub",
+  landing: {
+    title: "Ta journée,\ntriée par Claude",
+    body: "Taskly transforme tes mails, ton agenda et tes messages en une checklist claire, avec de vrais rappels.",
+    point1: "Claude lit tes mails et ton agenda",
+    point2: "Des rappels qui arrivent à l'heure",
+    point3: "Open source, tes données restent à toi",
+    install: "Installer l'app",
+    haveAccount: "J'ai déjà un compte",
+    footer: "Gratuit · fonctionne avec Claude · open source",
+  },
+  install: {
+    title: "Installe Taskly",
+    whyIos: "Sur iPhone, les notifications ne marchent qu'une fois l'app ajoutée à l'écran d'accueil.",
+    iosStep1: "Touche Partager en bas de Safari",
+    iosStep2: "Choisis « Sur l'écran d'accueil »",
+    iosStep3: "Touche « Ajouter », puis ouvre Taskly depuis l'écran d'accueil",
+    iosOldVersion: "Il faut iOS 16.4 ou plus récent pour recevoir les rappels.",
+    promptTitle: "Installe l'app en un geste",
+    promptButton: "Installer Taskly",
+    installed: "Taskly est installée. Ouvre-la depuis ton écran d'accueil ou ton dock.",
+    alreadyInstalled: "Tu utilises déjà l'app installée.",
+    openApp: "Ouvrir Taskly",
+    desktopSafari: "Dans Safari : menu Fichier › Ajouter au Dock.",
+    unsupported: "Ce navigateur ne sait pas installer d'app web. Utilise Chrome, Edge ou Safari, ou continue dans le navigateur.",
+    continueInBrowser: "Continuer dans le navigateur",
+    browserWarning: "Dans le navigateur, Taskly marche, mais les rappels peuvent ne pas arriver.",
+  },
+  offline: {
+    title: "Pas de connexion",
+    body: "Taskly a besoin d'internet pour cette page. Réessaie dès que tu es en ligne.",
+    retry: "Réessayer",
   },
 };
 
