@@ -16,6 +16,10 @@ export const DEFAULT_PREFERENCES: PreferencesValues = {
   insistence: 2,
   followUpPriorityOnly: true,
   onboardedAt: null,
+  installedSeenAt: null,
+  testPushReceivedAt: null,
+  claudeSeenAt: null,
+  claudeSources: null,
 };
 
 /** The user's preferences, or the defaults if they haven't been saved yet. */

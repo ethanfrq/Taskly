@@ -21,6 +21,14 @@ export const preferences = pgTable("preferences", {
   insistence: integer("insistence").notNull().default(2),
   followUpPriorityOnly: boolean("follow_up_priority_only").notNull().default(true),
   onboardedAt: timestamp("onboarded_at", { withTimezone: true }),
+  /** Last time the app was opened from the home screen (health check). */
+  installedSeenAt: timestamp("installed_seen_at", { withTimezone: true }),
+  /** Last time a test notification reached the device (the service worker confirms it). */
+  testPushReceivedAt: timestamp("test_push_received_at", { withTimezone: true }),
+  /** Last time Claude called the MCP server. */
+  claudeSeenAt: timestamp("claude_seen_at", { withTimezone: true }),
+  /** Connectors Claude reported seeing, comma-separated: "gmail,calendar". */
+  claudeSources: text("claude_sources"),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
