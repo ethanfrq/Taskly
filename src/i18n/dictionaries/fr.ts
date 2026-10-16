@@ -375,6 +375,10 @@ export const fr = {
     browserWarning: "Dans le navigateur, Taskly marche, mais les rappels peuvent ne pas arriver.",
   },
   offline: {
+    banner: "Hors ligne · tes changements seront envoyés au retour du réseau",
+    pending: { one: "{count} changement en attente", other: "{count} changements en attente" },
+    syncing: "Synchronisation…",
+    synced: "Changements synchronisés",
     title: "Pas de connexion",
     body: "Taskly a besoin d'internet pour cette page. Réessaie dès que tu es en ligne.",
     retry: "Réessayer",

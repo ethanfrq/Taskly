@@ -2,8 +2,9 @@
 
 import { IconCalendarEvent, IconChartBar, IconSparkles, IconTarget } from "@tabler/icons-react";
 import Link from "next/link";
-import { useOptimistic, useState, useTransition } from "react";
+import { useMemo, useOptimistic, useState, useTransition } from "react";
 import { AppBadge } from "@/components/pwa/app-badge";
+import { useOutbox } from "@/components/pwa/offline-sync";
 import { QuickAdd } from "@/components/tasks/quick-add";
 import { SortableTaskList } from "@/components/tasks/sortable-task-list";
 import { TaskRow } from "@/components/tasks/task-row";
@@ -11,6 +12,7 @@ import { Group, GroupList } from "@/components/ui/group";
 import { ProgressRing } from "@/components/ui/progress-ring";
 import { useI18n } from "@/i18n/client";
 import { format, plural } from "@/i18n/format";
+import { enqueue, isNetworkError } from "@/lib/offline/outbox";
 import type { ImportSummary, TaskView } from "@/lib/tasks/service";
 import { toggleTaskAction, undoImportAction } from "../actions";
 
@@ -26,7 +28,47 @@ type Props = {
 export function TodayView({ tasks, today, dateLabel, next, latestImport, listNames }: Props) {
   const { locale, t } = useI18n();
   const [pending, startTransition] = useTransition();
-  const [optimistic, toggleOptimistic] = useOptimistic(tasks, (state, id: string) =>
+  const outbox = useOutbox();
+  // Changes queued offline stay visible until they reach the server.
+  const withOffline = useMemo(() => {
+    const toggles = new Map(outbox.flatMap((op) => (op.kind === "toggle" ? [[op.taskId, op.done] as const] : [])));
+    const created: TaskView[] = outbox.flatMap((op) =>
+      op.kind === "create" && op.input.dueDate === today
+        ? [
+            {
+              ...tasks[0],
+              id: op.id,
+              title: op.input.title,
+              dueDate: op.input.dueDate,
+              dueTime: op.input.dueTime,
+              priority: op.input.priority,
+              completedAt: null,
+              list: null,
+              listId: null,
+              parentId: null,
+              notes: null,
+              recurrence: op.input.recurrence,
+              source: "manual" as const,
+              sourceKind: null,
+              sourceUrl: null,
+              sourceLabel: null,
+              importBatchId: null,
+              tagNames: op.input.tags,
+              subtasks: { done: 0, total: 0 },
+              position: Number.MAX_SAFE_INTEGER,
+              userId: "",
+              createdAt: new Date(op.at),
+              updatedAt: new Date(op.at),
+            },
+          ]
+        : [],
+    );
+    return [
+      ...tasks.map((task) => (toggles.has(task.id) ? { ...task, completedAt: toggles.get(task.id) ? new Date() : null } : task)),
+      ...created,
+    ];
+  }, [tasks, outbox, today]);
+  const [optimistic, toggleOptimistic] = useOptimistic(withOffline, (state, id: string) =>
     state.map((task) => (task.id === id ? { ...task, completedAt: task.completedAt ? null : new Date() } : task)),
   );
   const [showDone, setShowDone] = useState(false);
@@ -43,7 +85,12 @@ export function TodayView({ tasks, today, dateLabel, next, latestImport, listNam
   const toggle = (task: TaskView) =>
     startTransition(async () => {
       toggleOptimistic(task.id);
-      await toggleTaskAction(task.id, !task.completedAt);
+      try {
+        await toggleTaskAction(task.id, !task.completedAt);
+      } catch (error) {
+        if (!isNetworkError(error)) throw error;
+        enqueue({ kind: "toggle", id: crypto.randomUUID(), taskId: task.id, done: !task.completedAt, at: Date.now() });
+      }
     });
 
   const undo = (batchId: string) =>

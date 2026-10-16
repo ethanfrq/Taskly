@@ -373,6 +373,10 @@ export const en: Dictionary = {
     browserWarning: "Taskly works in the browser, but reminders may not arrive.",
   },
   offline: {
+    banner: "Offline · your changes will be sent once you're back online",
+    pending: { one: "{count} change waiting", other: "{count} changes waiting" },
+    syncing: "Syncing…",
+    synced: "Changes synced",
     title: "No connection",
     body: "Taskly needs the internet for this page. Try again once you're online.",
     retry: "Try again",
