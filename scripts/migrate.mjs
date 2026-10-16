@@ -4,8 +4,20 @@ import { mkdirSync } from "node:fs";
 
 const url = process.env.DATABASE_URL;
 const migrationsFolder = "./drizzle";
+const postgres = !!url && /^postgres(ql)?:\/\//.test(url);
 
-if (url && /^postgres(ql)?:\/\//.test(url)) {
+// On Vercel a local database would be lost after the build: fail the deploy
+// with a clear message instead of shipping an app that can't sign anyone in.
+if (process.env.VERCEL && !postgres) {
+  console.error(
+    "✗ DATABASE_URL is missing or isn't a postgres:// URL.\n" +
+      "  Add a Neon Postgres database from the Vercel Marketplace (Storage tab), then redeploy.\n" +
+      "  See docs/self-hosting.md.",
+  );
+  process.exit(1);
+}
+
+if (postgres) {
   const { Pool } = await import("pg");
   const { drizzle } = await import("drizzle-orm/node-postgres");
   const { migrate } = await import("drizzle-orm/node-postgres/migrator");

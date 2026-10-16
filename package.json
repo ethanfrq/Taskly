@@ -1,6 +1,6 @@
 {
   "name": "taskly",
-  "version": "0.1.0",
+  "version": "0.5.0",
   "private": true,
   "description": "Open-source daily to-do PWA that Claude fills from your mail, calendar and messages, with real reminders.",
   "license": "MIT",
