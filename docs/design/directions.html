@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Taskly directions</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+:root{--surface-0:#F5F5F7;--surface-1:#FFFFFF;--border-strong:rgba(0,0,0,.16);--bg-accent:#E6F1FB;--text-accent:#0C447C;--border-accent:#378ADD;--text-primary:#1D1D1F;--text-secondary:#5F5F64;--font-sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,system-ui,sans-serif}
+@media (prefers-color-scheme:dark){:root{--surface-0:#111113;--surface-1:#1A1A1D;--border-strong:rgba(255,255,255,.2);--bg-accent:#0C2A47;--text-accent:#85B7EB;--border-accent:#378ADD;--text-primary:#F2F2F4;--text-secondary:#A8A8AE}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface-0);color:var(--text-primary);font-family:var(--font-sans);padding:24px 16px 48px}
+main{max-width:720px;margin:0 auto}
+h1{font-size:22px;font-weight:600;margin:0 0 4px}
+h2{font-size:17px;font-weight:600;margin:32px 0 6px}
+p{font-size:14px;color:var(--text-secondary);margin:0 0 14px;line-height:1.5}
+a{color:var(--text-accent)}
+.card{background:var(--surface-1);border-radius:12px;padding:16px}
+.lbl{font-size:13px;color:var(--text-secondary);margin-bottom:6px}
+.lbl b{color:var(--text-accent);font-weight:500}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:640px){.grid3,.grid2{grid-template-columns:minmax(0,1fr)}.k-ph,.n-ph{max-width:300px;margin:0 auto}}
+.k-app{--acc:#007AFF;--acct:#007AFF;--bg:#F2F2F7;--card:#fff;--bgw:#fff;--tx:#000;--tx2:#6E6E73;--sep:#E5E5EA;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif}
+.k-app[data-theme=dark]{--bg:#000;--card:#1C1C1E;--bgw:#000;--tx:#fff;--tx2:#98989D;--sep:#38383A}
+.k-ph{border:1px solid var(--border-strong);border-radius:30px;overflow:hidden;height:490px;position:relative;display:flex;flex-direction:column;color:var(--tx)}
+.k-sb{display:flex;justify-content:space-between;padding:10px 16px 2px;font-size:11px;font-weight:500}
+.k-lt{font-size:22px;font-weight:600;letter-spacing:-0.3px;line-height:1.2}
+.k-mt{font-size:11px;color:var(--tx2);line-height:1.4}
+.k-row{display:flex;gap:8px;align-items:flex-start;padding:7px 10px}
+.k-cb{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--tx2);flex:none;margin-top:1px;display:flex;align-items:center;justify-content:center}
+.k-cb.on{background:var(--acc);border-color:var(--acc)}
+.k-tt{font-size:12px;line-height:1.35}
+.k-done .k-tt{color:var(--tx2);text-decoration:line-through}
+.k-grp{background:var(--card);border-radius:10px;margin:0 10px}
+.k-sep{height:0.5px;background:var(--sep);margin-left:32px}
+.k-acc{color:var(--acct)}
+.k-tab{margin-top:auto;display:flex;justify-content:space-around;padding:8px 0 14px;border-top:0.5px solid var(--sep);font-size:18px;color:var(--tx2)}
+.k-sw{width:26px;height:26px;border-radius:50%;border:none;cursor:pointer;padding:0}
+.k-sw[aria-pressed=true]{outline:2px solid var(--text-primary);outline-offset:2px}
+.k-seg{border:0.5px solid var(--border-strong);background:transparent;color:var(--text-primary);border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:inherit}
+.k-seg[aria-pressed=true]{background:var(--bg-accent);color:var(--text-accent);border-color:var(--border-accent)}
+.n-ph{border:1px solid var(--border-strong);border-radius:30px;overflow:hidden;height:460px}
+</style>
+</head>
+<body>
+<main>
+<h1>Taskly · directions visuelles</h1>
+<p>Trois directions explorées sur l'écran Aujourd'hui, avec les mêmes données. Choix retenu : la direction 1 avec les tuiles de la direction 3 en en-tête. Voir <a href="DECISIONS.md">D-001</a> et le <a href="prototype.html">prototype</a>.</p>
+
+<div class="card">
+<div class="k-app grid3" id="k-app" data-theme="light">
+
+<div>
+<div class="lbl">1 · Groupé iOS <b>· retenue</b></div>
+<div class="k-ph" style="background:var(--bg)">
+<div class="k-sb"><span>9:41</span><span><i class="ti ti-wifi"></i> <i class="ti ti-battery-2"></i></span></div>
+<div style="display:flex;justify-content:space-between;align-items:flex-end;padding:6px 14px 10px">
+<div><div class="k-mt">Jeudi 16 octobre</div><div class="k-lt">Aujourd'hui</div></div>
+<svg width="30" height="30" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15" fill="none" style="stroke:var(--sep)" stroke-width="4"/><circle cx="18" cy="18" r="15" fill="none" style="stroke:var(--acc)" stroke-width="4" stroke-dasharray="18.85 94.25" stroke-linecap="round" transform="rotate(-90 18 18)"/></svg>
+</div>
+<div class="k-mt" style="padding:0 24px 4px">Agenda</div>
+<div class="k-grp">
+<div class="k-row"><span class="k-acc" style="font-size:11px;width:32px;flex:none;font-weight:500">09:30</span><span class="k-tt">Point équipe</span></div>
+<div class="k-sep" style="margin-left:50px"></div>
+<div class="k-row"><span class="k-acc" style="font-size:11px;width:32px;flex:none;font-weight:500">14:00</span><span class="k-tt">Démo client Acme</span></div>
+</div>
+<div class="k-mt" style="padding:12px 24px 4px">À faire · 1 sur 5</div>
+<div class="k-grp">
+<div class="k-row"><span class="k-cb"></span><div style="flex:1;min-width:0"><div class="k-tt">Répondre à Sarah</div><div class="k-mt"><i class="ti ti-mail"></i> Gmail · <span class="k-acc">10:30</span></div></div><span class="k-acc" style="font-size:12px;font-weight:500">!</span></div>
+<div class="k-sep"></div>
+<div class="k-row"><span class="k-cb"></span><div style="flex:1;min-width:0"><div class="k-tt">Slides de la démo</div><div class="k-mt"><i class="ti ti-subtask"></i> 1 sur 3</div></div></div>
+<div class="k-sep"></div>
+<div class="k-row"><span class="k-cb"></span><div style="flex:1;min-width:0"><div class="k-tt">Valider la PR #12</div><div class="k-mt"><i class="ti ti-brand-slack"></i> Slack</div></div></div>
+<div class="k-sep"></div>
+<div class="k-row"><span class="k-cb"></span><div style="flex:1;min-width:0"><div class="k-tt">Appeler le comptable</div><div class="k-mt"><i class="ti ti-clock"></i> 16:30</div></div></div>
+<div class="k-sep"></div>
+<div class="k-row k-done"><span class="k-cb on"><i class="ti ti-check" style="font-size:9px;color:#fff"></i></span><div style="flex:1;min-width:0"><div class="k-tt">Relire le devis Dupont</div></div></div>
+</div>
+<div style="margin:auto 10px 8px;background:var(--card);border-radius:10px;padding:8px 10px;font-size:11px;color:var(--tx2);display:flex;gap:6px;align-items:center"><i class="ti ti-circle-plus k-acc" style="font-size:15px"></i>Appeler Paul demain 14h</div>
+<div class="k-tab" style="margin-top:0"><i class="ti ti-sun k-acc"></i><i class="ti ti-calendar"></i><i class="ti ti-list"></i><i class="ti ti-settings"></i></div>
+</div>
+</div>
+
+<div>
+<div class="lbl">2 · Minimal</div>
+<div class="k-ph" style="background:var(--bgw)">
+<div class="k-sb"><span>9:41</span><span><i class="ti ti-wifi"></i> <i class="ti ti-battery-2"></i></span></div>
+<div style="padding:14px 16px 12px">
+<div style="display:flex;align-items:center;gap:6px"><i class="ti ti-sun k-acc" style="font-size:20px"></i><span class="k-lt">Aujourd'hui</span></div>
+<div class="k-mt" style="margin-top:2px">Jeudi 16 octobre · 1 sur 5</div>
+</div>
+<div style="padding:0 16px 10px;display:flex;flex-direction:column;gap:4px">
+<div class="k-mt" style="display:flex;gap:6px;align-items:center"><span style="width:5px;height:5px;border-radius:50%;background:var(--acc)"></span>09:30 Point équipe</div>
+<div class="k-mt" style="display:flex;gap:6px;align-items:center"><span style="width:5px;height:5px;border-radius:50%;background:var(--acc)"></span>14:00 Démo client Acme</div>
+</div>
+<div style="height:0.5px;background:var(--sep);margin:0 16px 6px"></div>
+<div style="padding:0 6px">
+<div class="k-row" style="padding:9px 10px"><span class="k-cb" style="border-radius:4px"></span><div style="flex:1;min-width:0"><div class="k-tt">Répondre à Sarah</div><div class="k-mt"><i class="ti ti-flag k-acc"></i> <span class="k-acc">10:30</span> · <i class="ti ti-mail"></i></div></div></div>
+<div class="k-row" style="padding:9px 10px"><span class="k-cb" style="border-radius:4px"></span><div style="flex:1;min-width:0"><div class="k-tt">Slides de la démo</div><div class="k-mt">1 sur 3</div></div></div>
+<div class="k-row" style="padding:9px 10px"><span class="k-cb" style="border-radius:4px"></span><div style="flex:1;min-width:0"><div class="k-tt">Valider la PR #12</div><div class="k-mt"><i class="ti ti-brand-slack"></i></div></div></div>
+<div class="k-row" style="padding:9px 10px"><span class="k-cb" style="border-radius:4px"></span><div style="flex:1;min-width:0"><div class="k-tt">Appeler le comptable</div><div class="k-mt">16:30</div></div></div>
+<div class="k-row k-done" style="padding:9px 10px"><span class="k-cb on" style="border-radius:4px"><i class="ti ti-check" style="font-size:9px;color:#fff"></i></span><div style="flex:1;min-width:0"><div class="k-tt">Relire le devis Dupont</div></div></div>
+</div>
+<div style="position:absolute;right:16px;bottom:18px;width:38px;height:38px;border-radius:50%;background:var(--acc);display:flex;align-items:center;justify-content:center"><i class="ti ti-plus" style="font-size:20px;color:#fff"></i></div>
+</div>
+</div>
+
+<div>
+<div class="lbl">3 · Cartes</div>
+<div class="k-ph" style="background:var(--bg)">
+<div class="k-sb"><span>9:41</span><span><i class="ti ti-wifi"></i> <i class="ti ti-battery-2"></i></span></div>
+<div style="padding:6px 14px 10px"><div class="k-mt">Jeudi 16 octobre</div><div class="k-lt">Aujourd'hui</div></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 10px 8px">
+<div style="background:var(--card);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:4px">
+<svg width="34" height="34" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15" fill="none" style="stroke:var(--sep)" stroke-width="4"/><circle cx="18" cy="18" r="15" fill="none" style="stroke:var(--acc)" stroke-width="4" stroke-dasharray="18.85 94.25" stroke-linecap="round" transform="rotate(-90 18 18)"/></svg>
+<div style="font-size:15px;font-weight:600">1/5</div><div class="k-mt">faites</div>
+</div>
+<div style="background:var(--card);border-radius:12px;padding:10px">
+<div class="k-acc" style="font-size:11px;font-weight:500"><i class="ti ti-calendar-event"></i> Prochain</div>
+<div style="font-size:15px;font-weight:600;margin-top:8px">14:00</div>
+<div class="k-mt">Démo client Acme</div>
+</div>
+</div>
+<div style="background:var(--card);border-radius:12px;margin:0 10px">
+<div style="display:flex;justify-content:space-between;padding:9px 10px 2px"><span class="k-acc" style="font-size:11px;font-weight:500"><i class="ti ti-checklist"></i> À faire</span><span class="k-mt">Tout voir</span></div>
+<div class="k-row"><span class="k-cb"></span><div style="flex:1;min-width:0"><div class="k-tt">Répondre à Sarah</div><div class="k-mt"><i class="ti ti-mail"></i> <span class="k-acc">10:30</span></div></div><span class="k-acc" style="font-size:12px;font-weight:500">!</span></div>
+<div class="k-sep"></div>
+<div class="k-row"><span class="k-cb"></span><div style="flex:1;min-width:0"><div class="k-tt">Slides de la démo</div><div class="k-mt">1 sur 3</div></div></div>
+<div class="k-sep"></div>
+<div class="k-row"><span class="k-cb"></span><div style="flex:1;min-width:0"><div class="k-tt">Valider la PR #12</div><div class="k-mt"><i class="ti ti-brand-slack"></i> Slack</div></div></div>
+</div>
+<div style="background:var(--card);border-radius:12px;margin:8px 10px 0">
+<div style="padding:9px 10px 2px"><span class="k-acc" style="font-size:11px;font-weight:500"><i class="ti ti-calendar"></i> Agenda</span></div>
+<div class="k-row"><span class="k-acc" style="font-size:11px;width:32px;flex:none;font-weight:500">09:30</span><span class="k-tt">Point équipe</span></div>
+</div>
+<div class="k-tab"><i class="ti ti-sun k-acc"></i><i class="ti ti-calendar"></i><i class="ti ti-list"></i><i class="ti ti-settings"></i></div>
+</div>
+</div>
+
+</div>
+
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:16px">
+<button type="button" class="k-sw" data-i="0" aria-label="Bleu" aria-pressed="true" style="background:#007AFF"></button>
+<button type="button" class="k-sw" data-i="1" aria-label="Indigo" aria-pressed="false" style="background:#5856D6"></button>
+<button type="button" class="k-sw" data-i="2" aria-label="Violet" aria-pressed="false" style="background:#AF52DE"></button>
+<button type="button" class="k-sw" data-i="3" aria-label="Rose" aria-pressed="false" style="background:#FF2D55"></button>
+<button type="button" class="k-sw" data-i="4" aria-label="Rouge" aria-pressed="false" style="background:#FF3B30"></button>
+<button type="button" class="k-sw" data-i="5" aria-label="Orange" aria-pressed="false" style="background:#FF9500"></button>
+<button type="button" class="k-sw" data-i="6" aria-label="Jaune" aria-pressed="false" style="background:#FFCC00"></button>
+<button type="button" class="k-sw" data-i="7" aria-label="Vert" aria-pressed="false" style="background:#34C759"></button>
+<button type="button" class="k-sw" data-i="8" aria-label="Menthe" aria-pressed="false" style="background:#00C7BE"></button>
+<button type="button" class="k-sw" data-i="9" aria-label="Cyan" aria-pressed="false" style="background:#32ADE6"></button>
+<button type="button" class="k-sw" data-i="10" aria-label="Graphite" aria-pressed="false" style="background:#8E8E93"></button>
+<label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-secondary)">Couleur libre <input type="color" id="k-custom" value="#B8F2E6" style="width:30px;height:26px;padding:0;border:none;background:none;cursor:pointer"></label>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px">
+<button type="button" class="k-seg" id="k-light" aria-pressed="true">Clair</button>
+<button type="button" class="k-seg" id="k-dark" aria-pressed="false">Sombre</button>
+<span id="k-note" style="font-size:13px;color:var(--text-secondary)"></span>
+</div>
+</div>
+
+<h2>Notifications</h2>
+<p>L'apparence est imposée par le système : Taskly ne contrôle que le texte et l'icône. Android accepte des boutons d'action, pas iOS. Voir <a href="DECISIONS.md">D-010</a>.</p>
+<div class="card grid2">
+
+<div>
+<div class="lbl">iPhone · 10:47</div>
+<div class="n-ph" style="background:#2B3440;color:#fff">
+<div style="display:flex;justify-content:space-between;padding:10px 18px 0;font-size:11px;font-weight:500"><span>9:41</span><span><i class="ti ti-wifi"></i> <i class="ti ti-battery-2"></i></span></div>
+<div style="text-align:center;margin-top:18px"><i class="ti ti-lock" style="font-size:16px"></i><div style="font-size:14px;margin-top:4px">jeudi 16 octobre</div><div style="font-size:56px;line-height:1.05;letter-spacing:-1px">10:47</div></div>
+<div style="margin-top:26px;display:flex;flex-direction:column;gap:7px;padding:0 10px">
+<div style="background:#E8E8ED;border-radius:16px;padding:10px 12px;color:#000"><div style="display:flex;align-items:center;gap:6px;margin-bottom:3px"><span style="width:18px;height:18px;border-radius:5px;background:#007AFF;display:flex;align-items:center;justify-content:center"><i class="ti ti-checks" style="font-size:12px;color:#fff"></i></span><span style="font-size:11px;color:#3A3A3C">Taskly</span><span style="font-size:11px;color:#6E6E73;margin-left:auto">maintenant</span></div><div style="font-size:12px;font-weight:600">Toujours pas fait : répondre à Sarah</div><div style="font-size:12px;color:#3A3A3C">Relance 2 sur 3 · prévu à 10:30</div></div>
+<div style="background:#E8E8ED;border-radius:16px;padding:10px 12px;color:#000"><div style="display:flex;align-items:center;gap:6px;margin-bottom:3px"><span style="width:18px;height:18px;border-radius:5px;background:#007AFF;display:flex;align-items:center;justify-content:center"><i class="ti ti-checks" style="font-size:12px;color:#fff"></i></span><span style="font-size:11px;color:#3A3A3C">Taskly</span><span style="font-size:11px;color:#6E6E73;margin-left:auto">10:30</span></div><div style="font-size:12px;font-weight:600">Répondre à Sarah</div><div style="font-size:12px;color:#3A3A3C">Priorité haute · ajoutée par Claude depuis Gmail</div></div>
+<div style="background:#E8E8ED;border-radius:16px;padding:10px 12px;color:#000"><div style="display:flex;align-items:center;gap:6px;margin-bottom:3px"><span style="width:18px;height:18px;border-radius:5px;background:#007AFF;display:flex;align-items:center;justify-content:center"><i class="ti ti-checks" style="font-size:12px;color:#fff"></i></span><span style="font-size:11px;color:#3A3A3C">Taskly</span><span style="font-size:11px;color:#6E6E73;margin-left:auto">07:30</span></div><div style="font-size:12px;font-weight:600">Ta journée : 5 tâches, 2 réunions</div><div style="font-size:12px;color:#3A3A3C">Première réunion à 09:30 : point équipe</div></div>
+</div>
+</div>
+</div>
+
+<div>
+<div class="lbl">Android · 18:30</div>
+<div class="n-ph" style="background:#1F2A24;color:#fff;font-family:Roboto,system-ui,sans-serif">
+<div style="display:flex;justify-content:space-between;padding:10px 18px 0;font-size:11px"><span>18:30</span><span><i class="ti ti-wifi"></i> <i class="ti ti-battery-2"></i></span></div>
+<div style="padding:22px 20px 0"><div style="font-size:52px;line-height:1.05">18:30</div><div style="font-size:13px;margin-top:4px">jeu. 16 octobre</div></div>
+<div style="margin-top:22px;display:flex;flex-direction:column;gap:8px;padding:0 10px">
+<div style="background:#F3EDF7;border-radius:20px;padding:12px 14px;color:#1D1B20"><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="width:18px;height:18px;border-radius:50%;background:#007AFF;display:flex;align-items:center;justify-content:center"><i class="ti ti-checks" style="font-size:11px;color:#fff"></i></span><span style="font-size:11px;color:#49454F">Taskly · 18:30</span></div><div style="font-size:12px;font-weight:600">Bilan du soir : 4 sur 5 faites</div><div style="font-size:12px;color:#49454F">1 tâche à reporter : appeler le comptable</div><div style="display:flex;gap:14px;margin-top:8px;font-size:12px;font-weight:600;color:#0B57D0"><span>Reporter à demain</span><span>Ouvrir</span></div></div>
+<div style="background:#F3EDF7;border-radius:20px;padding:12px 14px;color:#1D1B20"><div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="width:18px;height:18px;border-radius:50%;background:#007AFF;display:flex;align-items:center;justify-content:center"><i class="ti ti-checks" style="font-size:11px;color:#fff"></i></span><span style="font-size:11px;color:#49454F">Taskly · 16:30</span></div><div style="font-size:12px;font-weight:600">Appeler le comptable</div><div style="font-size:12px;color:#49454F">Prévu à 16:30 · en retard</div><div style="display:flex;gap:14px;margin-top:8px;font-size:12px;font-weight:600;color:#0B57D0"><span>Fait</span><span>Dans 15 min</span><span>Demain</span></div></div>
+</div>
+</div>
+</div>
+
+</div>
+</main>
+<script>
+const P=[["#007AFF","#0A84FF"],["#5856D6","#5E5CE6"],["#AF52DE","#BF5AF2"],["#FF2D55","#FF375F"],["#FF3B30","#FF453A"],["#FF9500","#FF9F0A"],["#FFCC00","#FFD60A"],["#34C759","#30D158"],["#00C7BE","#63E6E2"],["#32ADE6","#64D2FF"],["#8E8E93","#98989D"]];
+const st={i:0,custom:null,dark:false};
+const app=document.getElementById('k-app'),note=document.getElementById('k-note'),sws=[...document.querySelectorAll('.k-sw')];
+const rgb=h=>{h=h.replace('#','');return [0,2,4].map(i=>parseInt(h.substr(i,2),16))};
+const lum=c=>c.map(v=>{v/=255;return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4)}).reduce((a,v,i)=>a+v*[0.2126,0.7152,0.0722][i],0);
+const ratio=(a,b)=>{const x=lum(a),y=lum(b);return (Math.max(x,y)+0.05)/(Math.min(x,y)+0.05)};
+function adjust(hex,dark){let c=rgb(hex);const bg=dark?[28,28,30]:[255,255,255],t=dark?[255,255,255]:[0,0,0];let n=0;while(ratio(c,bg)<3&&n<60){c=c.map((v,i)=>Math.round(v+(t[i]-v)*0.06));n++}return {hex:'#'+c.map(v=>v.toString(16).padStart(2,'0')).join('').toUpperCase(),changed:n>0}}
+function apply(){const base=(st.custom||(st.dark?P[st.i][1]:P[st.i][0])).toUpperCase();const a=adjust(base,st.dark);app.style.setProperty('--acc',base);app.style.setProperty('--acct',a.hex);app.dataset.theme=st.dark?'dark':'light';note.textContent=a.changed?('Texte ajusté pour rester lisible : '+base+' → '+a.hex):'Contraste suffisant, aucun ajustement';sws.forEach((s,k)=>s.setAttribute('aria-pressed',(!st.custom&&k===st.i)?'true':'false'));document.getElementById('k-light').setAttribute('aria-pressed',st.dark?'false':'true');document.getElementById('k-dark').setAttribute('aria-pressed',st.dark?'true':'false')}
+sws.forEach(s=>s.addEventListener('click',()=>{st.i=+s.dataset.i;st.custom=null;apply()}));
+document.getElementById('k-custom').addEventListener('input',e=>{st.custom=e.target.value;apply()});
+document.getElementById('k-light').addEventListener('click',()=>{st.dark=false;apply()});
+document.getElementById('k-dark').addEventListener('click',()=>{st.dark=true;apply()});
+apply();
+</script>
+</body>
+</html>
