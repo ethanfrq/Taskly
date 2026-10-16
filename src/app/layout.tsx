@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { ServiceWorker } from "@/components/pwa/service-worker";
 import { I18nProvider } from "@/i18n/client";
 import { getI18n } from "@/i18n/server";
 import "./globals.css";
@@ -8,6 +9,9 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Taskly",
     description: t.meta.description,
+    applicationName: "Taskly",
+    appleWebApp: { capable: true, title: "Taskly", statusBarStyle: "default" },
+    formatDetection: { telephone: false },
   };
 }
 
@@ -16,6 +20,7 @@ export const viewport: Viewport = {
     { media: "(prefers-color-scheme: light)", color: "#f2f2f7" },
     { media: "(prefers-color-scheme: dark)", color: "#000000" },
   ],
+  viewportFit: "cover",
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
@@ -26,6 +31,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <I18nProvider locale={locale} dictionary={t}>
           {children}
         </I18nProvider>
+        <ServiceWorker />
       </body>
     </html>
   );
