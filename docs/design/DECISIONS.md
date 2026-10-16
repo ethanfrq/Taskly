@@ -53,6 +53,8 @@ Android and desktop get the browser's native install prompt instead of the Share
 
 **Why.** When the user connects Claude, Claude opens Taskly's authorization page in a browser that doesn't have the app's session. With a passkey synced by iCloud Keychain or Google Password Manager, signing in again there takes one gesture. With an email code, it takes a second email.
 
+**As built.** A new account starts with the email code, so every account has an address to recover it. Face ID (or Touch ID, or the device's passkey) is offered right after the first sign-in and is the first button on later sign-ins. Creating an account with a passkey alone would leave it without any recovery path.
+
 ## D-006 · Notification permission: explain, ask on tap, test
 
 **Decision.** The permission is only requested when the user taps "Allow notifications", after one sentence explaining what they'll receive. Once granted, the user sends themselves a test notification.
