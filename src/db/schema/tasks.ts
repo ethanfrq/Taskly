@@ -15,9 +15,26 @@ export const lists = pgTable(
     /** Hex color for the list's dot, or null to use the accent. */
     color: text("color"),
     position: integer("position").notNull().default(0),
+    /** Secret for the invite link of a shared list; null when sharing is off. */
+    inviteToken: text("invite_token").unique(),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [index("lists_owner_idx").on(t.ownerId)],
+);
+
+/** People a list is shared with (the owner is in `lists.ownerId`, not here). */
+export const listMembers = pgTable(
+  "list_members",
+  {
+    listId: text("list_id")
+      .notNull()
+      .references(() => lists.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    joinedAt: timestamp("joined_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [primaryKey({ columns: [t.listId, t.userId] }), index("list_members_user_idx").on(t.userId)],
 );
 
 export const tasks = pgTable(
@@ -29,6 +46,8 @@ export const tasks = pgTable(
       .references(() => user.id, { onDelete: "cascade" }),
     listId: text("list_id").references(() => lists.id, { onDelete: "set null" }),
     parentId: text("parent_id").references((): AnyPgColumn => tasks.id, { onDelete: "cascade" }),
+    /** In a shared list: who should do it. Null means the creator. */
+    assigneeId: text("assignee_id").references(() => user.id, { onDelete: "set null" }),
     title: text("title").notNull(),
     notes: text("notes"),
     /** Calendar day in the user's time zone, "YYYY-MM-DD". Null: someday. */
@@ -56,6 +75,7 @@ export const tasks = pgTable(
     index("tasks_list_idx").on(t.listId),
     index("tasks_parent_idx").on(t.parentId),
     index("tasks_batch_idx").on(t.importBatchId),
+    index("tasks_assignee_idx").on(t.assigneeId),
   ],
 );
 

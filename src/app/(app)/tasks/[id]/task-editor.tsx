@@ -18,7 +18,17 @@ type ListOption = { id: string; name: string; color: string | null };
 const rowClass = "flex items-center justify-between gap-3 px-4 py-3 text-[16px]";
 const inputClass = "bg-transparent text-right text-[16px] text-text-secondary outline-none";
 
-export function TaskEditor({ task, lists, today }: { task: TaskDetail; lists: ListOption[]; today: string }) {
+export function TaskEditor({
+  task,
+  lists,
+  today,
+  participants,
+}: {
+  task: TaskDetail;
+  lists: ListOption[];
+  today: string;
+  participants: { id: string; name: string }[];
+}) {
   const { t } = useI18n();
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -156,6 +166,23 @@ export function TaskEditor({ task, lists, today }: { task: TaskDetail; lists: Li
                 <option value="weekly">{t.task.recurrence.weekly}</option>
                 <option value="monthly">{t.task.recurrence.monthly}</option>
                 {task.recurrence?.startsWith("weekly:") ? <option value="custom">{t.task.recurrence.custom}</option> : null}
+              </select>
+            </label>
+          ) : null}
+          {participants.length > 0 ? (
+            <label className={rowClass}>
+              {t.sharing.assignee}
+              <select
+                value={task.assigneeId ?? ""}
+                onChange={(e) => save({ assigneeId: e.target.value || null })}
+                className={`${inputClass} appearance-none`}
+              >
+                <option value="">{t.sharing.nobody}</option>
+                {participants.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
+                ))}
               </select>
             </label>
           ) : null}

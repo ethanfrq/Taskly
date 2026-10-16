@@ -12,6 +12,8 @@ import { format } from "@/i18n/format";
 import type { TaskView } from "@/lib/tasks/service";
 import { deleteListAction, toggleTaskAction, updateListAction } from "../../actions";
 import { LIST_COLORS } from "../list-colors";
+import type { Participant } from "@/lib/tasks/service";
+import { SharingPanel } from "./sharing-panel";
 
 type Props = {
   list: { id: string; name: string; color: string | null } | null;
@@ -19,9 +21,10 @@ type Props = {
   tasks: TaskView[];
   today: string;
   listNames: string[];
+  sharing: { isOwner: boolean; inviteToken: string | null; participants: Participant[]; meId: string; origin: string } | null;
 };
 
-export function ListView({ list, title, tasks, today, listNames }: Props) {
+export function ListView({ list, title, tasks, today, listNames, sharing }: Props) {
   const { t } = useI18n();
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -46,7 +49,7 @@ export function ListView({ list, title, tasks, today, listNames }: Props) {
         <h1 className="flex-1 text-[34px] font-bold tracking-tight">
           {title}
         </h1>
-        {list ? (
+        {list && sharing?.isOwner ? (
           <button
             type="button"
             aria-label={t.lists.delete}
@@ -65,7 +68,13 @@ export function ListView({ list, title, tasks, today, listNames }: Props) {
         ) : null}
       </header>
 
-      {list ? (
+      {list && sharing ? (
+        <div className="mt-3 px-5">
+          <SharingPanel list={list} {...sharing} />
+        </div>
+      ) : null}
+
+      {list && sharing?.isOwner ? (
         <div role="radiogroup" aria-label={t.lists.color} className="mt-3 flex flex-wrap gap-2 px-5">
           {LIST_COLORS.map((c) => (
             <button

@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { z } from "zod";
 import { getDb } from "@/db";
 import { requireUser } from "@/lib/auth/session";
@@ -26,6 +27,7 @@ const taskFields = {
   priority: z.number().int().min(0).max(3).optional(),
   recurrence: z.string().refine(isRecurrence).nullable().optional(),
   tags: z.array(z.string().trim().min(1).max(40)).max(20).optional(),
+  assigneeId: id.nullable().optional(),
 };
 
 const createSchema = z.object({
@@ -151,4 +153,39 @@ export async function recordFocusAction(minutes: number, taskId: string | null) 
   // Only link the session to one of the user's own tasks.
   const task = taskId ? await service.getTask(db, user.id, id.parse(taskId)).catch(() => null) : null;
   await recordFocusSession(db, user.id, z.number().int().min(1).max(180).parse(minutes), task?.id ?? null);
+}
+
+/* ---------- Shared lists ---------- */
+
+export async function shareListAction(listId: string) {
+  const user = await requireUser();
+  const token = await service.shareList(getDb(), user.id, id.parse(listId));
+  refresh();
+  return { token };
+}
+
+export async function disableInviteAction(listId: string) {
+  const user = await requireUser();
+  await service.disableInvite(getDb(), user.id, id.parse(listId));
+  refresh();
+}
+
+export async function joinListAction(token: string) {
+  const user = await requireUser();
+  const listId = await service.joinList(getDb(), user.id, z.string().min(16).max(64).parse(token));
+  refresh();
+  redirect(`/lists/${listId}`);
+}
+
+export async function leaveListAction(listId: string) {
+  const user = await requireUser();
+  await service.leaveList(getDb(), user.id, id.parse(listId));
+  refresh();
+  redirect("/lists");
+}
+
+export async function removeMemberAction(listId: string, memberId: string) {
+  const user = await requireUser();
+  await service.removeMember(getDb(), user.id, id.parse(listId), id.parse(memberId));
+  refresh();
 }

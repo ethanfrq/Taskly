@@ -43,6 +43,13 @@
       "when": 1792187805708,
       "tag": "0005_events_and_oauth",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792188290446,
+      "tag": "0006_shared_lists",
+      "breakpoints": true
     }
   ]
 }
