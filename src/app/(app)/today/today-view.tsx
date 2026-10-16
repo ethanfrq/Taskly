@@ -1,6 +1,7 @@
 "use client";
 
-import { IconCalendarEvent, IconSparkles } from "@tabler/icons-react";
+import { IconCalendarEvent, IconChartBar, IconSparkles, IconTarget } from "@tabler/icons-react";
+import Link from "next/link";
 import { useOptimistic, useState, useTransition } from "react";
 import { AppBadge } from "@/components/pwa/app-badge";
 import { QuickAdd } from "@/components/tasks/quick-add";
@@ -58,9 +59,19 @@ export function TodayView({ tasks, today, dateLabel, next, latestImport, listNam
   return (
     <div className="flex flex-1 flex-col">
       <AppBadge count={overdue.length + todo.length} />
-      <header className="px-5 pt-[max(1.25rem,env(safe-area-inset-top))]">
-        <p className="text-[13px] text-text-secondary">{dateLabel}</p>
-        <h1 className="text-[34px] font-bold tracking-tight">{t.today.title}</h1>
+      <header className="flex items-end px-5 pt-[max(1.25rem,env(safe-area-inset-top))]">
+        <div className="flex-1">
+          <p className="text-[13px] text-text-secondary">{dateLabel}</p>
+          <h1 className="text-[34px] font-bold tracking-tight">{t.today.title}</h1>
+        </div>
+        <nav className="flex gap-1 pb-2 text-accent-text">
+          <Link href="/focus" aria-label={t.focus.open} className="rounded-full p-2">
+            <IconTarget size={24} stroke={1.8} aria-hidden />
+          </Link>
+          <Link href="/stats" aria-label={t.stats.open} className="rounded-full p-2">
+            <IconChartBar size={24} stroke={1.8} aria-hidden />
+          </Link>
+        </nav>
       </header>
 
       <div className="mt-3 grid grid-cols-2 gap-3 px-4">

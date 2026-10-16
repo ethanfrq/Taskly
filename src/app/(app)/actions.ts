@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getDb } from "@/db";
 import { requireUser } from "@/lib/auth/session";
+import { recordFocusSession } from "@/lib/stats";
 import * as service from "@/lib/tasks/service";
 import { getPreferences } from "@/lib/preferences";
 import { reminderDeps } from "@/lib/reminders/runtime";
@@ -141,4 +142,13 @@ export async function moveToTomorrowAction(taskIds: string[]) {
   const deps = reminderDeps();
   for (const taskId of z.array(id).max(200).parse(taskIds)) await moveTaskToTomorrow(deps, user.id, taskId);
   refresh();
+}
+
+/** A focus session ran to the end (weekly stats). */
+export async function recordFocusAction(minutes: number, taskId: string | null) {
+  const user = await requireUser();
+  const db = getDb();
+  // Only link the session to one of the user's own tasks.
+  const task = taskId ? await service.getTask(db, user.id, id.parse(taskId)).catch(() => null) : null;
+  await recordFocusSession(db, user.id, z.number().int().min(1).max(180).parse(minutes), task?.id ?? null);
 }

@@ -13,6 +13,7 @@ export function ProgressRing({ done, total, size = 40 }: { done: number; total: 
         stroke="var(--accent)"
         strokeWidth="4"
         strokeLinecap="round"
+        strokeOpacity={filled > 0 ? 1 : 0}
         strokeDasharray={`${filled} ${circumference}`}
         className="transition-[stroke-dasharray] duration-500"
       />
