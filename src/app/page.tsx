@@ -1,8 +1,7 @@
 import { Logo } from "@/components/brand/logo";
 import { LanguageSwitch } from "@/components/language-switch";
-import { SignOutButton } from "@/components/sign-out-button";
 import { buttonClass } from "@/components/ui/button";
-import { format } from "@/i18n/format";
+import { redirect } from "next/navigation";
 import { getI18n } from "@/i18n/server";
 import { getSession } from "@/lib/auth/session";
 
@@ -12,7 +11,7 @@ const PROTOTYPE_URL =
 
 export default async function Home() {
   const { t } = await getI18n();
-  const session = await getSession();
+  if (await getSession()) redirect("/today");
   return (
     <main className="flex flex-1 items-center justify-center px-4 py-16">
       <div className="w-full max-w-sm rounded-2xl bg-card p-8 text-center">
@@ -33,18 +32,9 @@ export default async function Home() {
           </a>
         </div>
         <div className="mt-6 border-t border-separator pt-6">
-          {session ? (
-            <div className="flex flex-col gap-2">
-              <p className="text-sm text-text-secondary">
-                {format(t.auth.signedInAs, { email: session.user.email })}
-              </p>
-              <SignOutButton />
-            </div>
-          ) : (
-            <a href="/sign-in" className={buttonClass("secondary")}>
-              {t.auth.signIn}
-            </a>
-          )}
+          <a href="/sign-in" className={buttonClass("secondary")}>
+            {t.auth.signIn}
+          </a>
         </div>
         <div className="mt-6">
           <LanguageSwitch />
