@@ -5,7 +5,9 @@ import { z } from "zod";
 import { getDb } from "@/db";
 import { requireUser } from "@/lib/auth/session";
 import * as service from "@/lib/tasks/service";
-import { isValidDay, isValidTime } from "@/lib/time";
+import { getPreferences } from "@/lib/preferences";
+import { isRecurrence } from "@/lib/tasks/recurrence";
+import { isValidDay, isValidTime, todayIn } from "@/lib/time";
 
 const id = z.string().min(1).max(64);
 const day = z.string().refine(isValidDay).nullable();
@@ -19,11 +21,16 @@ const taskFields = {
   dueDate: day.optional(),
   dueTime: time.optional(),
   priority: z.number().int().min(0).max(3).optional(),
-  recurrence: z.string().max(64).nullable().optional(),
+  recurrence: z.string().refine(isRecurrence).nullable().optional(),
   tags: z.array(z.string().trim().min(1).max(40)).max(20).optional(),
 };
 
-const createSchema = z.object({ ...taskFields, parentId: id.nullable().optional() });
+const createSchema = z.object({
+  ...taskFields,
+  parentId: id.nullable().optional(),
+  /** From "@list" in the quick add field; resolved to listId here. */
+  listName: z.string().trim().min(1).max(80).optional(),
+});
 const patchSchema = z.object(taskFields).partial();
 
 function refresh() {
@@ -32,8 +39,10 @@ function refresh() {
 
 export async function createTaskAction(input: z.input<typeof createSchema>) {
   const user = await requireUser();
-  const data = createSchema.parse(input);
-  const task = await service.createTask(getDb(), user.id, data);
+  const { listName, ...data } = createSchema.parse(input);
+  const db = getDb();
+  if (listName && !data.listId) data.listId = (await service.findListByName(db, user.id, listName))?.id ?? null;
+  const task = await service.createTask(db, user.id, data);
   refresh();
   return { id: task.id };
 }
@@ -46,7 +55,9 @@ export async function updateTaskAction(taskId: string, patch: z.input<typeof pat
 
 export async function toggleTaskAction(taskId: string, done: boolean) {
   const user = await requireUser();
-  await service.setCompleted(getDb(), user.id, id.parse(taskId), z.boolean().parse(done));
+  const db = getDb();
+  const { timeZone } = await getPreferences(db, user.id);
+  await service.setCompleted(db, user.id, id.parse(taskId), z.boolean().parse(done), new Date(), todayIn(timeZone));
   refresh();
 }
 

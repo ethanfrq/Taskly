@@ -5,8 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useOptimistic, useTransition } from "react";
 import { QuickAdd } from "@/components/tasks/quick-add";
-import { TaskRow } from "@/components/tasks/task-row";
-import { Group, GroupList } from "@/components/ui/group";
+import { SortableTaskList } from "@/components/tasks/sortable-task-list";
+import { Group } from "@/components/ui/group";
 import { useI18n } from "@/i18n/client";
 import { format } from "@/i18n/format";
 import type { TaskView } from "@/lib/tasks/service";
@@ -18,9 +18,10 @@ type Props = {
   title: string;
   tasks: TaskView[];
   today: string;
+  listNames: string[];
 };
 
-export function ListView({ list, title, tasks, today }: Props) {
+export function ListView({ list, title, tasks, today, listNames }: Props) {
   const { t } = useI18n();
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -84,11 +85,7 @@ export function ListView({ list, title, tasks, today }: Props) {
       <div className="mt-5 px-4">
         {optimistic.length > 0 ? (
           <Group>
-            <GroupList>
-              {optimistic.map((task) => (
-                <TaskRow key={task.id} task={task} today={today} onToggle={toggle} showDate />
-              ))}
-            </GroupList>
+            <SortableTaskList tasks={optimistic} today={today} onToggle={toggle} showDate />
           </Group>
         ) : (
           <p className="rounded-xl bg-card px-4 py-8 text-center text-text-secondary">{t.lists.empty}</p>
@@ -96,7 +93,7 @@ export function ListView({ list, title, tasks, today }: Props) {
       </div>
 
       <div className="mt-auto">
-        <QuickAdd dueDate={null} listId={list?.id ?? null} />
+        <QuickAdd dueDate={null} today={today} listId={list?.id ?? null} listNames={listNames} />
       </div>
     </div>
   );

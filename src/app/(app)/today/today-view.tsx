@@ -3,6 +3,7 @@
 import { IconCalendarEvent, IconSparkles } from "@tabler/icons-react";
 import { useOptimistic, useState, useTransition } from "react";
 import { QuickAdd } from "@/components/tasks/quick-add";
+import { SortableTaskList } from "@/components/tasks/sortable-task-list";
 import { TaskRow } from "@/components/tasks/task-row";
 import { Group, GroupList } from "@/components/ui/group";
 import { ProgressRing } from "@/components/ui/progress-ring";
@@ -17,9 +18,10 @@ type Props = {
   dateLabel: string;
   next: { time: string; title: string } | null;
   latestImport: ImportSummary | null;
+  listNames: string[];
 };
 
-export function TodayView({ tasks, today, dateLabel, next, latestImport }: Props) {
+export function TodayView({ tasks, today, dateLabel, next, latestImport, listNames }: Props) {
   const { locale, t } = useI18n();
   const [pending, startTransition] = useTransition();
   const [optimistic, toggleOptimistic] = useOptimistic(tasks, (state, id: string) =>
@@ -30,6 +32,9 @@ export function TodayView({ tasks, today, dateLabel, next, latestImport }: Props
 
   const overdue = optimistic.filter((x) => !x.completedAt && x.dueDate! < today);
   const todo = optimistic.filter((x) => !x.completedAt && x.dueDate === today);
+  // Timed tasks follow the clock; the rest keep the order the user dragged them into.
+  const timed = todo.filter((x) => x.dueTime);
+  const anytime = todo.filter((x) => !x.dueTime);
   const done = optimistic.filter((x) => x.completedAt);
   const total = optimistic.length;
 
@@ -115,7 +120,9 @@ export function TodayView({ tasks, today, dateLabel, next, latestImport }: Props
 
         {todo.length > 0 ? (
           <Group title={t.today.todo}>
-            <GroupList>{todo.map((task) => row(task))}</GroupList>
+            {timed.length > 0 ? <GroupList>{timed.map((task) => row(task))}</GroupList> : null}
+            {timed.length > 0 && anytime.length > 0 ? <div className="h-px bg-separator" /> : null}
+            {anytime.length > 0 ? <SortableTaskList tasks={anytime} today={today} onToggle={toggle} /> : null}
           </Group>
         ) : total === 0 ? (
           <div className="rounded-xl bg-card px-5 py-8 text-center">
@@ -149,7 +156,7 @@ export function TodayView({ tasks, today, dateLabel, next, latestImport }: Props
       </div>
 
       <div className="mt-auto">
-        <QuickAdd dueDate={today} />
+        <QuickAdd dueDate={today} today={today} listNames={listNames} />
       </div>
     </div>
   );

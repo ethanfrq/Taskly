@@ -99,6 +99,26 @@ describe("updates", () => {
   });
 });
 
+describe("recurring tasks", () => {
+  it("creates the next occurrence on check, once", async () => {
+    const task = await createTask(db, "sam", { title: "Standup", dueDate: TODAY, dueTime: "09:30", recurrence: "weekdays", tags: ["work"] });
+    const { next } = await setCompleted(db, "sam", task.id, true, new Date(), TODAY);
+    expect(next).toMatchObject({ title: "Standup", dueDate: "2026-10-19", dueTime: "09:30", recurrence: "weekdays" });
+    expect((await getTask(db, "sam", next!.id)).tagNames).toEqual(["work"]);
+
+    // Unchecking and checking again must not create a second occurrence.
+    await setCompleted(db, "sam", task.id, false);
+    const again = await setCompleted(db, "sam", task.id, true, new Date(), TODAY);
+    expect(again.next).toBeNull();
+  });
+
+  it("catches up when an old occurrence is checked late", async () => {
+    const task = await createTask(db, "sam", { title: "Vitamins", dueDate: "2026-10-10", recurrence: "daily" });
+    const { next } = await setCompleted(db, "sam", task.id, true, new Date(), TODAY);
+    expect(next?.dueDate).toBe("2026-10-17");
+  });
+});
+
 describe("lists", () => {
   it("counts open tasks and moves tasks to the inbox when a list is deleted", async () => {
     const work = await createList(db, "sam", "Work", "#FF9500");
