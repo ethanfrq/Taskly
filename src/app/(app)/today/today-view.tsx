@@ -2,6 +2,7 @@
 
 import { IconCalendarEvent, IconSparkles } from "@tabler/icons-react";
 import { useOptimistic, useState, useTransition } from "react";
+import { AppBadge } from "@/components/pwa/app-badge";
 import { QuickAdd } from "@/components/tasks/quick-add";
 import { SortableTaskList } from "@/components/tasks/sortable-task-list";
 import { TaskRow } from "@/components/tasks/task-row";
@@ -56,6 +57,7 @@ export function TodayView({ tasks, today, dateLabel, next, latestImport, listNam
 
   return (
     <div className="flex flex-1 flex-col">
+      <AppBadge count={overdue.length + todo.length} />
       <header className="px-5 pt-[max(1.25rem,env(safe-area-inset-top))]">
         <p className="text-[13px] text-text-secondary">{dateLabel}</p>
         <h1 className="text-[34px] font-bold tracking-tight">{t.today.title}</h1>

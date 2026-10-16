@@ -8,6 +8,8 @@ import { LOCALES } from "@/i18n/config";
 import { setLocale } from "@/i18n/actions";
 import { requireUser } from "@/lib/auth/session";
 import { savePreferences } from "@/lib/preferences";
+import { reminderDeps } from "@/lib/reminders/runtime";
+import { syncAllTaskReminders, syncDailyReminders } from "@/lib/reminders/service";
 import { isValidTime, isValidTimeZone } from "@/lib/time";
 
 const time = z.string().refine(isValidTime);
@@ -32,7 +34,21 @@ export async function savePreferencesAction(patch: z.input<typeof schema>) {
   const data = schema.parse(patch);
   await savePreferences(getDb(), user.id, data);
   if (data.locale) await setLocale(data.locale);
+  await replan(user.id, {
+    daily: !!(data.briefingTime || data.reviewTime || data.timeZone),
+    tasks: !!data.timeZone,
+  });
   revalidatePath("/", "layout");
+}
+
+async function replan(userId: string, what: { daily: boolean; tasks: boolean }) {
+  try {
+    const deps = reminderDeps();
+    if (what.daily) await syncDailyReminders(deps, userId);
+    if (what.tasks) await syncAllTaskReminders(deps, userId);
+  } catch (error) {
+    console.error("Reminder replanning failed", error);
+  }
 }
 
 /** The app was opened from the home screen: remember it for the health check. */
@@ -44,6 +60,7 @@ export async function reportInstalledAction() {
 export async function completeOnboardingAction() {
   const user = await requireUser();
   await savePreferences(getDb(), user.id, { onboardedAt: new Date() });
+  await replan(user.id, { daily: true, tasks: true });
   revalidatePath("/", "layout");
   redirect("/today");
 }

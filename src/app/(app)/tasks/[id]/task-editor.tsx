@@ -10,7 +10,7 @@ import { Group, GroupList } from "@/components/ui/group";
 import { useI18n } from "@/i18n/client";
 import { format } from "@/i18n/format";
 import type { TaskDetail } from "@/lib/tasks/service";
-import { createTaskAction, deleteTaskAction, toggleTaskAction, updateTaskAction } from "../../actions";
+import { createTaskAction, deleteTaskAction, snoozeTaskAction, toggleTaskAction, updateTaskAction } from "../../actions";
 
 type ListOption = { id: string; name: string; color: string | null };
 
@@ -25,6 +25,7 @@ export function TaskEditor({ task, lists, today }: { task: TaskDetail; lists: Li
   const [notes, setNotes] = useState(task.notes ?? "");
   const [tags, setTags] = useState(task.tagNames.join(", "));
   const [subtask, setSubtask] = useState("");
+  const [snoozed, setSnoozed] = useState(false);
 
   const save = (patch: Parameters<typeof updateTaskAction>[1]) =>
     startTransition(async () => {
@@ -190,6 +191,36 @@ export function TaskEditor({ task, lists, today }: { task: TaskDetail; lists: Li
           </label>
         </div>
       </Group>
+
+      {task.dueTime && !task.completedAt ? (
+        <Group title={t.reminders.snoozeLabel} footer={snoozed ? t.reminders.snoozed : undefined}>
+          <div className="flex gap-2 p-3">
+            {(
+              [
+                ["15", t.reminders.snooze15],
+                ["60", t.reminders.snooze60],
+                ["tomorrow", t.reminders.snoozeTomorrow],
+              ] as const
+            ).map(([preset, label]) => (
+              <button
+                key={preset}
+                type="button"
+                disabled={pending}
+                onClick={() =>
+                  startTransition(async () => {
+                    await snoozeTaskAction(task.id, preset);
+                    setSnoozed(true);
+                    router.refresh();
+                  })
+                }
+                className="flex-1 rounded-[10px] bg-fill py-2 text-[15px] text-accent-text"
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </Group>
+      ) : null}
 
       <Group title={t.task.subtasks}>
         <GroupList>
