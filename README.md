@@ -1,6 +1,9 @@
 <div align="center">
 
-# ✅ Taskly
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="public/brand/taskly-logo-ivory.svg">
+  <img alt="Taskly" src="public/brand/taskly-logo-graphite.svg" width="300">
+</picture>
 
 **Your day, sorted by Claude.**
 
