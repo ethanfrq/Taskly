@@ -1,0 +1,73 @@
+name: 🐛 Bug report
+description: Something doesn't work as expected
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this. For security issues, don't use this form: follow [SECURITY.md](https://github.com/ethanfrq/Taskly/blob/main/SECURITY.md).
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: Describe the bug in a few sentences.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open Today
+        2. Check the first task
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+  - type: dropdown
+    id: device
+    attributes:
+      label: Device
+      options:
+        - iPhone
+        - iPad
+        - Android phone or tablet
+        - Desktop
+    validations:
+      required: true
+  - type: dropdown
+    id: installed
+    attributes:
+      label: Is Taskly installed on the home screen?
+      description: Notifications and sign-in behave differently in an installed app and in a browser tab.
+      options:
+        - "Yes, installed app"
+        - "No, browser tab"
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: OS and browser versions
+      placeholder: iOS 26.0, Safari
+  - type: dropdown
+    id: claude-plan
+    attributes:
+      label: Claude plan (if the bug involves Claude)
+      options:
+        - Not related to Claude
+        - Free
+        - Pro
+        - Max
+        - Team
+        - Enterprise
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots or recordings
+      description: Drag and drop images or videos here.

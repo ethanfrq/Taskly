@@ -1,0 +1,41 @@
+name: 💡 Feature request
+description: Suggest an idea for Taskly
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Start from the situation, not the solution. "Every morning I have to..." works well.
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: What would you like to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you've considered
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Today view and tasks
+        - Reminders and notifications
+        - Claude connection
+        - Onboarding and settings
+        - Design and accessibility
+        - Self-hosting
+        - Other
+  - type: checkboxes
+    id: rules
+    attributes:
+      label: Product rules
+      description: See the product rules in CONTRIBUTING.md.
+      options:
+        - label: This still works for people who haven't connected Claude
+        - label: This doesn't require storing email content
