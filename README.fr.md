@@ -103,7 +103,11 @@ Chaque étape arrive en une série de petites pull requests. L'avancement est vi
 
 ## 🛠️ Technologies
 
-Prévues : [Next.js](https://nextjs.org) (React, TypeScript), Tailwind CSS, Neon Postgres avec Drizzle ORM, Better Auth (passkeys et codes par email), un serveur MCP avec OAuth, Web Push avec Upstash QStash, hébergé sur Vercel.
+En place : [Next.js](https://nextjs.org) (React, TypeScript), Tailwind CSS, Vitest.
+
+Prévues : Neon Postgres avec Drizzle ORM, Better Auth (passkeys et codes par email), un serveur MCP avec OAuth, Web Push avec Upstash QStash, hébergé sur Vercel.
+
+Chaque choix et ses compromis sont expliqués dans [docs/adr](docs/adr/README.md) (en anglais).
 
 ## 🎨 Design
 

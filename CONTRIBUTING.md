@@ -13,7 +13,26 @@ For anything bigger than a small fix, open an issue first so we can agree on the
 
 ## Development setup
 
-The Next.js app lands in the next pull requests. This section will describe how to install, run and test it locally.
+You need Node.js 22 or later. The version used in CI is in `.nvmrc` (`nvm use` picks it up).
+
+```bash
+npm install
+npm run dev
+```
+
+Then open http://localhost:3000.
+
+| Command | What it does |
+|---|---|
+| `npm run dev` | Development server with hot reload |
+| `npm run lint` | ESLint |
+| `npm run typecheck` | Generates Next.js route types, then runs `tsc` |
+| `npm test` | Unit tests with Vitest |
+| `npm run build` | Production build |
+
+Run lint, type check, tests and build locally before pushing. GitHub Actions will run the same checks on every pull request.
+
+The technical choices are explained in [docs/adr](docs/adr/README.md), the design ones in [docs/design](docs/design/README.md).
 
 ## Branches
 
