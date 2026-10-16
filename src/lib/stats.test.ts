@@ -32,7 +32,7 @@ describe("getWeeklyStats", () => {
     const fromClaude = await doneOn("Fri b", "2026-10-16T09:00:00Z");
     await db.update(tasks).set({ source: "claude" }).where(eq(tasks.id, fromClaude.id));
     await createTask(db, "sam", { title: "Not done", dueDate: "2026-10-16" });
-    await recordFocusSession(db, "sam", 25, null);
+    await recordFocusSession(db, "sam", 25, null, NOW);
 
     const stats = await getWeeklyStats(db, "sam", PARIS, NOW);
     expect(stats.days.map((d) => [d.day, d.done])).toEqual([

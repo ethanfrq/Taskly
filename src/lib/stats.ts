@@ -88,6 +88,12 @@ export async function getWeeklyStats(db: Database, userId: string, timeZone: str
   };
 }
 
-export async function recordFocusSession(db: Database, userId: string, minutes: number, taskId: string | null) {
-  await db.insert(focusSessions).values({ id: crypto.randomUUID(), userId, minutes, taskId });
+export async function recordFocusSession(
+  db: Database,
+  userId: string,
+  minutes: number,
+  taskId: string | null,
+  endedAt: Date = new Date(),
+) {
+  await db.insert(focusSessions).values({ id: crypto.randomUUID(), userId, minutes, taskId, endedAt });
 }

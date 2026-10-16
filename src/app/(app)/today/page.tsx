@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { longDate } from "@/lib/date-label";
 import { getLatestImport, getLists, getTodayTasks } from "@/lib/tasks/service";
-import { timeIn } from "@/lib/time";
+import { getEventsBetween } from "@/lib/events/service";
+import { addDays, startOfDayUtc, timeIn } from "@/lib/time";
 import { getAppContext } from "../context";
 import { TodayView } from "./today-view";
 
@@ -12,21 +13,26 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function TodayPage() {
   const { db, user, prefs, locale, today, startOfToday } = await getAppContext();
-  const [sections, latestImport, lists] = await Promise.all([
+  const [sections, latestImport, lists, events] = await Promise.all([
     getTodayTasks(db, user.id, today, startOfToday),
     getLatestImport(db, user.id, startOfToday),
     getLists(db, user.id),
+    getEventsBetween(db, user.id, new Date(), startOfDayUtc(addDays(today, 1), prefs.timeZone)),
   ]);
   const tasks = [...sections.overdue, ...sections.today, ...sections.done];
   const now = timeIn(prefs.timeZone);
-  const nextTask = sections.today.find((task) => task.dueTime && task.dueTime >= now);
+  // The next thing on the clock: a timed task or a calendar event, whichever comes first.
+  const candidates = [
+    ...sections.today.filter((task) => task.dueTime && task.dueTime >= now).map((task) => ({ time: task.dueTime!, title: task.title })),
+    ...events.filter((e) => !e.allDay).map((e) => ({ time: timeIn(prefs.timeZone, e.startsAt), title: e.title })),
+  ].sort((a, b) => a.time.localeCompare(b.time));
 
   return (
     <TodayView
       tasks={tasks}
       today={today}
       dateLabel={longDate(today, locale)}
-      next={nextTask ? { time: nextTask.dueTime!, title: nextTask.title } : null}
+      next={candidates[0] ?? null}
       latestImport={latestImport}
       listNames={lists.map((l) => l.name)}
     />

@@ -327,6 +327,21 @@ export const en: Dictionary = {
     topLists: "Most active lists",
     empty: "No task done this week yet.",
   },
+  consent: {
+    title: "{client} wants to access your Taskly account",
+    unknownClient: "An app",
+    scopes: {
+      "tasks:read": "See your tasks, lists and agenda",
+      "tasks:write": "Create, edit and check tasks",
+      offline_access: "Stay connected without asking again",
+      email: "Know your email address",
+    },
+    note: "Taskly never receives the content of your emails, only the tasks Claude creates.",
+    signedInAs: "Signed in as {email}",
+    allow: "Allow",
+    deny: "Deny",
+    expired: "This request expired. Start connecting again from Claude.",
+  },
   errors: {
     generic: "Something went wrong. Try again.",
   },

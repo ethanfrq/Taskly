@@ -52,6 +52,8 @@ flowchart LR
   Q[Planificateur de rappels] -- "Web Push" --> A
 ```
 
+Configuration et liste des outils que Claude peut utiliser : [docs/connect-claude.md](docs/connect-claude.md) (en anglais).
+
 Ce que ce choix t'apporte :
 
 - **Ton plan Claude actuel suffit.** Pas de clé API Anthropic, aucun coût à l'usage pour celui qui héberge Taskly.

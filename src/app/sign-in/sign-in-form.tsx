@@ -28,7 +28,7 @@ function errorMessage(code: string | undefined, t: ReturnType<typeof useI18n>["t
   }
 }
 
-export function SignInForm({ next }: { next: string }) {
+export function SignInForm({ next, oauth = false }: { next: string; oauth?: boolean }) {
   const { t } = useI18n();
   const router = useRouter();
   const [step, setStep] = useState<Step>("start");
@@ -44,6 +44,8 @@ export function SignInForm({ next }: { next: string }) {
   }, []);
 
   const finish = () => {
+    // During an OAuth authorization the auth client already follows the redirect back to Claude.
+    if (oauth) return;
     router.replace(next);
     router.refresh();
   };
@@ -100,7 +102,7 @@ export function SignInForm({ next }: { next: string }) {
         setError(errorMessage(err.code, t));
         return;
       }
-      if (passkeys) setStep("passkey-offer");
+      if (passkeys && !oauth) setStep("passkey-offer");
       else finish();
     });
   };

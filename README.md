@@ -52,6 +52,8 @@ flowchart LR
   Q[Reminder scheduler] -- "Web Push" --> A
 ```
 
+Setup and the list of tools Claude can use: [docs/connect-claude.md](docs/connect-claude.md).
+
 What this design gives you:
 
 - **Your existing Claude plan is enough.** No Anthropic API key, no per-use cost for whoever hosts Taskly.

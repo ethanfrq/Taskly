@@ -36,6 +36,13 @@
       "when": 1792187571313,
       "tag": "0004_focus_sessions",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1792187805708,
+      "tag": "0005_events_and_oauth",
+      "breakpoints": true
     }
   ]
 }
