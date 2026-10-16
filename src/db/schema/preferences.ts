@@ -29,6 +29,8 @@ export const preferences = pgTable("preferences", {
   claudeSeenAt: timestamp("claude_seen_at", { withTimezone: true }),
   /** Connectors Claude reported seeing, comma-separated: "gmail,calendar". */
   claudeSources: text("claude_sources"),
+  /** When the user disconnected Claude: access tokens issued before it are refused. */
+  claudeDisconnectedAt: timestamp("claude_disconnected_at", { withTimezone: true }),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
 

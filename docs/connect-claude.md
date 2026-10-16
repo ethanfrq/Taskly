@@ -48,4 +48,5 @@ Tasks, their source link and a short label ("Email from Sarah"). **Never the con
 
 - Claude connects through OAuth 2.1. Access tokens are bound to the MCP endpoint (RFC 8707) and signed by the instance; the endpoint checks the signature, audience, expiry and scopes on every call.
 - Each call only sees the data of the user who authorized it.
-- Revoke access at any time from Claude's connector settings.
+- **Disconnect Claude** in **Settings › Connect Claude** revokes access right away: Taskly deletes the grants (consent, refresh and access tokens) and the MCP endpoint refuses any token issued before that moment, even one that hasn't expired yet. Claude gets `401 invalid_token` and has to go through the consent screen again.
+- Removing the connector in Claude's settings stops Claude from using it, but only Taskly's button revokes the tokens themselves.

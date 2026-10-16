@@ -50,6 +50,13 @@
       "when": 1792188290446,
       "tag": "0006_shared_lists",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1792189887090,
+      "tag": "0007_claude_disconnect",
+      "breakpoints": true
     }
   ]
 }

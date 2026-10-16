@@ -2,7 +2,9 @@ import { IconChevronLeft } from "@tabler/icons-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ClaudeConnect } from "@/components/setup/claude-connect";
+import { DisconnectClaude } from "@/components/setup/disconnect-claude";
 import { HealthCheck } from "@/components/setup/health-check";
+import { hasClaudeAccess } from "@/lib/claude-access";
 import { getBaseUrl } from "@/lib/url";
 import { getAppContext } from "../../context";
 
@@ -12,7 +14,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ClaudeSettingsPage() {
-  const { prefs, t } = await getAppContext();
+  const { db, user, prefs, t } = await getAppContext();
+  const connected = await hasClaudeAccess(db, user.id);
   return (
     <div className="flex flex-col gap-6 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-8">
       <Link href="/settings" className="-ml-1 flex w-fit items-center text-[17px] text-accent-text">
@@ -33,6 +36,7 @@ export default async function ClaudeSettingsPage() {
           claudeSources: prefs.claudeSources?.split(",").filter(Boolean) ?? [],
         }}
       />
+      {connected ? <DisconnectClaude /> : null}
     </div>
   );
 }

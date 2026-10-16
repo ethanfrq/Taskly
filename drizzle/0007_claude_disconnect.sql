@@ -1,0 +1,1 @@
+ALTER TABLE "preferences" ADD COLUMN "claude_disconnected_at" timestamp with time zone;

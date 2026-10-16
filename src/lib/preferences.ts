@@ -20,6 +20,7 @@ export const DEFAULT_PREFERENCES: PreferencesValues = {
   testPushReceivedAt: null,
   claudeSeenAt: null,
   claudeSources: null,
+  claudeDisconnectedAt: null,
 };
 
 /** The user's preferences, or the defaults if they haven't been saved yet. */

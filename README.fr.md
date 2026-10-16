@@ -59,6 +59,7 @@ Ce que ce choix t'apporte :
 - **Ton plan Claude actuel suffit.** Pas de clé API Anthropic, aucun coût à l'usage pour celui qui héberge Taskly.
 - **Taskly ne reçoit jamais tes mails.** Il stocke seulement les tâches créées par Claude, avec un lien vers la source.
 - **Taskly marche aussi sans Claude.** Tâches manuelles, rappels et checklist fonctionnent seuls.
+- **Tu peux couper l'accès de Claude à tout moment.** **Réglages › Connecte Claude › Déconnecter Claude** le retire immédiatement, même pour les jetons pas encore expirés.
 
 | Plan Claude | À savoir |
 |---|---|
