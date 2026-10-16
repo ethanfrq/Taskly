@@ -10,6 +10,20 @@ updates:
     groups:
       minor-and-patch:
         update-types: [minor, patch]
+    ignore:
+      # The types follow the Node.js Taskly runs on (.nvmrc, Vercel): newer
+      # majors describe APIs that don't exist in production. Bump with the runtime.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      # typescript-eslint doesn't support TypeScript 7 yet ("does not support
+      # TS 7.0"), so `npm run lint` breaks. Remove once it does.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      # eslint-config-next bundles plugins (import, jsx-a11y, react) whose peer
+      # range stops at ESLint 9. Lint happens to pass on 10, but unsupported.
+      # Remove once eslint-config-next supports ESLint 10.
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
     directory: /
