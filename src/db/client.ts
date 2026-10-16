@@ -1,3 +1,4 @@
+import { mkdirSync } from "node:fs";
 import { PGlite } from "@electric-sql/pglite";
 import { drizzle as drizzlePglite } from "drizzle-orm/pglite";
 import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
@@ -24,6 +25,9 @@ export function createDatabase(url?: string): AnyDatabase {
   if (url !== "memory://" && process.env.VERCEL) {
     throw new Error("DATABASE_URL is missing. On Vercel, add a Neon Postgres database from the Marketplace (docs/self-hosting.md).");
   }
-  const client = url === "memory://" ? new PGlite() : new PGlite(LOCAL_DATA_DIR);
+  if (url === "memory://") return drizzlePglite(new PGlite(), { schema }) as unknown as AnyDatabase;
+  // PGlite creates its own folder but not the parents: a fresh clone has no .data yet.
+  mkdirSync(LOCAL_DATA_DIR, { recursive: true });
+  const client = new PGlite(LOCAL_DATA_DIR);
   return drizzlePglite(client, { schema }) as unknown as AnyDatabase;
 }
