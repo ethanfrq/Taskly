@@ -105,6 +105,10 @@ Each milestone ships as a series of small pull requests. See the [milestones](ht
 
 Planned: [Next.js](https://nextjs.org) (React, TypeScript), Tailwind CSS, Neon Postgres with Drizzle ORM, Better Auth (passkeys and email codes), an MCP server with OAuth, Web Push with Upstash QStash, hosted on Vercel.
 
+## 🎨 Design
+
+The full iPhone flow is mocked up as a [clickable prototype](https://htmlpreview.github.io/?https://github.com/ethanfrq/Taskly/blob/main/docs/design/prototype.html), from the web page to the evening review. Every design choice and its reason is in [docs/design](docs/design/README.md).
+
 ## 🤝 Contributing
 
 Contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) first: every change goes through its own pull request with a clear description, and CI must be green before merging.

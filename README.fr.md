@@ -105,6 +105,10 @@ Chaque étape arrive en une série de petites pull requests. L'avancement est vi
 
 Prévues : [Next.js](https://nextjs.org) (React, TypeScript), Tailwind CSS, Neon Postgres avec Drizzle ORM, Better Auth (passkeys et codes par email), un serveur MCP avec OAuth, Web Push avec Upstash QStash, hébergé sur Vercel.
 
+## 🎨 Design
+
+Tout le parcours iPhone existe sous forme de [prototype cliquable](https://htmlpreview.github.io/?https://github.com/ethanfrq/Taskly/blob/main/docs/design/prototype.html), de la page web au bilan du soir. Chaque choix de design et sa raison sont dans [docs/design](docs/design/README.md) (en anglais).
+
 ## 🤝 Contribuer
 
 Les contributions sont les bienvenues. Lis d'abord [CONTRIBUTING.md](CONTRIBUTING.md) (en anglais) : chaque modification passe par sa propre pull request avec une description claire, et la CI doit être verte avant le merge.
