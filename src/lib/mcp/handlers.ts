@@ -1,7 +1,7 @@
 import { and, eq, isNull } from "drizzle-orm";
 import type { Database } from "@/db";
 import { tasks } from "@/db/schema";
-import { getEventsBetween, upsertEvents } from "@/lib/events/service";
+import { getEventsBetween, pruneEvents, removeEvents, upsertEvents } from "@/lib/events/service";
 import { getPreferences, savePreferences } from "@/lib/preferences";
 import type { Recurrence } from "@/lib/tasks/recurrence";
 import {
@@ -67,6 +67,7 @@ export async function getToday(ctx: McpContext) {
     to_do: sections.today.map(taskOut),
     done: sections.done.map(taskOut),
     events: todayEvents.map((e) => ({
+      id: e.externalId ?? e.id,
       title: e.title,
       start: timeIn(prefs.timeZone, e.startsAt),
       end: e.endsAt ? timeIn(prefs.timeZone, e.endsAt) : null,
@@ -182,11 +183,24 @@ export async function listLists(ctx: McpContext) {
   return { lists: lists.map((l) => ({ name: l.name, open_tasks: l.openCount })) };
 }
 
-export async function addEvents(
-  ctx: McpContext,
-  input: { title: string; start: string; end?: string; all_day?: boolean; location?: string; url?: string; id?: string; kind?: SourceKind }[],
-) {
-  const count = await upsertEvents(
+export type NewEvent = {
+  title: string;
+  start: string;
+  end?: string;
+  all_day?: boolean;
+  location?: string;
+  url?: string;
+  id?: string;
+  kind?: SourceKind;
+};
+
+/**
+ * Saves events from the user's calendars. With `replaceDay`, the list is the
+ * whole day: events Taskly had for that day and Claude didn't resend are
+ * removed, so a cancelled meeting doesn't linger in the agenda.
+ */
+export async function addEvents(ctx: McpContext, input: NewEvent[], replaceDay?: string) {
+  const ids = await upsertEvents(
     ctx.db,
     ctx.userId,
     input.map((e) => ({
@@ -200,7 +214,23 @@ export async function addEvents(
       sourceKind: e.kind ?? "calendar",
     })),
   );
-  return { saved: count };
+  let removed = 0;
+  if (replaceDay) {
+    const { timeZone } = await getPreferences(ctx.db, ctx.userId);
+    removed = await pruneEvents(
+      ctx.db,
+      ctx.userId,
+      startOfDayUtc(replaceDay, timeZone),
+      startOfDayUtc(addDays(replaceDay, 1), timeZone),
+      ids,
+    );
+  }
+  return { saved: ids.length, removed };
+}
+
+/** Removes events the user says were cancelled, by the ids get_today returns. */
+export async function removeCalendarEvents(ctx: McpContext, ids: string[]) {
+  return { removed: await removeEvents(ctx.db, ctx.userId, ids) };
 }
 
 /** "Taskly, check my connections": Claude lists the connectors it can use. */
