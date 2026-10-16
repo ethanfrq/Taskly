@@ -1,6 +1,7 @@
 "use client";
 
-import { IconChevronLeft, IconExternalLink, IconSparkles } from "@tabler/icons-react";
+import { IconChevronLeft, IconExternalLink, IconSparkles, IconTarget } from "@tabler/icons-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { CheckCircle } from "@/components/tasks/check-circle";
@@ -266,6 +267,16 @@ export function TaskEditor({ task, lists, today }: { task: TaskDetail; lists: Li
           </li>
         </GroupList>
       </Group>
+
+      {!task.completedAt && !task.parentId ? (
+        <Link
+          href={`/focus?task=${task.id}`}
+          className="flex items-center justify-center gap-2 rounded-xl bg-card px-4 py-3 text-[15px] font-medium text-accent-text"
+        >
+          <IconTarget size={20} stroke={1.8} aria-hidden />
+          {t.focus.title}
+        </Link>
+      ) : null}
 
       <Button
         variant="destructive"
