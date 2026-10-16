@@ -220,7 +220,16 @@ export function SignInForm({ next }: { next: string }) {
           {t.auth.sendCode}
         </Button>
       </div>
-      <p className="mt-auto pt-8 text-center text-[12px] text-text-secondary">{t.auth.legal}</p>
+      <p className="mt-auto pt-8 text-center text-[12px] text-text-secondary">
+        {t.auth.legal}{" "}
+        <a href="/terms" className="text-accent-text">
+          {t.privacy.terms}
+        </a>
+        {" · "}
+        <a href="/privacy" className="text-accent-text">
+          {t.privacy.policy}
+        </a>
+      </p>
     </form>
   );
 }
