@@ -1,6 +1,7 @@
 import { and, asc, count, desc, eq, gte, inArray, isNotNull, isNull, lt, lte, max, or, sql } from "drizzle-orm";
 import type { Database } from "@/db";
 import { type List, type SourceKind, type Task, lists, tags, taskTags, tasks } from "@/db/schema";
+import { isRecurrence, nextOccurrence } from "./recurrence";
 
 /*
  * Task and list data access. Every function takes the user id and only
@@ -140,21 +141,58 @@ export async function updateTask(db: Database, userId: string, id: string, patch
   return task;
 }
 
-/** Checks or unchecks a task. Returns the task as saved. */
+/**
+ * Checks or unchecks a task. Checking a recurring task creates its next
+ * occurrence, which takes over the rule (so unchecking can't duplicate it).
+ * `today` is the user's local day, used to catch up after a late check.
+ */
 export async function setCompleted(
   db: Database,
   userId: string,
   id: string,
   done: boolean,
   now: Date = new Date(),
-): Promise<Task> {
-  await ownedTask(db, userId, id);
+  today?: string,
+): Promise<{ task: Task; next: Task | null }> {
+  const current = await ownedTask(db, userId, id);
+  const recurring = done && !current.completedAt && current.recurrence && isRecurrence(current.recurrence);
   const [task] = await db
     .update(tasks)
-    .set({ completedAt: done ? now : null, updatedAt: now })
+    .set({ completedAt: done ? now : null, updatedAt: now, ...(recurring && { recurrence: null }) })
     .where(and(eq(tasks.id, id), eq(tasks.userId, userId)))
     .returning();
-  return task;
+  if (!recurring || !current.recurrence || !isRecurrence(current.recurrence)) return { task, next: null };
+
+  const anchor = current.dueDate ?? today ?? now.toISOString().slice(0, 10);
+  const after = today && today > anchor ? today : anchor;
+  const tagRows = await db
+    .select({ name: tags.name })
+    .from(taskTags)
+    .innerJoin(tags, eq(tags.id, taskTags.tagId))
+    .where(eq(taskTags.taskId, id));
+  const next = await createTask(
+    db,
+    userId,
+    {
+      title: current.title,
+      notes: current.notes,
+      listId: current.listId,
+      dueDate: nextOccurrence(current.recurrence, anchor, after),
+      dueTime: current.dueTime,
+      priority: current.priority,
+      recurrence: current.recurrence,
+      tags: tagRows.map((t) => t.name),
+    },
+    { source: current.source, sourceKind: current.sourceKind, sourceUrl: current.sourceUrl, sourceLabel: current.sourceLabel },
+  );
+  return { task, next };
+}
+
+/** Finds one of the user's lists by name, ignoring case and spaces. */
+export async function findListByName(db: Database, userId: string, name: string): Promise<List | null> {
+  const wanted = name.toLowerCase().replace(/\s+/g, "");
+  const rows = await db.select().from(lists).where(eq(lists.ownerId, userId));
+  return rows.find((l) => l.name.toLowerCase().replace(/\s+/g, "") === wanted) ?? null;
 }
 
 export async function deleteTask(db: Database, userId: string, id: string): Promise<void> {

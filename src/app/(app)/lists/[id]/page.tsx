@@ -16,7 +16,8 @@ export default async function ListPage({ params }: PageProps<"/lists/[id]">) {
   const { db, user, t, today } = await getAppContext();
   const { id } = await params;
   const inbox = id === "inbox";
-  const list = inbox ? null : (await getLists(db, user.id)).find((l) => l.id === id);
+  const allLists = await getLists(db, user.id);
+  const list = inbox ? null : allLists.find((l) => l.id === id);
   if (!inbox && !list) notFound();
   const tasks = await getListTasks(db, user.id, inbox ? null : id).catch((error) => {
     if (error instanceof NotFoundError) notFound();
@@ -28,6 +29,7 @@ export default async function ListPage({ params }: PageProps<"/lists/[id]">) {
       title={list?.name ?? t.lists.inbox}
       tasks={tasks}
       today={today}
+      listNames={allLists.map((l) => l.name)}
     />
   );
 }

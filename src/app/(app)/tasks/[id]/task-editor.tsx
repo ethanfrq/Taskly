@@ -140,6 +140,23 @@ export function TaskEditor({ task, lists, today }: { task: TaskDetail; lists: Li
               ))}
             </select>
           </label>
+          {task.dueDate ? (
+            <label className={rowClass}>
+              {t.task.recurrenceLabel}
+              <select
+                value={task.recurrence?.startsWith("weekly:") ? "custom" : (task.recurrence ?? "")}
+                onChange={(e) => e.target.value !== "custom" && save({ recurrence: e.target.value || null })}
+                className={`${inputClass} appearance-none`}
+              >
+                <option value="">{t.task.recurrence.none}</option>
+                <option value="daily">{t.task.recurrence.daily}</option>
+                <option value="weekdays">{t.task.recurrence.weekdays}</option>
+                <option value="weekly">{t.task.recurrence.weekly}</option>
+                <option value="monthly">{t.task.recurrence.monthly}</option>
+                {task.recurrence?.startsWith("weekly:") ? <option value="custom">{t.task.recurrence.custom}</option> : null}
+              </select>
+            </label>
+          ) : null}
           <div className={rowClass}>
             <span id="priority-label">{t.task.priorityLabel}</span>
             <div role="radiogroup" aria-labelledby="priority-label" className="flex rounded-[9px] bg-fill p-0.5">

@@ -14,11 +14,20 @@ export function TaskRow({
   today,
   onToggle,
   showDate = false,
+  itemRef,
+  style,
+  className = "",
+  trailing,
 }: {
   task: TaskView;
   today: string;
   onToggle: (task: TaskView) => void;
   showDate?: boolean;
+  /** For drag and drop: the row element, its style and an extra control. */
+  itemRef?: (node: HTMLLIElement | null) => void;
+  style?: React.CSSProperties;
+  className?: string;
+  trailing?: React.ReactNode;
 }) {
   const { locale, t } = useI18n();
   const done = !!task.completedAt;
@@ -66,7 +75,7 @@ export function TaskRow({
   for (const tag of task.tagNames) meta.push(<span key={`#${tag}`}>#{tag}</span>);
 
   return (
-    <li className="flex items-start gap-3 px-4 py-2.5">
+    <li ref={itemRef} style={style} className={`flex items-start gap-3 bg-card px-4 py-2.5 ${className}`}>
       <div className="pt-0.5">
         <CheckCircle
           checked={done}
@@ -94,6 +103,7 @@ export function TaskRow({
           {"!".repeat(task.priority)}
         </span>
       ) : null}
+      {trailing}
     </li>
   );
 }
