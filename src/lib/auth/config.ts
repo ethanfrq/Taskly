@@ -1,11 +1,21 @@
+import { cimd } from "@better-auth/cimd";
+import { fetchClientMetadataResource } from "@better-auth/cimd/node";
+import { mcp } from "@better-auth/mcp";
 import { passkey } from "@better-auth/passkey";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
-import { emailOTP } from "better-auth/plugins";
+import { emailOTP, jwt } from "better-auth/plugins";
 import { LOCALE_COOKIE, type Locale, isLocale, negotiateLocale } from "@/i18n/config";
 import type { Database } from "@/db";
 import * as schema from "@/db/schema";
+
+/** OAuth scopes Claude asks for when it connects (docs/connect-claude.md). */
+export const MCP_SCOPES = ["tasks:read", "tasks:write"] as const;
+const OAUTH_SCOPES = ["openid", "profile", "email", "offline_access", ...MCP_SCOPES];
+
+/** The MCP endpoint, also the OAuth resource tokens are bound to (RFC 8707). */
+export const mcpResource = (baseURL: string) => `${new URL(baseURL).origin}/api/mcp`;
 
 export type AuthOptions = {
   db: Database;
@@ -54,6 +64,22 @@ export function createAuth({ db, baseURL, secret, sendSignInCode, nextjs = true 
         rpName: "Taskly",
         origin: url.origin,
       }),
+      // Taskly as an OAuth 2.1 authorization server for Claude's MCP connector (ADR 0001, 0007).
+      jwt(),
+      mcp({
+        resource: mcpResource(baseURL),
+        loginPage: "/sign-in",
+        consentPage: "/oauth/consent",
+        scopes: OAUTH_SCOPES,
+        clientRegistrationDefaultScopes: OAUTH_SCOPES,
+        clientRegistrationAllowedScopes: OAUTH_SCOPES,
+        // Claude registers itself: Client ID Metadata Documents (below) or Dynamic Client Registration.
+        allowDynamicClientRegistration: true,
+        allowUnauthenticatedClientRegistration: true,
+        // Accept native and localhost callbacks too (MCP Inspector, desktop clients).
+        clientRegistrationDefaultApplicationType: "infer",
+      }),
+      cimd({ fetchClientMetadataResource, metadataProfile: "mcp-2026-07-28" }),
       ...(nextjs ? [nextCookies()] : []),
     ],
   });

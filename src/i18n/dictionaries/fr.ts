@@ -329,6 +329,21 @@ export const fr = {
     topLists: "Listes les plus actives",
     empty: "Pas encore de tâche faite cette semaine.",
   },
+  consent: {
+    title: "{client} veut accéder à ton compte Taskly",
+    unknownClient: "Une application",
+    scopes: {
+      "tasks:read": "Voir tes tâches, tes listes et ton agenda",
+      "tasks:write": "Créer, modifier et cocher des tâches",
+      offline_access: "Rester connecté sans te le redemander",
+      email: "Connaître ton adresse email",
+    },
+    note: "Taskly ne reçoit jamais le contenu de tes mails, seulement les tâches que Claude crée.",
+    signedInAs: "Connecté : {email}",
+    allow: "Autoriser",
+    deny: "Refuser",
+    expired: "Cette demande a expiré. Recommence la connexion depuis Claude.",
+  },
   errors: {
     generic: "Quelque chose n'a pas marché. Réessaie.",
   },

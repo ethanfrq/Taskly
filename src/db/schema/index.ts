@@ -4,3 +4,5 @@ export * from "./tasks";
 export * from "./push";
 export * from "./reminders";
 export * from "./focus";
+export * from "./events";
+export * from "./oauth";
