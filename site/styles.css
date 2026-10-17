@@ -241,10 +241,21 @@ p {
 }
 
 .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   margin-bottom: 18px;
   color: var(--accent-text);
   font-size: 15px;
   font-weight: 600;
+}
+
+/* The app icon is a graphite square: a hairline keeps it visible on black. */
+.eyebrow-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px var(--line);
 }
 
 .hero h1 {
@@ -597,7 +608,24 @@ p {
 /* Privacy: manifesto */
 
 .manifesto {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   text-align: center;
+}
+
+/* The mark, huge and faint, behind the headline. */
+.watermark {
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  left: 50%;
+  width: min(560px, 90vw);
+  height: auto;
+  translate: -50% -50%;
+  color: var(--text);
+  opacity: 0.05;
+  pointer-events: none;
 }
 
 .manifesto h2 {
@@ -662,6 +690,101 @@ p {
 
 .code .comment {
   color: var(--muted);
+}
+
+/* FAQ: native disclosure, no script */
+
+.faq {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  align-items: start;
+  gap: clamp(32px, 5vw, 72px);
+}
+
+.faq-list {
+  border-top: 1px solid var(--line);
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--line);
+}
+
+.faq-item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-block: 22px;
+  cursor: pointer;
+  list-style: none;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item summary:focus-visible {
+  border-radius: 6px;
+  outline-offset: 4px;
+}
+
+.faq-icon {
+  color: var(--accent-text);
+  transition: rotate 0.25s var(--ease);
+}
+
+.faq-item[open] .faq-icon {
+  rotate: 45deg;
+}
+
+.faq-item p {
+  max-width: 62ch;
+  margin: 0 0 24px;
+  color: var(--muted);
+}
+
+.faq-item a {
+  color: var(--accent-text);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.faq-item a:hover {
+  text-decoration: underline;
+}
+
+/* Closing: the app icon, one line, the two ways in. */
+
+.closing .wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.closing-icon {
+  width: 112px;
+  height: 112px;
+  margin-bottom: 32px;
+  border-radius: 25px;
+  box-shadow:
+    0 0 0 1px var(--line),
+    var(--shadow);
+}
+
+.closing h2 {
+  max-width: none;
+}
+
+.closing .section-lead {
+  margin-inline: auto;
+  margin-bottom: 32px;
+}
+
+.closing .ctas {
+  justify-content: center;
 }
 
 /* Creator and footer */
@@ -784,7 +907,8 @@ p {
     display: none;
   }
 
-  .open {
+  .open,
+  .faq {
     grid-template-columns: 1fr;
   }
 
