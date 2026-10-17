@@ -92,9 +92,16 @@ Every failing item says how to fix it, for example "Slack connector missing in C
 
 **Decision.** Taskly only controls the text and icon of notifications. Android notifications get action buttons (Done, In 15 min, Tomorrow). iOS web push doesn't support them, so on iPhone those actions live inside the app.
 
-## D-011 · Open question: who starts Claude in the morning?
+## D-011 · Who starts Claude in the morning? One tap, from Taskly
 
-With the MCP architecture, Taskly can't trigger Claude. The current idea is that the 07:30 briefing notification opens Claude with "Prepare my day in Taskly" already typed, so it takes one tap. This has to be verified in v0.2 before it's promised anywhere.
+**Context.** With the MCP architecture, Taskly can't trigger Claude (ADR 0001), so tasks can't appear on their own.
+
+**Decision.** Taskly opens Claude with the request already typed, and Claude answers it through the connector:
+- The morning briefing notification, when Claude is connected but hasn't come by yet that day, opens `claude.ai/new?q=Prépare ma journée dans Taskly`. Its body shows the sentence, and Android gets an "Open Taskly" button for the app instead.
+- Today has a "Prepare my day" tile (or "Refresh with Claude" once Claude came by) that does the same and also copies the sentence.
+- Today refreshes when the user comes back, so Claude's tasks show up without a reload.
+
+**Limits.** claude.ai's `?q=` prefill isn't documented and may stop working; the Claude iPhone app may open without the sentence. That's why the sentence is always visible (and copied from Today; a notification can't write to the clipboard).
 
 ## D-012 · A monochrome brand: the color belongs to the user
 

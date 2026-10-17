@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useI18n } from "@/i18n/client";
 import { format } from "@/i18n/format";
+import { claudePromptUrl } from "@/lib/claude-link";
 
 /** How long Today keeps checking for Claude's tasks after the user sent them to Claude. */
 const WATCH_MS = 3 * 60_000;
@@ -64,7 +65,7 @@ export function PrepareWithClaude({ claude, className = "" }: { claude: ClaudeSt
   return (
     <div className={className}>
       <a
-        href={`https://claude.ai/new?q=${encodeURIComponent(prompt)}`}
+        href={claudePromptUrl(prompt)}
         target="_blank"
         rel="noopener noreferrer"
         onClick={send}

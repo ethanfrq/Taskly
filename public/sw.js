@@ -117,14 +117,23 @@ self.addEventListener("notificationclick", (event) => {
     return;
   }
 
+  // The morning briefing opens Claude; its "Open Taskly" button opens the app instead.
+  const target = event.action === "open-app" ? "/today" : url;
+
+  // Another site (claude.ai) opens in the browser or its own app, never inside Taskly's window.
+  if (new URL(target, self.location.origin).origin !== self.location.origin) {
+    event.waitUntil(self.clients.openWindow(target));
+    return;
+  }
+
   event.waitUntil(
     self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((windows) => {
       const existing = windows.find((w) => new URL(w.url).origin === self.location.origin);
       if (existing) {
-        existing.navigate(url);
+        existing.navigate(target);
         return existing.focus();
       }
-      return self.clients.openWindow(url);
+      return self.clients.openWindow(target);
     }),
   );
 });

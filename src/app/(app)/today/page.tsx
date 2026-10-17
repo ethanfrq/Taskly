@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { longDate } from "@/lib/date-label";
 import { getLatestImport, getLists, getTodayTasks } from "@/lib/tasks/service";
+import { claudeCameToday } from "@/lib/claude-link";
 import { getEventsBetween } from "@/lib/events/service";
 import { getLatestRefresh } from "@/lib/tasks/refresh";
 import { addDays, startOfDayUtc, timeIn } from "@/lib/time";
@@ -38,7 +39,7 @@ export default async function TodayPage() {
       latestImport={latestImport}
       latestRefresh={latestRefresh}
       listNames={lists.map((l) => l.name)}
-      claude={{ connected: !!prefs.claudeSeenAt, preparedToday: !!prefs.claudeSeenAt && prefs.claudeSeenAt >= startOfToday }}
+      claude={{ connected: !!prefs.claudeSeenAt, preparedToday: claudeCameToday(prefs.claudeSeenAt, startOfToday) }}
     />
   );
 }

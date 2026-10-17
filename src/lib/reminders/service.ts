@@ -5,6 +5,7 @@ import type { Dictionary } from "@/i18n/dictionaries/fr";
 import { en } from "@/i18n/dictionaries/en";
 import { fr } from "@/i18n/dictionaries/fr";
 import { format, plural } from "@/i18n/format";
+import { claudeCameToday, claudePromptUrl } from "@/lib/claude-link";
 import { type PreferencesValues, getPreferences } from "@/lib/preferences";
 import type { PushPayload, SendResult } from "@/lib/push/send";
 import { getTodayTasks } from "@/lib/tasks/service";
@@ -171,17 +172,29 @@ export async function fireReminder(deps: ReminderDeps, reminderId: string): Prom
     }
   } else if (reminder.kind === "briefing") {
     const first = sections.today.find((x) => x.dueTime);
-    payload = {
-      title: open.length ? plural(prefs.locale === "en" ? "en" : "fr", open.length, t.reminders.briefingTitle) : t.reminders.briefingEmpty,
-      body: first
-        ? format(t.reminders.briefingFirst, { time: first.dueTime!, title: first.title })
-        : prefs.claudeSeenAt
-          ? t.reminders.briefingClaude
-          : t.reminders.briefingOpen,
-      url: "/today",
-      tag: "briefing",
-      badge,
-    };
+    const title = open.length ? plural(prefs.locale === "en" ? "en" : "fr", open.length, t.reminders.briefingTitle) : t.reminders.briefingEmpty;
+    // Claude is connected but hasn't prepared today yet: one tap opens it with the request typed (D-011).
+    const askClaude = !!prefs.claudeSeenAt && !claudeCameToday(prefs.claudeSeenAt, startOfDayUtc(todayIn(prefs.timeZone), prefs.timeZone));
+    payload = askClaude
+      ? {
+          title,
+          body: format(t.reminders.briefingPrepare, { prompt: t.today.preparePrompt }),
+          url: claudePromptUrl(t.today.preparePrompt),
+          tag: "briefing",
+          badge,
+          actions: [{ action: "open-app", title: t.reminders.actionOpenApp }],
+        }
+      : {
+          title,
+          body: first
+            ? format(t.reminders.briefingFirst, { time: first.dueTime!, title: first.title })
+            : prefs.claudeSeenAt
+              ? t.reminders.briefingClaude
+              : t.reminders.briefingOpen,
+          url: "/today",
+          tag: "briefing",
+          badge,
+        };
     await insertReminder(deps, { userId: reminder.userId, kind: "briefing", dueAt: nextDailyAt(prefs.briefingTime, prefs.timeZone, now) });
   } else {
     const left = open.length;
