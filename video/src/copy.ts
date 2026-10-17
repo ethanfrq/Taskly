@@ -2,6 +2,8 @@ export type Lang = "fr" | "en";
 
 export type SourceKind = "gmail" | "outlook" | "calendar" | "slack" | "teams" | "notion";
 
+export type OutroCopy = { tagline: string; url: string; small: string; disclaimer: string };
+
 export type Copy = {
   hook: { eyebrow: string; counts: { n: number; label: string }[]; punch: string };
   chaos: { line1: string; line2: string; cards: { kind: SourceKind; from: string; text: string; when: string }[] };
@@ -13,7 +15,7 @@ export type Copy = {
     d: { title: string; sub: string };
   };
   values: { title: string; pills: string[] };
-  outro: { tagline: string; url: string; small: string; disclaimer: string };
+  outro: OutroCopy;
   phone: {
     date: string;
     title: string;

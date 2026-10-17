@@ -1,25 +1,14 @@
-import {
-  IconBellRinging,
-  IconCalendar,
-  IconCalendarEvent,
-  IconChartBar,
-  IconCheck,
-  IconCirclePlus,
-  IconGripVertical,
-  IconList,
-  IconSettings,
-  IconSparkles,
-  IconSun,
-  IconTarget,
-} from "@tabler/icons-react";
-import { Easing, interpolate, spring, useVideoConfig } from "remotion";
-import { Monogram } from "../brand/Logo";
+import { IconCalendarEvent, IconChartBar, IconCheck, IconCirclePlus, IconGripVertical, IconSparkles, IconTarget } from "@tabler/icons-react";
+import { spring, useVideoConfig } from "remotion";
 import type { Copy } from "../copy";
 import { progress } from "../motion";
 import { colors, font } from "../theme";
+import { DropIn, NotificationCard } from "./NotificationCard";
+import { PhoneFrame } from "./PhoneFrame";
 import { SourceIcon } from "./SourceIcon";
+import { TabBar } from "./TabBar";
 
-export const PHONE = { width: 424, height: 890, bezel: 12 } as const;
+export { PHONE } from "./PhoneFrame";
 
 export type PhoneTimeline = {
   bannerAt: number;
@@ -28,13 +17,9 @@ export type PhoneTimeline = {
   notifAt: number;
 };
 
-const TAB_ICONS = [IconSun, IconCalendar, IconList, IconSettings];
-
 /** The Today screen (design D-001), redrawn with the app's tokens and animated by frame. */
 export function Phone({ copy, frame, t }: { copy: Copy["phone"]; frame: number; t: PhoneTimeline }) {
   const { fps } = useVideoConfig();
-  const screenW = PHONE.width - PHONE.bezel * 2;
-  const screenH = PHONE.height - PHONE.bezel * 2;
 
   const total = copy.tasks.length;
   const ticked = t.ticksAt.map((at) => progress(frame, at, 14)).reduce((a, b) => a + b, 0);
@@ -45,45 +30,7 @@ export function Phone({ copy, frame, t }: { copy: Copy["phone"]; frame: number; 
   const banner = progress(frame, t.bannerAt, 18);
 
   return (
-    <div
-      style={{
-        width: PHONE.width,
-        height: PHONE.height,
-        borderRadius: 66,
-        background: "#0b0b0c",
-        boxShadow: "0 0 0 1.5px #3a3a3c, 0 40px 90px rgba(0,0,0,0.6)",
-        padding: PHONE.bezel,
-        position: "relative",
-        fontFamily: font.text,
-        color: colors.text,
-      }}
-    >
-      <div
-        style={{
-          width: screenW,
-          height: screenH,
-          borderRadius: 54,
-          background: colors.bg,
-          overflow: "hidden",
-          position: "relative",
-        }}
-      >
-        {/* Dynamic island */}
-        <div
-          style={{
-            position: "absolute",
-            top: 12,
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: 118,
-            height: 34,
-            borderRadius: 999,
-            background: "#000",
-            boxShadow: "0 0 0 1px #0b0b0c",
-            zIndex: 3,
-          }}
-        />
-
+    <PhoneFrame>
         <div style={{ padding: "58px 18px 0" }}>
           <div style={{ fontSize: 13, color: colors.textSecondary, marginBottom: 2 }}>{copy.date}</div>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -229,37 +176,12 @@ export function Phone({ copy, frame, t }: { copy: Copy["phone"]; frame: number; 
           </div>
         </div>
 
-        {/* Tab bar */}
-        <div
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            height: 84,
-            borderTop: `1px solid ${colors.separator}`,
-            background: "rgba(0,0,0,0.9)",
-            display: "flex",
-            justifyContent: "space-around",
-            alignItems: "flex-start",
-            paddingTop: 10,
-          }}
-        >
-          {copy.tabs.map((label, i) => {
-            const Icon = TAB_ICONS[i];
-            const active = i === 0;
-            return (
-              <div key={label} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4, color: active ? colors.accent : colors.textSecondary }}>
-                <Icon size={24} stroke={active ? 2 : 1.7} />
-                <div style={{ fontSize: 11 }}>{label}</div>
-              </div>
-            );
-          })}
-        </div>
+        <TabBar labels={copy.tabs} active={0} />
 
-        <Notification copy={copy.notification} frame={frame - t.notifAt} width={screenW} />
-      </div>
-    </div>
+        <DropIn frame={frame - t.notifAt}>
+          <NotificationCard app={copy.notification.app} when={copy.notification.when} title={copy.notification.title} body={copy.notification.body} bellFrame={frame - t.notifAt} />
+        </DropIn>
+    </PhoneFrame>
   );
 }
 
@@ -274,61 +196,3 @@ const tile: React.CSSProperties = {
   height: 94,
   boxSizing: "border-box",
 };
-
-/** An iOS banner notification dropping over the screen. */
-function Notification({ copy, frame, width }: { copy: Copy["phone"]["notification"]; frame: number; width: number }) {
-  const { fps } = useVideoConfig();
-  if (frame < 0) return null;
-  const drop = spring({ frame, fps, config: { damping: 18, stiffness: 140, mass: 0.9 } });
-  const y = interpolate(drop, [0, 1], [-150, 14]);
-  const bell = interpolate(frame, [4, 10, 16, 22], [0, -14, 10, 0], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-    easing: Easing.inOut(Easing.sin),
-  });
-  return (
-    <div
-      style={{
-        position: "absolute",
-        top: 0,
-        left: 12,
-        width: width - 24,
-        transform: `translateY(${y}px)`,
-        zIndex: 5,
-        borderRadius: 24,
-        background: "rgba(44,44,46,0.92)",
-        boxShadow: "0 18px 50px rgba(0,0,0,0.55)",
-        padding: "12px 16px 14px 14px",
-        display: "flex",
-        gap: 12,
-        alignItems: "center",
-        backdropFilter: "blur(20px)",
-      }}
-    >
-      <div
-        style={{
-          width: 40,
-          height: 40,
-          borderRadius: 11,
-          background: colors.graphite,
-          color: colors.ivory,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flex: "none",
-        }}
-      >
-        <Monogram style={{ width: 25, height: 25 }} />
-      </div>
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: colors.textSecondary, letterSpacing: 0.4 }}>
-          <span style={{ fontWeight: 600 }}>{copy.app}</span>
-          <span>{copy.when}</span>
-        </div>
-        <div style={{ fontSize: 15, fontWeight: 600, marginTop: 1, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{copy.title}</div>
-        <div style={{ fontSize: 14, color: colors.textSecondary }}>{copy.body}</div>
-      </div>
-      <IconBellRinging size={22} stroke={1.8} color={colors.accent} style={{ transform: `rotate(${bell}deg)`, flex: "none" }} />
-    </div>
-  );
-}

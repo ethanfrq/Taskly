@@ -88,6 +88,19 @@ Taskly est une **todo list du jour open source** que tu installes sur ton télé
 </tr>
 </table>
 
+## 🎬 En vidéo
+
+Quatre courts films, chacun en paysage et en portrait. GitHub les lit dans sa visionneuse ; ils tournent aussi sur le [site](https://taskly-day.vercel.app/fr).
+
+| | Film | Paysage | Portrait |
+|---|---|---|---|
+| 🎬 | **Vue d'ensemble**, 30 s : la pile du matin, une phrase à Claude, la liste se remplit. | [▶ 16:9](site/assets/taskly-30s-fr.mp4) | [▶ 9:16](site/assets/taskly-30s-fr-vertical.mp4) |
+| 🔔 | **Les rappels**, 21 s : à la minute, les relances, les heures calmes, le briefing qui ouvre Claude. | [▶ 16:9](site/assets/taskly-reminders-fr.mp4) | [▶ 9:16](site/assets/taskly-reminders-fr-vertical.mp4) |
+| 🔒 | **Des tâches, pas des mails**, 20 s : qui lit quoi, MCP, pas de clé API, annuler et déconnecter. | [▶ 16:9](site/assets/taskly-privacy-fr.mp4) | [▶ 9:16](site/assets/taskly-privacy-fr-vertical.mp4) |
+| 🌙 | **Ta journée**, 21 s : langage naturel, une seule timeline, le bilan du soir, la semaine. | [▶ 16:9](site/assets/taskly-day-fr.mp4) | [▶ 9:16](site/assets/taskly-day-fr-vertical.mp4) |
+
+<sub>Versions anglaises : remplace <code>-fr</code> par <code>-en</code> dans le nom du fichier, ou ouvre le <a href="README.md">README anglais</a>. Réalisés avec le <a href="video/README.md">projet Remotion dans <code>video/</code></a>.</sub>
+
 <a id="demarrer"></a>
 
 ## 🚀 Démarrer

@@ -43,7 +43,7 @@ The PNG icons, the favicon and the social preview are rasterized from the offici
 
 ## Video
 
-[`video/`](../../video/README.md) holds the 30-second motion design video (French and English, landscape and portrait) as a Remotion project: it draws the logo from the same paths and the screens with the app's tokens, so it never drifts from the brand. Render it with `npm run render` in that folder; the files land in [`site/assets/`](../../site/assets), where the landing page plays them and the README links to them.
+[`video/`](../../video/README.md) holds the motion design films (the 30-second overview and three feature films, each in French and English, landscape and portrait) as a Remotion project: it draws the logo from the same paths and the screens with the app's tokens, so it never drifts from the brand. Render it with `npm run render` in that folder; the files land in [`site/assets/`](../../site/assets), where the landing page plays them and the README links to them.
 
 ## GitHub social preview
 

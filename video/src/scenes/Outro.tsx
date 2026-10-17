@@ -1,12 +1,12 @@
 import { AbsoluteFill, interpolate, spring, useVideoConfig } from "remotion";
 import { LogoParts } from "../brand/Logo";
-import type { Copy } from "../copy";
+import type { OutroCopy } from "../copy";
 import { progress, Rise, useLayout, useSceneFrame } from "../motion";
 import { colors, font } from "../theme";
 import { Body, Display } from "../ui/text";
 
 /** Logo, tagline, where to go. */
-export function Outro({ c }: { c: Copy }) {
+export function Outro({ c }: { c: { outro: OutroCopy } }) {
   const frame = useSceneFrame();
   const { fps } = useVideoConfig();
   const { portrait } = useLayout();

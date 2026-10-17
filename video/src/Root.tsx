@@ -1,17 +1,30 @@
+import type { ComponentType } from "react";
 import { Composition } from "remotion";
-import { DURATION, FPS, Video } from "./Video";
+import type { Lang } from "./copy";
+import { FPS, filmDuration } from "./film";
+import { DayFilm, DAY } from "./films/day";
+import { PrivacyFilm, PRIVACY } from "./films/privacy";
+import { RemindersFilm, REMINDERS } from "./films/reminders";
+import { PROMO, Video } from "./Video";
 
-const landscape = { component: Video, durationInFrames: DURATION, fps: FPS, width: 1920, height: 1080 } as const;
-const portrait = { ...landscape, width: 1080, height: 1920 } as const;
+const landscape = { fps: FPS, width: 1920, height: 1080 } as const;
+const portrait = { fps: FPS, width: 1080, height: 1920 } as const;
 
-/** Landscape for the web, YouTube and LinkedIn; portrait for Reels, TikTok and Shorts. */
+/** Every film comes in four: French and English, landscape (web, YouTube, LinkedIn) and portrait (Reels, TikTok, Shorts). */
+function four(id: string, component: ComponentType<{ lang: Lang }>, durationInFrames: number) {
+  return (["fr", "en"] as const).flatMap((lang) => [
+    <Composition key={`${id}-${lang}`} id={`${id}${lang.toUpperCase()}`} component={component} durationInFrames={durationInFrames} defaultProps={{ lang }} {...landscape} />,
+    <Composition key={`${id}-${lang}-v`} id={`${id}${lang.toUpperCase()}-Vertical`} component={component} durationInFrames={durationInFrames} defaultProps={{ lang }} {...portrait} />,
+  ]);
+}
+
 export function Root() {
   return (
     <>
-      <Composition id="TasklyPromoFR" {...landscape} defaultProps={{ lang: "fr" }} />
-      <Composition id="TasklyPromoEN" {...landscape} defaultProps={{ lang: "en" }} />
-      <Composition id="TasklyPromoFR-Vertical" {...portrait} defaultProps={{ lang: "fr" }} />
-      <Composition id="TasklyPromoEN-Vertical" {...portrait} defaultProps={{ lang: "en" }} />
+      {four("TasklyPromo", Video, filmDuration(PROMO))}
+      {four("TasklyReminders", RemindersFilm, filmDuration(REMINDERS))}
+      {four("TasklyPrivacy", PrivacyFilm, filmDuration(PRIVACY))}
+      {four("TasklyDay", DayFilm, filmDuration(DAY))}
     </>
   );
 }
