@@ -6,6 +6,9 @@ const VERSION = "taskly-v2";
 const PAGES = "taskly-pages";
 const SHELL = ["/offline", "/icons/icon-192.png", "/brand/taskly-monogram-graphite.svg"];
 const APP_PAGES = ["/today", "/agenda", "/lists", "/stats", "/review"];
+// Hashed build chunks (/_next/static/). A build is about 35 files; a deploy never asks for the old
+// ones again, so the cache keeps the most recent ones only: about four deploys' worth.
+const CHUNK_LIMIT = 150;
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(VERSION).then((cache) => cache.addAll(SHELL)));
@@ -17,12 +20,27 @@ self.addEventListener("activate", (event) => {
     caches
       .keys()
       .then((keys) => Promise.all(keys.filter((key) => key !== VERSION && key !== PAGES).map((key) => caches.delete(key))))
+      .then(pruneChunks)
       .then(() => self.clients.claim()),
   );
 });
 
 const isStaticAsset = (url) =>
   url.pathname.startsWith("/_next/static/") || url.pathname.startsWith("/icons/") || url.pathname.startsWith("/brand/");
+const isChunk = (url) => url.pathname.startsWith("/_next/static/");
+
+/**
+ * Drops the oldest build chunks beyond CHUNK_LIMIT. Icons and brand assets stay.
+ * Cache.keys() lists entries oldest first (put appends), so the slice is the stale end.
+ * Runs on activate and on every app open: this file rarely changes, so activate alone
+ * would let the cache grow with each deploy.
+ */
+async function pruneChunks() {
+  const cache = await caches.open(VERSION);
+  const chunks = (await cache.keys()).filter((request) => isChunk(new URL(request.url)));
+  const stale = chunks.slice(0, Math.max(0, chunks.length - CHUNK_LIMIT));
+  await Promise.all(stale.map((request) => cache.delete(request)));
+}
 
 self.addEventListener("fetch", (event) => {
   const request = event.request;
@@ -33,6 +51,7 @@ self.addEventListener("fetch", (event) => {
   // Pages: the network first. App pages are kept so they open offline
   // with the last known content; anything else falls back to /offline.
   if (request.mode === "navigate") {
+    event.waitUntil(pruneChunks().catch(() => undefined));
     const keep = APP_PAGES.some((path) => url.pathname === path || url.pathname.startsWith(`${path}/`));
     event.respondWith(
       fetch(request)
@@ -98,6 +117,47 @@ self.addEventListener("push", (event) => {
     tasks.push(data.badge > 0 ? self.navigator.setAppBadge(data.badge) : self.navigator.clearAppBadge());
   }
   event.waitUntil(Promise.all(tasks));
+});
+
+// The VAPID public key, as /api/push serves it (base64url), in the form subscribe() takes.
+const base64UrlToBytes = (base64) => {
+  const padded = (base64 + "=".repeat((4 - (base64.length % 4)) % 4)).replace(/-/g, "+").replace(/_/g, "/");
+  const raw = atob(padded);
+  const bytes = new Uint8Array(raw.length);
+  for (let i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i);
+  return bytes;
+};
+
+const pushJson = (method, body) =>
+  fetch("/api/push", { method, headers: { "Content-Type": "application/json" }, credentials: "include", body: JSON.stringify(body) });
+
+/**
+ * The browser dropped or rotated this device's subscription. Without this, every
+ * reminder would silently stop: the server keeps pushing to an endpoint that is gone.
+ * Subscribes again with the same server key and tells the server; the old row is only
+ * removed once the new one is saved, so the device is never left without one.
+ */
+async function resubscribe(oldSubscription, newSubscription) {
+  let subscription = newSubscription;
+  if (!subscription) {
+    let key = oldSubscription && oldSubscription.options && oldSubscription.options.applicationServerKey;
+    if (!key) {
+      const response = await fetch("/api/push", { credentials: "include" });
+      if (!response.ok) return;
+      key = base64UrlToBytes((await response.json()).publicKey);
+    }
+    subscription = await self.registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: key });
+  }
+  // What POST /api/push validates: endpoint, keys.p256dh, keys.auth (toJSON() has them).
+  const saved = await pushJson("POST", subscription.toJSON());
+  const oldEndpoint = oldSubscription && oldSubscription.endpoint;
+  if (saved.ok && oldEndpoint && oldEndpoint !== subscription.endpoint) {
+    await pushJson("DELETE", { endpoint: oldEndpoint });
+  }
+}
+
+self.addEventListener("pushsubscriptionchange", (event) => {
+  event.waitUntil(resubscribe(event.oldSubscription, event.newSubscription).catch(() => undefined));
 });
 
 self.addEventListener("notificationclick", (event) => {
