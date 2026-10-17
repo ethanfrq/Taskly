@@ -17,7 +17,7 @@ export function TabBar() {
   return (
     <nav
       aria-label="Taskly"
-      className="fixed inset-x-0 bottom-0 z-20 border-t border-separator bg-bg/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl"
+      className="fixed inset-x-0 bottom-0 z-20 border-t border-separator bg-bg/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl lg:hidden"
     >
       <ul className="mx-auto flex max-w-xl">
         {tabs.map(({ href, label, Icon }) => {

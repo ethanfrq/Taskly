@@ -85,7 +85,11 @@ export function TaskRow({
   for (const tag of task.tagNames) meta.push(<span key={`#${tag}`}>#{tag}</span>);
 
   return (
-    <li ref={itemRef} style={style} className={`flex items-start gap-3 bg-card px-4 py-2.5 ${className}`}>
+    <li
+      ref={itemRef}
+      style={style}
+      className={`flex items-start gap-3 bg-card px-4 py-2.5 transition-colors hover:bg-[color-mix(in_srgb,var(--fill)_45%,var(--card))] ${className}`}
+    >
       <div className="pt-0.5">
         <CheckCircle
           checked={done}

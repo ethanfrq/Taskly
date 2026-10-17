@@ -1,7 +1,7 @@
 "use client";
 
 import { IconCalendarEvent, IconCirclePlus, IconClock, IconFlag, IconHash, IconList, IconRepeat } from "@tabler/icons-react";
-import { type FormEvent, useMemo, useState, useTransition } from "react";
+import { type FormEvent, useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { createTaskAction } from "@/app/(app)/actions";
 import { useI18n } from "@/i18n/client";
 import { dayLabel } from "@/lib/date-label";
@@ -21,6 +21,21 @@ export function QuickAdd({ dueDate, today, listId, listNames = [] }: Props) {
   const { locale, t } = useI18n();
   const [text, setText] = useState("");
   const [pending, startTransition] = useTransition();
+  const field = useRef<HTMLInputElement>(null);
+
+  // On a keyboard, N starts a new task from anywhere on the page, as in Reminders and Things.
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== "n" && event.key !== "N") return;
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+      const target = event.target as HTMLElement | null;
+      if (target?.closest("input, textarea, select, [contenteditable=true]")) return;
+      event.preventDefault();
+      field.current?.focus();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   const parsed = useMemo(
     () => parseTask(text, { today, lists: listNames, dayFirst: locale !== "en" }),
@@ -68,7 +83,7 @@ export function QuickAdd({ dueDate, today, listId, listNames = [] }: Props) {
   return (
     <form
       onSubmit={submit}
-      className="sticky bottom-[calc(4.75rem+env(safe-area-inset-bottom))] z-10 mx-4 mt-4 rounded-xl bg-card px-3 shadow-[0_1px_8px_rgba(0,0,0,0.08)]"
+      className="sticky bottom-[calc(4.75rem+env(safe-area-inset-bottom))] z-10 mx-4 mt-4 rounded-xl bg-card px-3 shadow-[0_1px_8px_rgba(0,0,0,0.08)] lg:bottom-6"
     >
       {chips.length > 0 ? (
         <div aria-live="polite" className="flex flex-wrap items-center gap-1.5 pt-2.5">
@@ -90,9 +105,13 @@ export function QuickAdd({ dueDate, today, listId, listNames = [] }: Props) {
           {t.task.quickAddLabel}
         </label>
         <input
+          ref={field}
           id="quick-add"
           value={text}
           onChange={(e) => setText(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") e.currentTarget.blur();
+          }}
           placeholder={t.task.quickAddPlaceholder}
           title={t.task.examples}
           enterKeyHint="done"
@@ -103,7 +122,11 @@ export function QuickAdd({ dueDate, today, listId, listNames = [] }: Props) {
           <button type="submit" disabled={pending} className="text-[15px] font-medium text-accent-text">
             {t.task.add}
           </button>
-        ) : null}
+        ) : (
+          <kbd aria-hidden className="hidden rounded-md border border-separator px-1.5 font-sans text-[12px] text-text-secondary lg:block">
+            N
+          </kbd>
+        )}
       </div>
     </form>
   );
