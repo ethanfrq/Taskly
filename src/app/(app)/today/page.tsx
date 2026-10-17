@@ -38,6 +38,7 @@ export default async function TodayPage() {
       latestImport={latestImport}
       latestRefresh={latestRefresh}
       listNames={lists.map((l) => l.name)}
+      claude={{ connected: !!prefs.claudeSeenAt, preparedToday: !!prefs.claudeSeenAt && prefs.claudeSeenAt >= startOfToday }}
     />
   );
 }
