@@ -217,8 +217,8 @@ def page(t: dict) -> str:
     <title>{e(t["title"])}</title>
     <meta name="description" content="{e(t["description"])}">
     <meta name="color-scheme" content="light dark">
-    <meta name="theme-color" content="#f5f3ed" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Taskly">
     <meta property="og:title" content="{e(t["title"])}">

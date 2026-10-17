@@ -15,7 +15,8 @@ os.makedirs(OUT, exist_ok=True)
 GRAPHITE = (23, 23, 23)
 IVORY = (245, 243, 237)
 GRAY = (161, 161, 166)
-ACCENT = (245, 166, 35)
+# The app's default accent (iOS blue, dark appearance), so the visuals look like what people install.
+ACCENT = (10, 132, 255)
 SS = 4  # supersampling for smooth curves
 
 
@@ -89,7 +90,7 @@ def pill(draw, x, y, text, f):
 def hero(lang, headline, sub, chips):
     W, H = 1760, 880
     base = Image.new("RGBA", (W, H), GRAPHITE + (255,))
-    # Warm glow behind the phones.
+    # Accent glow behind the phones.
     glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     ImageDraw.Draw(glow).ellipse((880, 180, 1640, 940), fill=ACCENT + (70,))
     base = Image.alpha_composite(base, glow.filter(ImageFilter.GaussianBlur(140)))

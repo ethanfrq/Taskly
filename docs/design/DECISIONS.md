@@ -108,3 +108,9 @@ With the MCP architecture, Taskly can't trigger Claude. The current idea is that
 - Graphite and ivory read well on both light and dark home screens.
 
 See [docs/brand](../brand/README.md) for the files and usage rules.
+
+## D-013 · The showcase wears the app's default colors
+
+**Context.** The landing page, the README banners and their screenshots used an orange accent (`#F5A623`). The app's default accent is iOS blue (D-002), so a visitor who installed Taskly got a blue app that looked nothing like the page that sold it.
+
+**Decision.** The landing page and the README visuals use the app's own tokens: iOS grays, black in dark mode, and system blue. Screenshots are taken with the default accent. Filled buttons on the landing page use `#0071e3`, a deeper blue, so white labels keep a 4.5:1 contrast. The logo stays graphite and ivory (D-012).
