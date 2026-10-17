@@ -7,7 +7,14 @@ import { Field } from "@/components/ui/field";
 import { useI18n } from "@/i18n/client";
 import { format } from "@/i18n/format";
 import { authClient } from "@/lib/auth/client";
-import { type PasskeyKind, canUsePasskeys, passkeyKind } from "@/lib/auth/passkey-support";
+import {
+  type PasskeyKind,
+  canAutofillPasskeys,
+  canUsePasskeys,
+  passkeyKind,
+  passkeySavedOnDevice,
+  rememberPasskeyOnDevice,
+} from "@/lib/auth/passkey-support";
 
 type Step = "start" | "code" | "passkey-offer";
 
@@ -49,10 +56,15 @@ export function SignInForm({
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [passkeys, setPasskeys] = useState<PasskeyKind | null>(null);
+  // The explicit button only for a device that has a passkey (see passkeySavedOnDevice).
+  const [savedPasskey, setSavedPasskey] = useState(false);
   const [pending, startTransition] = useTransition();
 
   useEffect(() => {
-    canUsePasskeys().then((ok) => setPasskeys(ok ? passkeyKind(navigator.userAgent) : null));
+    canUsePasskeys().then((ok) => {
+      setPasskeys(ok ? passkeyKind(navigator.userAgent) : null);
+      setSavedPasskey(ok && passkeySavedOnDevice());
+    });
   }, []);
 
   const finish = () => {
@@ -61,6 +73,24 @@ export function SignInForm({
     router.replace(next);
     router.refresh();
   };
+
+  // Passkeys saved for this site show up in the email field's suggestions,
+  // and nothing shows when there are none: no system dialog on a new device.
+  useEffect(() => {
+    let active = true;
+    canAutofillPasskeys().then(async (ok) => {
+      if (!ok || !active) return;
+      const { error: err } = await authClient.signIn.passkey({ autoFill: true });
+      if (err || !active) return;
+      rememberPasskeyOnDevice();
+      if (oauth) return;
+      router.replace(next);
+      router.refresh();
+    });
+    return () => {
+      active = false;
+    };
+  }, [oauth, next, router]);
 
   const passkeyLabel =
     passkeys === "face-id"
@@ -73,6 +103,7 @@ export function SignInForm({
     startTransition(async () => {
       setError(null);
       const { error: err } = await authClient.signIn.passkey();
+      if (!err) rememberPasskeyOnDevice();
       if (err) {
         const cancelled = "code" in err && err.code === "AUTH_CANCELLED";
         const method = passkeys === "face-id" ? "Face ID" : passkeys === "touch-id" ? "Touch ID" : t.auth.passkeyGeneric;
@@ -122,7 +153,8 @@ export function SignInForm({
 
   const addPasskey = () =>
     startTransition(async () => {
-      await authClient.passkey.addPasskey();
+      const { error: err } = await authClient.passkey.addPasskey();
+      if (!err) rememberPasskeyOnDevice();
       finish();
     });
 
@@ -205,7 +237,7 @@ export function SignInForm({
       <h1 className="text-[28px] font-semibold tracking-tight">{t.auth.signInTitle}</h1>
       <p className="mt-2 text-text-secondary">{codeInLogs ? t.auth.signInSubtitleNoEmail : t.auth.signInSubtitle}</p>
       <div className="mt-8 flex flex-col gap-3">
-        {passkeys ? (
+        {passkeys && savedPasskey ? (
           <>
             <Button onClick={signInWithPasskey} disabled={pending}>
               {passkeyLabel}
@@ -231,7 +263,7 @@ export function SignInForm({
           placeholder={t.auth.emailPlaceholder}
           error={error}
         />
-        <Button type="submit" variant={passkeys ? "secondary" : "primary"} disabled={pending}>
+        <Button type="submit" variant={passkeys && savedPasskey ? "secondary" : "primary"} disabled={pending}>
           {t.auth.sendCode}
         </Button>
       </div>
