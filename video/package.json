@@ -6,9 +6,9 @@
   "license": "MIT",
   "scripts": {
     "studio": "remotion studio",
-    "render": "npm run render:fr && npm run render:en",
-    "render:fr": "remotion render TasklyPromoFR out/taskly-30s-fr.mp4",
-    "render:en": "remotion render TasklyPromoEN out/taskly-30s-en.mp4",
+    "render": "npm run render:landscape && npm run render:vertical",
+    "render:landscape": "remotion render TasklyPromoFR out/taskly-30s-fr.mp4 && remotion render TasklyPromoEN out/taskly-30s-en.mp4",
+    "render:vertical": "remotion render TasklyPromoFR-Vertical out/taskly-30s-fr-vertical.mp4 && remotion render TasklyPromoEN-Vertical out/taskly-30s-en-vertical.mp4",
     "still": "remotion still",
     "typecheck": "tsc --noEmit"
   },

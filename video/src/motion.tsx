@@ -1,5 +1,5 @@
 import { createContext, useContext, type CSSProperties, type PropsWithChildren } from "react";
-import { interpolate, useCurrentFrame } from "remotion";
+import { interpolate, useCurrentFrame, useVideoConfig } from "remotion";
 import { ease } from "./theme";
 
 /**
@@ -7,6 +7,16 @@ import { ease } from "./theme";
  * the previous scene is still fading out. Video.tsx sets it to the transition length.
  */
 export const LeadContext = createContext(0);
+
+/**
+ * Landscape (1920×1080) or portrait (1080×1920), from the composition's size.
+ * `pad` is the side gutter; portrait text is read on a phone, so it gets more room.
+ */
+export function useLayout() {
+  const { width, height } = useVideoConfig();
+  const portrait = height > width;
+  return { width, height, portrait, pad: portrait ? 80 : 160 };
+}
 
 /** The scene's frame: 0 once the fade from the previous scene is over. */
 export function useSceneFrame() {

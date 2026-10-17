@@ -1,22 +1,23 @@
 import { IconBrandGithub, IconFingerprint, IconUnlink } from "@tabler/icons-react";
 import { AbsoluteFill } from "remotion";
 import type { Copy } from "../copy";
-import { Rise } from "../motion";
+import { Rise, useLayout } from "../motion";
 import { colors } from "../theme";
 import { Display, Pill } from "../ui/text";
 
 const ICONS = [IconBrandGithub, IconFingerprint, IconUnlink];
 
-/** What Taskly promises, in three pills. */
+/** What Taskly promises, in three pills: in a row, or stacked in portrait. */
 export function Values({ c }: { c: Copy }) {
+  const { portrait } = useLayout();
   return (
-    <AbsoluteFill style={{ background: colors.bg, justifyContent: "center", alignItems: "center" }}>
+    <AbsoluteFill style={{ background: colors.bg, justifyContent: "center", alignItems: "center", padding: "0 60px" }}>
       <Rise at={0} duration={26}>
-        <Display size={104} style={{ textAlign: "center" }}>
+        <Display size={portrait ? 92 : 104} style={{ textAlign: "center" }}>
           {c.values.title}
         </Display>
       </Rise>
-      <div style={{ display: "flex", gap: 20, marginTop: 64 }}>
+      <div style={{ display: "flex", flexDirection: portrait ? "column" : "row", alignItems: "center", gap: 20, marginTop: 64 }}>
         {c.values.pills.map((label, i) => {
           const Icon = ICONS[i];
           return (
