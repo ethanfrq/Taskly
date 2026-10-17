@@ -605,6 +605,21 @@ p {
   color: var(--accent-text);
 }
 
+/* Desktop: the app on a computer, in a Mac window */
+
+.desktop-shot {
+  width: 100%;
+  height: auto;
+  margin-top: clamp(32px, 5vw, 56px);
+  filter: drop-shadow(0 24px 48px rgb(0 30 80 / 0.18));
+}
+
+@media (prefers-color-scheme: dark) {
+  .desktop-shot {
+    filter: drop-shadow(0 24px 60px rgb(0 0 0 / 0.7));
+  }
+}
+
 /* Privacy: manifesto */
 
 .manifesto {
