@@ -620,6 +620,104 @@ p {
   }
 }
 
+/* Films: one player, a tab per film */
+
+.films {
+  margin-top: clamp(32px, 5vw, 56px);
+}
+
+.film-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.film-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  transition:
+    background-color 0.2s var(--ease),
+    border-color 0.2s var(--ease),
+    color 0.2s var(--ease);
+}
+
+.film-tab .icon {
+  width: 18px;
+  height: 18px;
+  color: var(--accent-text);
+}
+
+.film-tab[aria-selected="true"] {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.film-tab[aria-selected="true"] .icon {
+  color: inherit;
+}
+
+.film-length {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.film-tab[aria-selected="true"] .film-length {
+  color: inherit;
+  opacity: 0.8;
+}
+
+.film-player {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #000000;
+  box-shadow: var(--shadow);
+}
+
+.film-player video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+}
+
+.film-player.is-vertical {
+  max-width: 420px;
+  margin-inline: auto;
+}
+
+.film-player.is-vertical video {
+  aspect-ratio: 9 / 16;
+}
+
+/* Phones: the tabs stay on one line and scroll sideways. */
+@media (max-width: 640px) {
+  .film-tabs {
+    flex-wrap: nowrap;
+    margin-inline: calc(-1 * var(--gutter));
+    overflow-x: auto;
+    padding-inline: var(--gutter);
+    scrollbar-width: none;
+  }
+
+  .film-tab {
+    flex: none;
+  }
+}
+
 /* Privacy: manifesto */
 
 .manifesto {

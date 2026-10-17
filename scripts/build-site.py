@@ -93,6 +93,14 @@ EN = {
     "desktop_h2": "On your computer too.",
     "desktop_lead": "A sidebar, your day and what's next side by side, and N to add a task. Install it from your browser, like an app.",
     "desktop_alt": "Taskly on a computer: a sidebar, today's tasks from Gmail, Calendar and Slack, and the progress, next meeting and Claude tiles on the right",
+    "films_h2": "Three films, twenty seconds each.",
+    "films_lead": "Reminders, your data, your day: each feature in action, without sound.",
+    "films_label": "Films",
+    "films": [
+        ("reminders", "bell-ringing", "Reminders that ring", "21 s"),
+        ("privacy", "lock", "Tasks, not emails", "20 s"),
+        ("day", "sun", "Your whole day", "21 s"),
+    ],
     "claude_title": "Claude prepares your day",
     "claude_text": "From the connectors Claude already uses. One tap undoes what it added, and duplicates are skipped.",
     "prompt": "“Prepare my day in Taskly”",
@@ -255,6 +263,14 @@ FR = {
     "desktop_h2": "Sur ton ordinateur aussi.",
     "desktop_lead": "Une barre latérale, ta journée et la suite côte à côte, et N pour ajouter une tâche. Installe-le depuis ton navigateur, comme une app.",
     "desktop_alt": "Taskly sur un ordinateur : une barre latérale, les tâches du jour venues de Gmail, de l'agenda et de Slack, et à droite la progression, le prochain rendez-vous et Claude",
+    "films_h2": "Trois films, vingt secondes chacun.",
+    "films_lead": "Les rappels, tes données, ta journée : chaque fonction en action, sans le son.",
+    "films_label": "Films",
+    "films": [
+        ("reminders", "bell-ringing", "Des rappels qui sonnent", "21 s"),
+        ("privacy", "lock", "Des tâches, pas des mails", "20 s"),
+        ("day", "sun", "Toute ta journée", "21 s"),
+    ],
     "claude_title": "Claude prépare ta journée",
     "claude_text": "Avec les connecteurs que Claude utilise déjà. Un geste annule ce qu'il a ajouté, et les doublons sont ignorés.",
     "prompt": "« Prépare ma journée dans Taskly »",
@@ -581,6 +597,12 @@ def page(t: dict) -> str:
         for q, a, link in t["faq"]
     )
 
+    film_tabs = "\n".join(
+        f'''              <button type="button" class="film-tab" role="tab" id="film-tab-{key}" aria-controls="film-player" aria-selected="{str(i == 0).lower()}"
+                data-src="/assets/taskly-{key}-{lang}.mp4" data-poster="/assets/poster-{key}-{lang}.webp"
+                data-vertical="/assets/taskly-{key}-{lang}-vertical.mp4" data-vertical-poster="/assets/poster-{key}-{lang}-vertical.webp">{icon(ic)}<span>{e(title)}</span><span class="film-length">{e(length)}</span></button>'''
+        for i, (key, ic, title, length) in enumerate(t["films"])
+    )
     main = f'''      <section class="hero">
         <div class="wrap">
           <div class="hero-copy">
@@ -644,6 +666,21 @@ def page(t: dict) -> str:
           <h2 class="reveal">{e(t["desktop_h2"])}</h2>
           <p class="section-lead reveal">{e(t["desktop_lead"])}</p>
           <img class="desktop-shot reveal" src="/assets/desktop-{lang}.webp" alt="{e(t["desktop_alt"])}" width="{DESKTOP_SIZE[0]}" height="{DESKTOP_SIZE[1]}" loading="lazy" decoding="async">
+        </div>
+      </section>
+
+      <section id="films" class="section">
+        <div class="wrap">
+          <h2 class="reveal">{e(t["films_h2"])}</h2>
+          <p class="section-lead reveal">{e(t["films_lead"])}</p>
+          <div class="films reveal" data-films>
+            <div class="film-tabs" role="tablist" aria-label="{e(t["films_label"])}">
+{film_tabs}
+            </div>
+            <figure class="film-player" id="film-player" role="tabpanel" aria-labelledby="film-tab-{t["films"][0][0]}">
+              <video src="/assets/taskly-{t["films"][0][0]}-{lang}.mp4" poster="/assets/poster-{t["films"][0][0]}-{lang}.webp" width="1920" height="1080" muted playsinline controls preload="none" aria-label="{e(t["films"][0][2])}"></video>
+            </figure>
+          </div>
         </div>
       </section>
 
@@ -748,8 +785,66 @@ def page(t: dict) -> str:
         main=main,
         extra_head=f'    <script type="application/ld+json">{structured_data(t)}</script>\n',
         preload=f'    <link rel="preload" as="image" href="/assets/poster-{lang}.webp" type="image/webp">\n',
-        scripts=video_script,
+        scripts=video_script + FILMS_SCRIPT,
     )
+
+
+# The feature films: one player, a tab per film. Plays when it comes into view (muted,
+# like the hero), moves on to the next film at the end, portrait files on phones.
+FILMS_SCRIPT = """    <script>
+      (() => {
+        const root = document.querySelector("[data-films]");
+        if (!root) return;
+        const tabs = [...root.querySelectorAll("[role=tab]")];
+        const figure = root.querySelector(".film-player");
+        const video = figure.querySelector("video");
+        const vertical = matchMedia("(max-width: 640px)").matches;
+        const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+        figure.classList.toggle("is-vertical", vertical);
+        let current = 0;
+        let seen = false;
+        let userPaused = false;
+        const load = (i, play) => {
+          current = i;
+          tabs.forEach((tab, j) => {
+            tab.setAttribute("aria-selected", String(j === i));
+            tab.tabIndex = j === i ? 0 : -1;
+          });
+          const tab = tabs[i];
+          figure.setAttribute("aria-labelledby", tab.id);
+          video.setAttribute("aria-label", tab.querySelector("span").textContent);
+          video.poster = vertical ? tab.dataset.verticalPoster : tab.dataset.poster;
+          video.src = vertical ? tab.dataset.vertical : tab.dataset.src;
+          if (play) video.play().catch(() => {});
+        };
+        load(0, false);
+        tabs.forEach((tab, i) => {
+          tab.addEventListener("click", () => {
+            userPaused = false;
+            load(i, true);
+          });
+          tab.addEventListener("keydown", (event) => {
+            const step = { ArrowRight: 1, ArrowLeft: -1 }[event.key];
+            if (!step) return;
+            const next = (current + step + tabs.length) % tabs.length;
+            load(next, !video.paused);
+            tabs[next].focus();
+          });
+        });
+        video.addEventListener("pause", () => {
+          if (!video.ended && document.visibilityState === "visible" && seen) userPaused = true;
+        });
+        video.addEventListener("play", () => (userPaused = false));
+        video.addEventListener("ended", () => load((current + 1) % tabs.length, true));
+        if (still) return;
+        new IntersectionObserver(([entry]) => {
+          seen = entry.isIntersecting;
+          if (entry.isIntersecting && !userPaused) video.play().catch(() => {});
+          else if (!entry.isIntersecting) video.pause();
+        }, { threshold: 0.5 }).observe(video);
+      })();
+    </script>
+"""
 
 
 def demo_page(t: dict) -> str:
