@@ -71,6 +71,13 @@
       "when": 1792233947251,
       "tag": "0009_claude_refresh",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1792245195774,
+      "tag": "0010_instance_secrets",
+      "breakpoints": true
     }
   ]
 }

@@ -10,7 +10,10 @@ import { emailOTP, jwt } from "better-auth/plugins";
 import { LOCALE_COOKIE, type Locale, isLocale, negotiateLocale } from "@/i18n/config";
 import type { Database } from "@/db";
 import * as schema from "@/db/schema";
+import { allowedEmailsFromEnv } from "./allowed-emails";
 import { consumeEmailCodeQuota } from "./quota";
+
+export { allowedEmailsFromEnv };
 
 /** OAuth scopes Claude asks for when it connects (docs/connect-claude.md). */
 export const MCP_SCOPES = ["tasks:read", "tasks:write"] as const;
@@ -31,14 +34,6 @@ export type AuthOptions = {
   /** Only these addresses may get a sign-in code (a personal instance). Empty: anyone. */
   allowedEmails?: string[];
 };
-
-/** TASKLY_ALLOWED_EMAILS: comma-separated addresses allowed to sign in. Unset: anyone. */
-export function allowedEmailsFromEnv(value = process.env.TASKLY_ALLOWED_EMAILS): string[] {
-  return (value ?? "")
-    .split(",")
-    .map((email) => email.trim().toLowerCase())
-    .filter(Boolean);
-}
 
 /** TASKLY_TRUSTED_PROXIES: comma-separated IPs or CIDR ranges of the proxies in front of Taskly. */
 function trustedProxies(): string[] | undefined {

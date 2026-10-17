@@ -116,9 +116,18 @@ To update: `git pull`, `npm ci`, `npm run db:migrate`, `npm run build`, then res
 
 ## 🔐 A personal instance
 
-To run Taskly for yourself only, set `TASKLY_ALLOWED_EMAILS` to your address. Other addresses are refused before any code is sent: nobody else can create an account, and nobody can use your instance to email strangers.
+Taskly just for you, on Vercel, in two clicks:
 
-It also makes the free email setup enough: without a verified domain, Resend only delivers to the address of your Resend account, which is the one you allow. Use `EMAIL_FROM="Taskly <onboarding@resend.dev>"` (or leave it unset).
+1. Set `TASKLY_ALLOWED_EMAILS` to your address. Every other address is refused before a code is sent: nobody else can create an account or use your instance to email strangers.
+2. In the project's **Storage** tab, add **Neon** (the database) and **Upstash › QStash** (reminders on time).
+3. Deploy, open the site and ask for a sign-in code: without `RESEND_API_KEY`, it is printed in the deployment's **Logs** (search for "Email to"). Sign in, then add Face ID in the onboarding: you won't need a code again.
+
+What a personal instance does for you:
+
+- **No secret to create.** If `BETTER_AUTH_SECRET` or the VAPID keys are missing, Taskly generates them on first start and keeps them in the database (`instance_secrets`). Anything set in the environment wins. Trade-off: whoever can read your database can read these too, but they can already read everything they protect.
+- **No email provider needed.** Codes go to the logs, which only you can read. Add Resend later if you prefer emails: without a domain, it only delivers to your Resend account's own address, which is the one you allow.
+
+A public instance (no `TASKLY_ALLOWED_EMAILS`) keeps the strict behaviour: missing secrets or email provider stop it with a clear error.
 
 <a id="abuse-protection"></a>
 
