@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { createTestDb } from "@/test/db";
+import { isPersonalInstance, signInCodesInLogs } from "./allowed-emails";
 import { allowedEmailsFromEnv, createAuth } from "./config";
 
 let sent: string[];
@@ -47,5 +48,19 @@ describe("allowedEmailsFromEnv", () => {
   it("is open when unset or empty", () => {
     expect(allowedEmailsFromEnv(undefined)).toEqual([]);
     expect(allowedEmailsFromEnv(" , ")).toEqual([]);
+  });
+});
+
+describe("where sign-in codes go", () => {
+  it("goes to the logs without an email provider, by email with one", () => {
+    expect(signInCodesInLogs({})).toBe(true);
+    expect(signInCodesInLogs({ RESEND_API_KEY: "" })).toBe(true);
+    expect(signInCodesInLogs({ RESEND_API_KEY: "re_live" })).toBe(false);
+  });
+
+  it("knows a personal instance by its allow list", () => {
+    expect(isPersonalInstance({ TASKLY_ALLOWED_EMAILS: " Ethan@example.com " })).toBe(true);
+    expect(isPersonalInstance({ TASKLY_ALLOWED_EMAILS: " , " })).toBe(false);
+    expect(isPersonalInstance({})).toBe(false);
   });
 });
