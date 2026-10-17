@@ -2,6 +2,7 @@
 
 import { IconRepeat, IconSubtask } from "@tabler/icons-react";
 import Link from "next/link";
+import { ViewTransition } from "react";
 import { useI18n } from "@/i18n/client";
 import { format } from "@/i18n/format";
 import { dayLabel } from "@/lib/date-label";
@@ -85,39 +86,42 @@ export function TaskRow({
   for (const tag of task.tagNames) meta.push(<span key={`#${tag}`}>#{tag}</span>);
 
   return (
-    <li
-      ref={itemRef}
-      style={style}
-      className={`flex items-start gap-3 bg-card px-4 py-2.5 transition-colors hover:bg-[color-mix(in_srgb,var(--fill)_45%,var(--card))] ${className}`}
-    >
-      <div className="pt-0.5">
-        <CheckCircle
-          checked={done}
-          label={format(done ? t.task.reopen : t.task.complete, { title: task.title })}
-          onToggle={() => onToggle(task)}
-        />
-      </div>
-      <Link href={`/tasks/${task.id}`} className="min-w-0 flex-1 py-0.5">
-        <span className={`block text-[16px] leading-snug ${done ? "text-text-secondary line-through" : ""}`}>
-          {task.title}
-        </span>
-        {meta.length > 0 ? (
-          <span className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[13px] text-text-secondary">
-            {meta.map((item, i) => (
-              <span key={i} className="inline-flex items-center gap-2">
-                {i > 0 ? <span aria-hidden>·</span> : null}
-                {item}
-              </span>
-            ))}
+    // Rows slide in when added, fade out when they leave, and the others close the gap (see globals.css).
+    <ViewTransition enter="task-enter" exit="task-exit" update="task-move" default="none">
+      <li
+        ref={itemRef}
+        style={style}
+        className={`flex items-start gap-3 bg-card px-4 py-2.5 transition-colors hover:bg-[color-mix(in_srgb,var(--fill)_45%,var(--card))] ${className}`}
+      >
+        <div className="pt-0.5">
+          <CheckCircle
+            checked={done}
+            label={format(done ? t.task.reopen : t.task.complete, { title: task.title })}
+            onToggle={() => onToggle(task)}
+          />
+        </div>
+        <Link href={`/tasks/${task.id}`} className="min-w-0 flex-1 py-0.5">
+          <span className={`block text-[16px] leading-snug ${done ? "text-text-secondary line-through" : ""}`}>
+            {task.title}
+          </span>
+          {meta.length > 0 ? (
+            <span className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[13px] text-text-secondary">
+              {meta.map((item, i) => (
+                <span key={i} className="inline-flex items-center gap-2">
+                  {i > 0 ? <span aria-hidden>·</span> : null}
+                  {item}
+                </span>
+              ))}
+            </span>
+          ) : null}
+        </Link>
+        {task.priority > 0 && !done ? (
+          <span className="pt-1 font-semibold text-accent-text" aria-label={`${t.task.priorityLabel}: ${t.task.priority[task.priority]}`}>
+            {"!".repeat(task.priority)}
           </span>
         ) : null}
-      </Link>
-      {task.priority > 0 && !done ? (
-        <span className="pt-1 font-semibold text-accent-text" aria-label={`${t.task.priorityLabel}: ${t.task.priority[task.priority]}`}>
-          {"!".repeat(task.priority)}
-        </span>
-      ) : null}
-      {trailing}
-    </li>
+        {trailing}
+      </li>
+    </ViewTransition>
   );
 }
