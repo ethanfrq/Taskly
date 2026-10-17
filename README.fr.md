@@ -212,6 +212,122 @@ Les cinq étapes sont livrées : **v0.1** Base · **v0.2** Claude · **v0.3** Ra
 
 Les contributions sont les bienvenues, une petite pull request à la fois : commence par [CONTRIBUTING.md](CONTRIBUTING.md) et le [code de conduite](CODE_OF_CONDUCT.md). Le design est documenté aussi : un [prototype cliquable](https://htmlpreview.github.io/?https://github.com/ethanfrq/Taskly/blob/main/docs/design/prototype.html) de tout le parcours iPhone et chaque décision dans [docs/design](docs/design/README.md) (en anglais).
 
+## 🔧 Sous le capot
+
+| Outils MCP | Tables | Migrations | Tests | Décisions documentées | Langues |
+|:-:|:-:|:-:|:-:|:-:|:-:|
+| **9** | **23** | **8** | **142** | **7** | **2** |
+
+Ce qui se passe quand tu dis *« Prépare ma journée dans Taskly »* :
+
+```mermaid
+sequenceDiagram
+  participant U as Toi
+  participant C as Claude
+  participant S as Gmail · Agenda · Slack
+  participant T as MCP Taskly
+  participant DB as Postgres
+  participant Q as QStash
+  participant P as Ton téléphone
+  U->>C: "Prépare ma journée dans Taskly"
+  C->>T: get_today (jeton OAuth)
+  C->>S: lit mails, événements, messages
+  C->>T: add_calendar_events (replace_day)
+  C->>T: add_tasks (un lot, avec les sources)
+  T->>DB: enregistre, ignore les doublons, planifie les rappels
+  T->>Q: programme chaque rappel à sa minute
+  Q->>T: rappel signé, pile à l'heure
+  T->>P: notification Web Push
+```
+
+<details>
+<summary><b>🔐 Modèle de sécurité</b></summary>
+
+<br>
+
+- **Taskly est son propre serveur OAuth 2.1** ([Better Auth](https://www.better-auth.com)) : PKCE, enregistrement dynamique des clients et Client ID Metadata Documents, et un écran de consentement que l'utilisateur valide.
+- **Les jetons sont liés au serveur MCP** ([RFC 8707](https://www.rfc-editor.org/rfc/rfc8707)) : des JWT signés, vérifiés à chaque appel (signature, audience, expiration, scopes `tasks:read` et `tasks:write`). Chaque appel ne voit que les données de l'utilisateur qui l'a autorisé.
+- **La révocation est immédiate.** « Déconnecter Claude » supprime les autorisations, et le serveur refuse tout jeton émis avant ce moment, même s'il n'a pas expiré.
+- **Aucun mot de passe stocké.** Passkeys (WebAuthn), ou codes à 6 chiffres par email, valables 10 minutes avec 5 essais.
+- **Chaque appel du planificateur est authentifié.** Les rappels QStash sont vérifiés par signature ; le balayage par cron exige un secret comparé en temps constant.
+- **Échec explicite.** En production, s'il manque le secret d'authentification, le service d'email ou la base, l'app s'arrête avec une erreur claire au lieu de se rabattre en silence.
+
+</details>
+
+<details>
+<summary><b>⏰ Moteur de rappels</b></summary>
+
+<br>
+
+- La table `reminders` fait foi : chaque modification d'une tâche replanifie ses rappels.
+- Chaque rappel est programmé à sa minute exacte (QStash `notBefore`, dédupliqué). Sans QStash, un balayage les récupère : un cron externe, ou le planificateur intégré toutes les 20 secondes.
+- L'envoi **réserve** d'abord le rappel par un `UPDATE` conditionnel : deux planificateurs réveillés en même temps ne peuvent pas l'envoyer deux fois.
+- Les heures calmes **décalent** un rappel au lieu de le perdre ; les relances suivent le niveau d'insistance ; le badge de l'app affiche ce qui reste.
+- Chaque « aujourd'hui » est calculé dans le fuseau de l'utilisateur, sans erreur aux changements d'heure.
+
+</details>
+
+<details>
+<summary><b>📴 Hors-ligne</b></summary>
+
+<br>
+
+Le service worker garde les pages de l'app en cache : Aujourd'hui et l'Agenda s'ouvrent sans réseau. Les tâches cochées hors-ligne vont dans une file d'attente rejouée au retour de la connexion : à la reconnexion, quand l'app revient au premier plan, et toutes les 15 secondes tant que des changements attendent.
+
+</details>
+
+<details>
+<summary><b>🗂️ Organisation du code</b></summary>
+
+<br>
+
+```
+src/
+├── app/            Routes Next.js
+│   ├── (app)/      Aujourd'hui, Agenda, Listes, Focus, Stats, Bilan, Réglages
+│   ├── api/        mcp · auth · push · reminders · account
+│   └── oauth/      Écran de consentement pour Claude
+├── lib/            Logique métier, testée unitairement
+│   ├── tasks/      Tâches, listes, partage, récurrence
+│   ├── reminders/  Planification, envoi, heures calmes, relances
+│   ├── mcp/        Les outils que Claude appelle
+│   ├── nlp/        Analyse du langage naturel (français et anglais)
+│   └── …           auth, push, offline, events, theme, pwa
+├── db/             Schéma et client Drizzle (Postgres ou PGlite)
+├── i18n/           Dictionnaires français et anglais typés
+└── components/     Interface
+drizzle/            Migrations SQL
+public/sw.js        Service worker : pages hors-ligne, push, actions des notifications
+docs/               Décisions, design, hébergement, connexion à Claude
+```
+
+</details>
+
+<details>
+<summary><b>✅ Qualité</b></summary>
+
+<br>
+
+- La logique métier est testée contre un **vrai Postgres** : [PGlite](https://pglite.dev) tourne en mémoire pour chaque test, donc les requêtes sont vérifiées en SQL, pas simulées.
+- TypeScript strict, ESLint et un build de production avant chaque merge.
+- Chaque choix technique et ses compromis sont écrits dans une [fiche de décision](docs/adr/README.md) ; chaque choix de design dans [docs/design](docs/design/DECISIONS.md) (en anglais).
+- Chaque modification arrive dans sa propre petite pull request avec une description complète : l'[historique](https://github.com/ethanfrq/Taskly/pulls?q=is%3Apr+is%3Amerged) se lit comme un journal des changements.
+
+</details>
+
+## 👋 Créateur
+
+<table>
+<tr>
+<td width="96"><a href="https://github.com/ethanfrq"><img src="https://github.com/ethanfrq.png?size=192" width="80" alt="Ethan"></a></td>
+<td>
+<b>Ethan</b> · <a href="https://github.com/ethanfrq">@ethanfrq</a><br>
+A créé et maintient Taskly : produit, design et code.<br>
+<sub>Une question, une idée, un bug ? <a href="https://github.com/ethanfrq/Taskly/issues">Ouvre une issue</a>. Si Taskly t'aide, une ⭐ aide les autres à le trouver.</sub>
+</td>
+</tr>
+</table>
+
 ## ⚖️ Licence
 
 [MIT](LICENSE). Taskly est un projet open source indépendant, ni affilié, ni approuvé, ni sponsorisé par Anthropic. Claude est une marque d'Anthropic.

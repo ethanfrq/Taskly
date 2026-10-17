@@ -212,6 +212,122 @@ All five milestones are shipped: **v0.1** Core · **v0.2** Claude · **v0.3** Re
 
 Contributions are welcome, one small pull request at a time: start with [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md). The design is documented too: a [clickable prototype](https://htmlpreview.github.io/?https://github.com/ethanfrq/Taskly/blob/main/docs/design/prototype.html) of the whole iPhone flow and every decision in [docs/design](docs/design/README.md).
 
+## 🔧 Under the hood
+
+| MCP tools | Database tables | Migrations | Tests | Decision records | Languages |
+|:-:|:-:|:-:|:-:|:-:|:-:|
+| **9** | **23** | **8** | **142** | **7** | **2** |
+
+What happens when you say *“Prepare my day in Taskly”*:
+
+```mermaid
+sequenceDiagram
+  participant U as You
+  participant C as Claude
+  participant S as Gmail · Calendar · Slack
+  participant T as Taskly MCP
+  participant DB as Postgres
+  participant Q as QStash
+  participant P as Your phone
+  U->>C: "Prepare my day in Taskly"
+  C->>T: get_today (OAuth bearer token)
+  C->>S: read mail, events, messages
+  C->>T: add_calendar_events (replace_day)
+  C->>T: add_tasks (one batch, with sources)
+  T->>DB: save, skip duplicates, plan reminders
+  T->>Q: schedule each reminder at its minute
+  Q->>T: signed callback, right on time
+  T->>P: Web Push notification
+```
+
+<details>
+<summary><b>🔐 Security model</b></summary>
+
+<br>
+
+- **Taskly is its own OAuth 2.1 server** ([Better Auth](https://www.better-auth.com)): PKCE, Dynamic Client Registration and Client ID Metadata Documents, and a consent screen the user approves.
+- **Tokens are bound to the MCP endpoint** ([RFC 8707](https://www.rfc-editor.org/rfc/rfc8707)): signed JWTs checked for signature, audience, expiry and scopes (`tasks:read`, `tasks:write`) on every call. Each call only sees the data of the user who approved it.
+- **Revocation is immediate.** “Disconnect Claude” deletes the grants, and the endpoint refuses any token issued before that moment, even one that hasn't expired.
+- **No passwords stored.** Passkeys (WebAuthn), or 6-digit email codes valid 10 minutes with 5 attempts.
+- **Every scheduler call is authenticated.** QStash callbacks are signature-checked; the cron sweep needs a secret compared in constant time.
+- **Fails closed.** In production, a missing auth secret, email provider or database stops the app with a clear error instead of falling back silently.
+
+</details>
+
+<details>
+<summary><b>⏰ Reminder engine</b></summary>
+
+<br>
+
+- The `reminders` table is the source of truth: every change to a task re-plans its reminders.
+- Each reminder is scheduled for its exact minute (QStash `notBefore`, deduplicated). Without QStash, a sweep picks them up: an external cron, or the built-in scheduler every 20 seconds.
+- Sending first **claims** the reminder with a conditional `UPDATE`, so two schedulers waking at once can't send it twice.
+- Quiet hours **defer** a reminder rather than drop it; follow-ups depend on the insistence level; the app badge carries what's left.
+- Every “today” is computed in the user's time zone, safe across daylight saving changes.
+
+</details>
+
+<details>
+<summary><b>📴 Offline</b></summary>
+
+<br>
+
+The service worker caches the app's pages, so Today and the Agenda open without a network. Tasks checked offline go into an outbox that is replayed when the connection comes back: on reconnect, when the app comes to the foreground, and every 15 seconds while changes wait.
+
+</details>
+
+<details>
+<summary><b>🗂️ Project layout</b></summary>
+
+<br>
+
+```
+src/
+├── app/            Next.js routes
+│   ├── (app)/      Today, Agenda, Lists, Focus, Stats, Review, Settings
+│   ├── api/        mcp · auth · push · reminders · account
+│   └── oauth/      Consent screen for Claude
+├── lib/            Domain logic, unit-tested
+│   ├── tasks/      Tasks, lists, sharing, recurrence
+│   ├── reminders/  Planning, sending, quiet hours, follow-ups
+│   ├── mcp/        The tools Claude calls
+│   ├── nlp/        Natural language parser (French and English)
+│   └── …           auth, push, offline, events, theme, pwa
+├── db/             Drizzle schema and client (Postgres or PGlite)
+├── i18n/           Typed French and English dictionaries
+└── components/     UI
+drizzle/            SQL migrations
+public/sw.js        Service worker: offline pages, push, notification actions
+docs/               Decision records, design, self-hosting, Claude connection
+```
+
+</details>
+
+<details>
+<summary><b>✅ Quality</b></summary>
+
+<br>
+
+- Domain code is tested against a **real Postgres**: [PGlite](https://pglite.dev) runs in memory for each test, so queries are checked as SQL, not mocked.
+- Strict TypeScript, ESLint, and a production build before every merge.
+- Every technical choice and its trade-offs is written down in a [decision record](docs/adr/README.md); every design choice in [docs/design](docs/design/DECISIONS.md).
+- Every change ships as its own small pull request with a full description: the [history](https://github.com/ethanfrq/Taskly/pulls?q=is%3Apr+is%3Amerged) reads like a changelog.
+
+</details>
+
+## 👋 Creator
+
+<table>
+<tr>
+<td width="96"><a href="https://github.com/ethanfrq"><img src="https://github.com/ethanfrq.png?size=192" width="80" alt="Ethan"></a></td>
+<td>
+<b>Ethan</b> · <a href="https://github.com/ethanfrq">@ethanfrq</a><br>
+Created and maintains Taskly: product, design and code.<br>
+<sub>Questions, ideas or a bug? <a href="https://github.com/ethanfrq/Taskly/issues">Open an issue</a>. If Taskly helps you, a ⭐ helps others find it.</sub>
+</td>
+</tr>
+</table>
+
 ## ⚖️ License
 
 [MIT](LICENSE). Taskly is an independent open-source project, not affiliated with, endorsed by or sponsored by Anthropic. Claude is a trademark of Anthropic.
