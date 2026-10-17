@@ -27,6 +27,7 @@ No external service is needed locally:
 - **Database:** without `DATABASE_URL`, Taskly uses [PGlite](https://pglite.dev), an embedded Postgres stored in `.data/pglite`. `npm run dev` applies the migrations first. Delete `.data/` to start from scratch.
 - **Sign-in codes:** without `RESEND_API_KEY`, emails are printed in the terminal running `npm run dev`.
 - **Configuration:** copy `.env.example` to `.env.local` to set any variable.
+- **Tests:** `createTestDb()` (src/test/db.ts) gives each test its own in-memory Postgres, loaded from a database the global setup migrates once per run, and closes it when the test ends. Don't create PGlite instances by hand in tests.
 
 | Command | What it does |
 |---|---|
