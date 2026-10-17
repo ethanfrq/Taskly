@@ -88,6 +88,19 @@ Taskly is an **open-source daily to-do app** you install on your phone. You conn
 </tr>
 </table>
 
+## 🎬 Watch
+
+Four short films, each in landscape and portrait. GitHub plays them in its file view; the overview also plays on the [website](https://taskly-day.vercel.app).
+
+| | Film | Landscape | Portrait |
+|---|---|---|---|
+| 🎬 | **Overview**, 30 s: the morning pile, one sentence to Claude, the list fills itself. | [▶ 16:9](site/assets/taskly-30s-en.mp4) | [▶ 9:16](site/assets/taskly-30s-en-vertical.mp4) |
+| 🔔 | **Reminders**, 21 s: to the minute, follow-ups, quiet hours, the briefing that opens Claude. | [▶ 16:9](site/assets/taskly-reminders-en.mp4) | [▶ 9:16](site/assets/taskly-reminders-en-vertical.mp4) |
+| 🔒 | **Tasks, not emails**, 20 s: who reads what, MCP, no API key, undo and disconnect. | [▶ 16:9](site/assets/taskly-privacy-en.mp4) | [▶ 9:16](site/assets/taskly-privacy-en-vertical.mp4) |
+| 🌙 | **Your day**, 21 s: natural language, one timeline, the evening review, the week. | [▶ 16:9](site/assets/taskly-day-en.mp4) | [▶ 9:16](site/assets/taskly-day-en-vertical.mp4) |
+
+<sub>French versions: replace <code>-en</code> with <code>-fr</code> in the file name, or open the <a href="README.fr.md">French README</a>. Made with the <a href="video/README.md">Remotion project in <code>video/</code></a>.</sub>
+
 <a id="get-started"></a>
 
 ## 🚀 Get started
