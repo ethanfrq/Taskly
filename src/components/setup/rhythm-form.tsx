@@ -13,7 +13,7 @@ export type Rhythm = {
 };
 
 const timeInput =
-  "rounded-[7px] bg-fill px-2 py-1 text-[15px] tabular-nums outline-none focus:ring-2 focus:ring-accent";
+  "rounded-[7px] bg-fill px-2 py-1 text-[15px] tabular-nums outline-none focus-visible:ring-2 focus-visible:ring-accent";
 
 /** Briefing and review times, quiet hours, reminder insistence (D-007). */
 export function RhythmForm({ value, onChange }: { value: Rhythm; onChange: (patch: Partial<Rhythm>) => void }) {
@@ -88,7 +88,7 @@ export function RhythmForm({ value, onChange }: { value: Rhythm; onChange: (patc
         />
         <span
           aria-hidden
-          className="relative h-[31px] w-[51px] shrink-0 rounded-full bg-fill transition-colors peer-checked:bg-[#34C759] peer-focus-visible:ring-2 peer-focus-visible:ring-accent after:absolute after:top-[2px] after:left-[2px] after:size-[27px] after:rounded-full after:bg-white after:shadow after:transition-transform peer-checked:after:translate-x-5"
+          className="relative h-[31px] w-[51px] shrink-0 rounded-full bg-fill transition-colors peer-checked:bg-success peer-focus-visible:ring-2 peer-focus-visible:ring-accent after:absolute after:top-[2px] after:left-[2px] after:size-[27px] after:rounded-full after:bg-white after:shadow after:transition-transform peer-checked:after:translate-x-5"
         />
       </label>
     </div>

@@ -34,7 +34,7 @@ export default async function StatsPage() {
           <div key={tile.label} className="rounded-xl bg-card p-3.5">
             <p className="text-[13px] text-text-secondary">{tile.label}</p>
             <p className="mt-1 flex items-center gap-1 text-[24px] font-semibold">
-              {tile.icon ? <IconFlame size={22} stroke={1.8} className="text-[#FF9500]" aria-hidden /> : null}
+              {tile.icon ? <IconFlame size={22} stroke={1.8} className="text-warning" aria-hidden /> : null}
               {tile.value}
             </p>
           </div>

@@ -81,7 +81,7 @@ export function InstallGuide() {
               </li>
             ))}
           </ol>
-          {oldIos ? <p className="mt-4 text-[14px] text-[#FF3B30]">{t.install.iosOldVersion}</p> : null}
+          {oldIos ? <p className="mt-4 text-[14px] text-danger">{t.install.iosOldVersion}</p> : null}
         </>
       ) : platform === "prompt" ? (
         <>

@@ -166,7 +166,7 @@ export function TodayView({ tasks, today, dateLabel, next, latestImport, latestR
 
           <div className="mt-5 flex flex-col gap-5 px-4">
             {overdue.length > 0 ? (
-              <Group title={<span className="text-[#FF3B30]">{t.today.overdue}</span>}>
+              <Group title={<span className="text-danger">{t.today.overdue}</span>}>
                 <GroupList>{overdue.map((task) => row(task, true))}</GroupList>
               </Group>
             ) : null}

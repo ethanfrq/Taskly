@@ -120,7 +120,7 @@ export function SharingPanel({ list, isOwner, inviteToken, participants, meId, o
                   type="button"
                   disabled={pending}
                   onClick={() => startTransition(() => removeMemberAction(list.id, p.id))}
-                  className="text-[14px] text-[#FF3B30]"
+                  className="text-[14px] text-danger"
                 >
                   {t.sharing.remove}
                 </button>
