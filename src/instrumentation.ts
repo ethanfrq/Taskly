@@ -6,6 +6,9 @@
  * 2. Local reminder scheduler: without QStash, sends due reminders every 20 s.
  *    On by default in development; on a long-running server (`next start` on
  *    a VPS) set TASKLY_INTERNAL_SCHEDULER=1. Serverless hosts use QStash.
+ * 3. Housekeeping: deletes expired bookkeeping rows once a day
+ *    (src/lib/housekeeping.ts), under the same switch. Serverless hosts call
+ *    GET /api/housekeeping from a cron instead (vercel.json).
  */
 export async function register() {
   if (process.env.NEXT_RUNTIME !== "nodejs") return;
@@ -17,14 +20,16 @@ export async function register() {
     if (filled.length) console.info(`🔐 Personal instance: ${filled.join(", ")} loaded from the database`);
   }
 
-  const wanted =
-    process.env.TASKLY_INTERNAL_SCHEDULER === "1" ||
-    (process.env.NODE_ENV === "development" && !process.env.QSTASH_TOKEN);
-  if (!wanted) return;
+  const internal = process.env.TASKLY_INTERNAL_SCHEDULER === "1";
+  const development = process.env.NODE_ENV === "development";
+  if (internal || (development && !process.env.QSTASH_TOKEN)) await startReminderSweep();
+  if (internal || development) await startHousekeeping();
+}
 
-  const state = globalThis as unknown as { taskly_scheduler?: NodeJS.Timeout };
+const state = globalThis as unknown as { taskly_scheduler?: NodeJS.Timeout; taskly_housekeeping?: NodeJS.Timeout };
+
+async function startReminderSweep() {
   if (state.taskly_scheduler) return;
-
   const { reminderDeps } = await import("./lib/reminders/runtime");
   const { fireDueReminders } = await import("./lib/reminders/service");
   let running = false;
@@ -40,4 +45,20 @@ export async function register() {
       running = false;
     }
   }, 20_000);
+}
+
+async function startHousekeeping() {
+  if (state.taskly_housekeeping) return;
+  const [{ getDb }, { cleanupDatabase }] = await Promise.all([import("./db"), import("./lib/housekeeping")]);
+  const run = async () => {
+    try {
+      const counts = await cleanupDatabase(getDb());
+      if (Object.values(counts).some(Boolean)) console.info("🧹 housekeeping", counts);
+    } catch (error) {
+      console.error("🧹 housekeeping failed", error);
+    }
+  };
+  // Once at start, then daily: a process restarted every day still gets its cleanup.
+  state.taskly_housekeeping = setInterval(run, 24 * 60 * 60 * 1000);
+  void run();
 }

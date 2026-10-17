@@ -155,7 +155,7 @@ flowchart LR
 
 ## ☁️ Self-hosting
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fethanfrq%2FTaskly&project-name=taskly&repository-name=taskly&env=BETTER_AUTH_SECRET,RESEND_API_KEY,EMAIL_FROM,NEXT_PUBLIC_VAPID_PUBLIC_KEY,VAPID_PRIVATE_KEY,VAPID_SUBJECT&envDescription=Secrets%20for%20sign-in%2C%20email%20codes%20and%20push%20notifications.&envLink=https%3A%2F%2Fgithub.com%2Fethanfrq%2FTaskly%2Fblob%2Fmain%2Fdocs%2Fself-hosting.md%23environment-variables&stores=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22neon%22%2C%22productSlug%22%3A%22neon%22%2C%22protocol%22%3A%22storage%22%7D%5D)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fethanfrq%2FTaskly&project-name=taskly&repository-name=taskly&env=BETTER_AUTH_SECRET,RESEND_API_KEY,EMAIL_FROM,NEXT_PUBLIC_VAPID_PUBLIC_KEY,VAPID_PRIVATE_KEY,VAPID_SUBJECT,CRON_SECRET&envDescription=Secrets%20for%20sign-in%2C%20email%20codes%2C%20push%20notifications%20and%20the%20daily%20cron.&envLink=https%3A%2F%2Fgithub.com%2Fethanfrq%2FTaskly%2Fblob%2Fmain%2Fdocs%2Fself-hosting.md%23environment-variables&stores=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22neon%22%2C%22productSlug%22%3A%22neon%22%2C%22protocol%22%3A%22storage%22%7D%5D)
 
 | You need | For | On Vercel |
 |---|---|---|
@@ -254,7 +254,7 @@ sequenceDiagram
 - **Tokens are bound to the MCP endpoint** ([RFC 8707](https://www.rfc-editor.org/rfc/rfc8707)): signed JWTs checked for signature, audience, expiry and scopes (`tasks:read`, `tasks:write`) on every call. Each call only sees the data of the user who approved it.
 - **Revocation is immediate.** “Disconnect Claude” deletes the grants, and the endpoint refuses any token issued before that moment, even one that hasn't expired.
 - **No passwords stored.** Passkeys (WebAuthn), or 6-digit email codes valid 10 minutes with 5 attempts.
-- **Every scheduler call is authenticated.** QStash callbacks are signature-checked; the cron sweep needs a secret compared in constant time.
+- **Every scheduler call is authenticated.** QStash callbacks are signature-checked; the cron endpoints (reminder sweep, daily housekeeping) need a secret compared in constant time.
 - **Fails closed.** In production, a missing auth secret, email provider or database stops the app with a clear error instead of falling back silently.
 
 </details>
