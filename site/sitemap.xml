@@ -10,4 +10,14 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://taskly-day.vercel.app/"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://taskly-day.vercel.app/fr"/>
   </url>
+  <url>
+    <loc>https://taskly-day.vercel.app/demo</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://taskly-day.vercel.app/demo"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://taskly-day.vercel.app/fr/demo"/>
+  </url>
+  <url>
+    <loc>https://taskly-day.vercel.app/fr/demo</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://taskly-day.vercel.app/demo"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://taskly-day.vercel.app/fr/demo"/>
+  </url>
 </urlset>
