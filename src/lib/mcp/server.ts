@@ -11,7 +11,7 @@ const sourceKind = z.enum(SOURCE_KINDS);
 
 export const INSTRUCTIONS = `Taskly is the user's daily to-do list with reminders. Dates are YYYY-MM-DD and times HH:MM (24h) in the user's time zone, which get_today returns.
 
-When the user asks to prepare their day (for example "Prepare my day in Taskly"):
+When the user asks to prepare their day (for example "Prepare my day in Taskly", "Prépare ma journée dans Taskly"):
 1. Call get_today to see what is already planned.
 2. Refresh the tasks you added earlier (see below).
 3. Read today's events from all of the user's calendar connectors and save them with add_calendar_events: pass each calendar event id as "id", and today's date as replace_day so meetings cancelled since last time disappear. Leave replace_day out if you could not read every calendar.
