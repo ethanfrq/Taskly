@@ -44,6 +44,7 @@ export const en: Dictionary = {
       invalidCode: "That code isn't right. Check it or ask for a new one.",
       expiredCode: "That code expired. Ask for a new one.",
       tooManyAttempts: "Too many attempts. Ask for a new code.",
+      tooManyRequests: "Too many requests at once. Try again in a few minutes.",
       passkeyCancelled: "Sign-in cancelled.",
       passkeyFailed: "The passkey didn't work. Use an email code instead.",
       generic: "Something went wrong. Try again.",

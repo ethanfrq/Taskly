@@ -57,6 +57,13 @@
       "when": 1792189887090,
       "tag": "0007_claude_disconnect",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1792231814075,
+      "tag": "0008_rate_limits",
+      "breakpoints": true
     }
   ]
 }

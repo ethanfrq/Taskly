@@ -112,6 +112,21 @@ With `TASKLY_INTERNAL_SCHEDULER=1`, the server checks for due reminders every 20
 
 To update: `git pull`, `npm ci`, `npm run db:migrate`, `npm run build`, then restart.
 
+<a id="abuse-protection"></a>
+
+## 🛡️ Abuse protection
+
+A public instance lets anyone type an email address and make Taskly send a code to it. Taskly limits that, with counters stored in Postgres so they hold across serverless instances and restarts:
+
+| What | Limit |
+|---|---|
+| Sign-in code requests | 5 per 10 minutes per IP |
+| Sign-in codes sent to one address | 5 per hour, whatever the IP (the address is stored as a hash) |
+| Code checks and sign-in attempts | Better Auth's defaults (3 per minute per IP) |
+| Claude registering as an OAuth client | 20 per hour per IP |
+
+The limits are on in production. They rely on the client IP: Vercel and a single reverse proxy such as Caddy pass it correctly; with several proxies in a row, set `TASKLY_TRUSTED_PROXIES`.
+
 <a id="environment-variables"></a>
 
 ## 🔧 Environment variables
@@ -128,6 +143,7 @@ To update: `git pull`, `npm ci`, `npm run db:migrate`, `npm run build`, then res
 | `QSTASH_TOKEN`, `QSTASH_CURRENT_SIGNING_KEY`, `QSTASH_NEXT_SIGNING_KEY` | One scheduler | Exact-time reminders through Upstash QStash. |
 | `CRON_SECRET` | One scheduler | Protects `/api/reminders/sweep` for an external cron. |
 | `TASKLY_INTERNAL_SCHEDULER` | One scheduler | `1` on a long-running server to send reminders from the process itself. |
+| `TASKLY_TRUSTED_PROXIES` | Behind a proxy chain | Comma-separated IPs or CIDR ranges of the proxies in front of Taskly (a CDN in front of your reverse proxy, for example), so rate limits see each visitor's own IP. Not needed on Vercel or behind a single Caddy. |
 | `NEXT_PUBLIC_SW_DEV` | No | `1` to register the service worker during `npm run dev`, to test push locally. |
 
 ## 🩺 Troubleshooting
@@ -136,7 +152,8 @@ To update: `git pull`, `npm ci`, `npm run db:migrate`, `npm run build`, then res
 |---|---|
 | Build fails with `DATABASE_URL is missing` | No Postgres connected on Vercel. Add Neon (step 2). |
 | "This page couldn't load", logs say `BETTER_AUTH_SECRET is missing` | Set the secret and redeploy. |
-| Sign-in says something went wrong, logs say `RESEND_API_KEY is missing` | Set the Resend key and `EMAIL_FROM`, then redeploy. |
+| The form says a code was sent but none arrives, logs say `RESEND_API_KEY is missing` | Set the Resend key and `EMAIL_FROM`, then redeploy. (Better Auth reports sending errors in the logs only, not to the visitor.) |
+| "Too many requests at once" for everyone | Behind a CDN plus a reverse proxy, the client IP can't be told apart: set `TASKLY_TRUSTED_PROXIES`. |
 | Codes never arrive | `EMAIL_FROM` isn't on a domain verified in Resend; check the Resend dashboard. |
 | No notifications on iPhone | Taskly must be installed on the home screen (iOS 16.4 or later), and notifications allowed in its onboarding. |
 | Notifications arrive but late | No scheduler configured: add QStash, a cron or `TASKLY_INTERNAL_SCHEDULER=1`. |
