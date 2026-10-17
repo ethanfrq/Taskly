@@ -90,7 +90,7 @@ Taskly est une **todo list du jour open source** que tu installes sur ton télé
 
 ## 🎬 En vidéo
 
-Quatre courts films, chacun en paysage et en portrait. GitHub les lit dans sa visionneuse ; ils tournent aussi sur le [site](https://taskly-day.vercel.app/fr).
+Quatre courts films, chacun en paysage et en portrait. GitHub les lit dans sa visionneuse ; la vue d'ensemble tourne aussi sur le [site](https://taskly-day.vercel.app/fr).
 
 | | Film | Paysage | Portrait |
 |---|---|---|---|

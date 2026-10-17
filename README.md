@@ -90,7 +90,7 @@ Taskly is an **open-source daily to-do app** you install on your phone. You conn
 
 ## 🎬 Watch
 
-Four short films, each in landscape and portrait. GitHub plays them in its file view; they also live on the [website](https://taskly-day.vercel.app).
+Four short films, each in landscape and portrait. GitHub plays them in its file view; the overview also plays on the [website](https://taskly-day.vercel.app).
 
 | | Film | Landscape | Portrait |
 |---|---|---|---|
