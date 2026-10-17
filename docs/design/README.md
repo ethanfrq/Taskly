@@ -38,7 +38,7 @@ The prototype is in French, the first language designed. English strings come wi
 
 ## Design tokens
 
-These are the prototype's values. The app will define them as CSS variables.
+These are the prototype's values. The app defines them as CSS variables in `src/app/globals.css` and, for the per-user theme, in `src/lib/theme/tokens.ts`. Components use them through Tailwind classes (`text-danger`, `bg-card`…), never a hex value: see rule 4 in [CONTRIBUTING](../../CONTRIBUTING.md).
 
 ### Accent palette
 
@@ -68,7 +68,16 @@ Custom colors are allowed. Text drawn in the accent is adjusted to keep 3:1 cont
 | Secondary text | `#6E6E73` | `#98989D` |
 | Separator | `#E5E5EA` | `#38383A` |
 | Fill (controls) | `#E3E3E8` | `#2C2C2E` |
-| Switch on | `#34C759` | `#34C759` |
+
+### Semantic colors
+
+The iOS system colors, with their dark variants. Tailwind classes: `text-danger`, `bg-danger`, `ring-danger`, `text-success`, `bg-success`, `text-warning`.
+
+| Token | Light | Dark | Used for |
+|---|---|---|---|
+| `--danger` | `#FF3B30` | `#FF453A` | Overdue tasks, errors, destructive actions |
+| `--success` | `#34C759` | `#30D158` | Switch on, a check that passed |
+| `--warning` | `#FF9500` | `#FF9F0A` | A check that needs attention, the streak flame |
 
 ### Shape and type
 

@@ -20,14 +20,14 @@ export function Field({
         aria-describedby={error ? errorId : undefined}
         className={[
           "w-full rounded-[10px] bg-card px-3.5 py-3 text-[16px] text-text outline-none",
-          "placeholder:text-text-secondary focus:ring-2 focus:ring-accent",
-          error ? "ring-2 ring-[#FF3B30]" : "",
+          "placeholder:text-text-secondary focus-visible:ring-2 focus-visible:ring-accent",
+          error ? "ring-2 ring-danger" : "",
           className,
         ].join(" ")}
         {...props}
       />
       {error ? (
-        <p id={errorId} role="alert" className="px-1 text-[13px] text-[#FF3B30]">
+        <p id={errorId} role="alert" className="px-1 text-[13px] text-danger">
           {error}
         </p>
       ) : null}

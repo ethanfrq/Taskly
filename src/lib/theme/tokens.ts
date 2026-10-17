@@ -1,7 +1,7 @@
 import { ensureContrast, textOnFill } from "./contrast";
 import { ACCENTS, CARD_SURFACE } from "./palette";
 
-/** Surface and text tokens, kept in sync with src/app/globals.css. */
+/** Surface, text and semantic color tokens, kept in sync with src/app/globals.css. */
 export const SURFACES = {
   light: {
     "--bg": "#f2f2f7",
@@ -10,6 +10,9 @@ export const SURFACES = {
     "--text-secondary": "#6e6e73",
     "--separator": "#e5e5ea",
     "--fill": "#e3e3e8",
+    "--danger": "#ff3b30",
+    "--success": "#34c759",
+    "--warning": "#ff9500",
   },
   dark: {
     "--bg": "#000000",
@@ -18,6 +21,9 @@ export const SURFACES = {
     "--text-secondary": "#98989d",
     "--separator": "#38383a",
     "--fill": "#2c2c2e",
+    "--danger": "#ff453a",
+    "--success": "#30d158",
+    "--warning": "#ff9f0a",
   },
 } as const;
 

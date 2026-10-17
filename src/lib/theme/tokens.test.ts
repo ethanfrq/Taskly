@@ -1,5 +1,21 @@
 import { describe, expect, it } from "vitest";
-import { accentVars, themeCss } from "./tokens";
+import { SURFACES, accentVars, themeCss } from "./tokens";
+
+describe("SURFACES", () => {
+  it("defines the semantic colors for both schemes", () => {
+    for (const token of ["--danger", "--success", "--warning"] as const) {
+      expect(SURFACES.light[token]).toMatch(/^#[0-9a-f]{6}$/);
+      expect(SURFACES.dark[token]).toMatch(/^#[0-9a-f]{6}$/);
+      expect(SURFACES.light[token]).not.toBe(SURFACES.dark[token]);
+    }
+  });
+
+  it("emits them in the theme for both schemes", () => {
+    const css = themeCss("#007AFF", "auto");
+    expect(css).toContain("--danger:#ff3b30");
+    expect(css).toContain("--danger:#ff453a");
+  });
+});
 
 describe("accentVars", () => {
   it("uses the iOS dark variant of a preset in dark mode", () => {

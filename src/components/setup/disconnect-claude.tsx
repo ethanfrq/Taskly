@@ -18,7 +18,7 @@ export function DisconnectClaude() {
         <button
           type="button"
           onClick={() => setConfirming(true)}
-          className="flex w-full items-center gap-3 px-4 py-3 text-left text-[#FF3B30]"
+          className="flex w-full items-center gap-3 px-4 py-3 text-left text-danger"
         >
           <IconPlugConnectedX size={20} stroke={1.8} aria-hidden />
           <span className="text-[16px]">{t.claude.disconnect}</span>
@@ -46,7 +46,7 @@ export function DisconnectClaude() {
               type="button"
               disabled={pending}
               onClick={() => startTransition(() => disconnectClaudeAction())}
-              className="inline-flex w-full items-center justify-center rounded-xl bg-[#FF3B30] px-4 py-3 text-[15px] font-medium text-white disabled:opacity-50"
+              className="inline-flex w-full items-center justify-center rounded-xl bg-danger px-4 py-3 text-[15px] font-medium text-white disabled:opacity-50"
             >
               {t.claude.disconnectConfirm}
             </button>
