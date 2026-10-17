@@ -16,7 +16,7 @@ import re
 import shutil
 from pathlib import Path
 
-from PIL import Image
+from PIL import Image, ImageDraw
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / "site"
@@ -90,6 +90,9 @@ EN = {
         ("Get reminded", "Taskly takes it from there: one clear checklist, and a notification at the right minute, even with Claude closed."),
     ],
     "features_h2": "Everything a day list needs.",
+    "desktop_h2": "On your computer too.",
+    "desktop_lead": "A sidebar, your day and what's next side by side, and N to add a task. Install it from your browser, like an app.",
+    "desktop_alt": "Taskly on a computer: a sidebar, today's tasks from Gmail, Calendar and Slack, and the progress, next meeting and Claude tiles on the right",
     "claude_title": "Claude prepares your day",
     "claude_text": "From the connectors Claude already uses. One tap undoes what it added, and duplicates are skipped.",
     "prompt": "“Prepare my day in Taskly”",
@@ -249,6 +252,9 @@ FR = {
         ("Être rappelé", "Taskly prend le relais : une checklist claire, et une notification à la bonne minute, même Claude fermé."),
     ],
     "features_h2": "Tout ce qu'il faut pour ta journée.",
+    "desktop_h2": "Sur ton ordinateur aussi.",
+    "desktop_lead": "Une barre latérale, ta journée et la suite côte à côte, et N pour ajouter une tâche. Installe-le depuis ton navigateur, comme une app.",
+    "desktop_alt": "Taskly sur un ordinateur : une barre latérale, les tâches du jour venues de Gmail, de l'agenda et de Slack, et à droite la progression, le prochain rendez-vous et Claude",
     "claude_title": "Claude prépare ta journée",
     "claude_text": "Avec les connecteurs que Claude utilise déjà. Un geste annule ce qu'il a ajouté, et les doublons sont ignorés.",
     "prompt": "« Prépare ma journée dans Taskly »",
@@ -383,6 +389,30 @@ def monogram(cls: str) -> str:
 
 def asset_hash(name: str) -> str:
     return hashlib.sha256((ASSETS / name).read_bytes()).hexdigest()[:8]
+
+
+DESKTOP_SIZE = (2000, 1128)  # the 2880 x 1624 window, scaled
+
+
+def desktop_window(lang: str) -> None:
+    """The desktop screenshot in a Mac window: rounded corners, a title bar and its three buttons."""
+    shot = Image.open(ROOT / f"docs/screenshots/desktop-{lang}.jpg").convert("RGBA")  # 2880 x 1560, 1440 x 780 at 2x
+    bar, radius, w = 64, 28, shot.width
+    h = shot.height + bar
+    window = Image.new("RGBA", (w, h), (38, 38, 40, 255))
+    window.paste(shot, (0, bar))
+    draw = ImageDraw.Draw(window)
+    draw.line([(0, bar - 1), (w, bar - 1)], fill=(0, 0, 0, 255), width=2)
+    for i, color in enumerate([(255, 95, 87), (254, 188, 46), (40, 200, 64)]):
+        cx = 36 + i * 40
+        draw.ellipse((cx - 12, bar // 2 - 12, cx + 12, bar // 2 + 12), fill=color + (255,))
+    mask = Image.new("L", (w * 2, h * 2), 0)
+    ImageDraw.Draw(mask).rounded_rectangle((0, 0, w * 2 - 1, h * 2 - 1), radius * 2, fill=255)
+    out = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    out.paste(window, (0, 0), mask.resize((w, h), Image.LANCZOS))
+    # A hairline so the window stands out on a black page.
+    ImageDraw.Draw(out).rounded_rectangle((0, 0, w - 1, h - 1), radius, outline=(255, 255, 255, 40), width=2)
+    out.resize(DESKTOP_SIZE, Image.LANCZOS).save(ASSETS / f"desktop-{lang}.webp", quality=84, method=6)
 
 
 def share_image(lang: str) -> None:
@@ -609,6 +639,14 @@ def page(t: dict) -> str:
         </div>
       </section>
 
+      <section id="desktop" class="section">
+        <div class="wrap">
+          <h2 class="reveal">{e(t["desktop_h2"])}</h2>
+          <p class="section-lead reveal">{e(t["desktop_lead"])}</p>
+          <img class="desktop-shot reveal" src="/assets/desktop-{lang}.webp" alt="{e(t["desktop_alt"])}" width="{DESKTOP_SIZE[0]}" height="{DESKTOP_SIZE[1]}" loading="lazy" decoding="async">
+        </div>
+      </section>
+
       <section class="section manifesto">
         {monogram("watermark")}
         <div class="wrap">
@@ -805,6 +843,7 @@ def main() -> None:
     shutil.copy(ROOT / "src/app/apple-icon.png", ASSETS / "apple-icon.png")
     for lang in PAGE_URLS:
         share_image(lang)
+        desktop_window(lang)
 
     (SITE / "index.html").write_text(versioned(page(EN)))
     (SITE / "fr").mkdir(exist_ok=True)
