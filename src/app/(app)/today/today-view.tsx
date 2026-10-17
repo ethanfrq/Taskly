@@ -16,6 +16,7 @@ import { enqueue, isNetworkError } from "@/lib/offline/outbox";
 import type { RefreshSummary } from "@/lib/tasks/refresh";
 import type { ImportSummary, TaskView } from "@/lib/tasks/service";
 import { toggleTaskAction, undoImportAction } from "../actions";
+import { type ClaudeState, PrepareWithClaude } from "./prepare-with-claude";
 import { RefreshBanner } from "./refresh-banner";
 
 type Props = {
@@ -26,9 +27,10 @@ type Props = {
   latestImport: ImportSummary | null;
   latestRefresh: RefreshSummary | null;
   listNames: string[];
+  claude: ClaudeState;
 };
 
-export function TodayView({ tasks, today, dateLabel, next, latestImport, latestRefresh, listNames }: Props) {
+export function TodayView({ tasks, today, dateLabel, next, latestImport, latestRefresh, listNames, claude }: Props) {
   const { locale, t } = useI18n();
   const [pending, startTransition] = useTransition();
   const outbox = useOutbox();
@@ -152,6 +154,7 @@ export function TodayView({ tasks, today, dateLabel, next, latestImport, latestR
               <p className="mt-1 text-[15px] text-text-secondary">{t.today.nothingNext}</p>
             )}
           </div>
+          <PrepareWithClaude claude={claude} className="col-span-2 xl:col-span-1" />
         </aside>
 
         <div className="flex flex-1 flex-col xl:order-1">
