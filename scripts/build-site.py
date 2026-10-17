@@ -4,15 +4,19 @@
 
 One template, two languages, so the pages can't drift apart. Copies the
 framed screenshots and the video posters from docs/readme/ and the brand files,
-and inlines Tabler icons from node_modules (run `npm install` first). The videos
+and inlines Tabler icons from node_modules (run `npm install` first). Also writes
+the social share images (needs Pillow), sitemap.xml and robots.txt. The videos
 themselves are rendered straight into site/assets/ by the Remotion project in
 video/. The page has no build step on Vercel: commit what this script writes.
 """
 import hashlib
 import html
+import json
 import re
 import shutil
 from pathlib import Path
+
+from PIL import Image
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / "site"
@@ -28,7 +32,8 @@ DEPLOY = (
     "&envLink=https%3A%2F%2Fgithub.com%2Fethanfrq%2FTaskly%2Fblob%2Fmain%2Fdocs%2Fself-hosting.md%23environment-variables"
     "&stores=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22neon%22%2C%22productSlug%22%3A%22neon%22%2C%22protocol%22%3A%22storage%22%7D%5D"
 )
-OG_IMAGE = "https://raw.githubusercontent.com/ethanfrq/Taskly/main/docs/brand/social-preview.png"
+SITE_URL = "https://taskly-day.vercel.app"
+PAGE_URLS = {"en": f"{SITE_URL}/", "fr": f"{SITE_URL}/fr"}
 SHOTS = ["today-dark", "agenda", "stats", "rhythm", "review", "onboarding-color"]
 POSTERS = ["poster-en", "poster-fr", "poster-en-vertical", "poster-fr-vertical"]
 
@@ -230,9 +235,49 @@ def monogram(cls: str) -> str:
     return svg.replace("<svg", f'<svg class="{cls}" aria-hidden="true" focusable="false"', 1)
 
 
+def asset_hash(name: str) -> str:
+    return hashlib.sha256((ASSETS / name).read_bytes()).hexdigest()[:8]
+
+
+def share_image(lang: str) -> None:
+    """The video poster, with the Taskly logo, cropped to the 1200 x 630 that social cards expect."""
+    card = Image.open(ROOT / f"docs/readme/poster-{lang}.webp").convert("RGB")
+    card = card.crop((0, 24, 1280, 696)).resize((1200, 630), Image.LANCZOS)
+    # The logo, cut out of the ivory-on-graphite social preview: only the ivory, not the gray tagline or the background.
+    social = Image.open(ROOT / "docs/brand/social-preview.png").convert("L")
+    social = social.crop(social.point(lambda v: 255 if v > 200 else 0).getbbox())
+    mark = social.point(lambda v: max(0, min(255, (v - 60) * 255 // 180)))
+    mark = mark.resize((220, round(220 * mark.height / mark.width)), Image.LANCZOS)
+    card.paste(Image.new("RGB", mark.size, (245, 243, 237)), (100, 64), mark)
+    card.save(ASSETS / f"og-{lang}.jpg", quality=86, optimize=True, progressive=True)
+
+
+def structured_data(t: dict) -> str:
+    """schema.org data for search engines: what Taskly is, that it's free, who made it."""
+    data = {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Taskly",
+        "description": t["description"],
+        "url": PAGE_URLS[t["lang"]],
+        "inLanguage": t["lang"],
+        "applicationCategory": "ProductivityApplication",
+        "operatingSystem": "iOS, Android, macOS, Windows, Linux",
+        "isAccessibleForFree": True,
+        "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"},
+        "license": "https://opensource.org/licenses/MIT",
+        "author": {"@type": "Person", "name": "Ethan", "url": "https://github.com/ethanfrq"},
+        "sameAs": [REPO],
+    }
+    return json.dumps(data, ensure_ascii=False)
+
+
 def page(t: dict) -> str:
     e = html.escape
     lang = t["lang"]
+    url = PAGE_URLS[lang]
+    other_locale = "en_US" if lang == "fr" else "fr_FR"
+    og_image = f"{SITE_URL}/assets/og-{lang}.jpg?v={asset_hash(f'og-{lang}.jpg')}"
     other_href, other_lang, other_label, other_title = t["other"]
 
     def shot(name: str, cls: str, extra: str = 'loading="lazy" decoding="async"') -> str:
@@ -277,11 +322,19 @@ def page(t: dict) -> str:
     <meta property="og:site_name" content="Taskly">
     <meta property="og:title" content="{e(t["title"])}">
     <meta property="og:description" content="{e(t["description"])}">
-    <meta property="og:image" content="{OG_IMAGE}">
-    <meta property="og:image:width" content="1280">
-    <meta property="og:image:height" content="640">
+    <meta property="og:url" content="{url}">
+    <meta property="og:image" content="{og_image}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="{e(t["title"])}">
     <meta property="og:locale" content="{t["og_locale"]}">
+    <meta property="og:locale:alternate" content="{other_locale}">
     <meta name="twitter:card" content="summary_large_image">
+    <link rel="canonical" href="{url}">
+    <link rel="alternate" hreflang="en" href="{PAGE_URLS["en"]}">
+    <link rel="alternate" hreflang="fr" href="{PAGE_URLS["fr"]}">
+    <link rel="alternate" hreflang="x-default" href="{PAGE_URLS["en"]}">
+    <script type="application/ld+json">{structured_data(t)}</script>
     <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/assets/apple-icon.png">
     <link rel="preload" as="image" href="/assets/poster-{t["lang"]}.webp" type="image/webp">
@@ -508,6 +561,8 @@ def main() -> None:
     shutil.copy(ROOT / "src/app/icon.svg", ASSETS / "icon.svg")
     shutil.copy(ROOT / "public/brand/taskly-app-icon.svg", ASSETS / "app-icon.svg")
     shutil.copy(ROOT / "src/app/apple-icon.png", ASSETS / "apple-icon.png")
+    for lang in PAGE_URLS:
+        share_image(lang)
 
     (SITE / "index.html").write_text(versioned(page(EN)))
     (SITE / "fr").mkdir(exist_ok=True)
@@ -517,6 +572,14 @@ def main() -> None:
         text = path.read_text()
         assert "—" not in text and "–" not in text, f"dash found in {path}"
         assert not re.search(r'"/(assets/[\w.-]+|styles\.css)"', text), f"unversioned asset URL in {path}"
+    alternates = "".join(f'\n    <xhtml:link rel="alternate" hreflang="{lang}" href="{href}"/>' for lang, href in PAGE_URLS.items())
+    urls = "".join(f"\n  <url>\n    <loc>{href}</loc>{alternates}\n  </url>" for href in PAGE_URLS.values())
+    (SITE / "sitemap.xml").write_text(
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">'
+        f"{urls}\n</urlset>\n"
+    )
+    (SITE / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {SITE_URL}/sitemap.xml\n")
     print("site/ built:", ", ".join(sorted(p.name for p in ASSETS.iterdir())))
 
 

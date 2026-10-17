@@ -10,7 +10,7 @@ The HTML is generated, so English and French stay in step. Change the text or th
 python3 scripts/build-site.py
 ```
 
-The script copies the framed screenshots from `docs/readme/` (rebuilt by `scripts/build-readme-art.py`) and inlines [Tabler](https://tabler.io/icons) icons from `node_modules`, so run `npm install` once first.
+The script copies the framed screenshots from `docs/readme/` (rebuilt by `scripts/build-readme-art.py`) and inlines [Tabler](https://tabler.io/icons) icons from `node_modules`, so run `npm install` once first. It also writes what search engines and link previews read: the share images `assets/og-en.jpg` and `assets/og-fr.jpg` (the video posters with the logo, made with Pillow), `sitemap.xml` and `robots.txt`; each page names its canonical URL and its other-language version.
 
 Preview it locally:
 
