@@ -1,106 +1,107 @@
-<div align="center">
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="public/brand/taskly-logo-ivory.svg">
-  <img alt="Taskly" src="public/brand/taskly-logo-graphite.svg" width="280">
-</picture>
-
-### Your day, sorted by Claude.
-
-An open-source daily to-do app you install on your phone.<br>
-Claude turns your mail, calendar and messages into a checklist, and Taskly makes sure you get reminded.
-
-[![Version](https://img.shields.io/badge/version-0.5.0%20beta-F5A623)](https://github.com/ethanfrq/Taskly/releases)
-[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
-![PWA](https://img.shields.io/badge/PWA-iPhone%20%C2%B7%20Android%20%C2%B7%20Desktop-171717)
-![MCP](https://img.shields.io/badge/Claude-MCP%20connector-D97757)
-
-**[Quick start](#quick-start)** · [Self-hosting](docs/self-hosting.md) · [Connect Claude](docs/connect-claude.md) · [Contributing](CONTRIBUTING.md) · [Français](README.fr.md)
-
-<br>
-
-<img src="docs/screenshots/today-dark.jpg" width="190" alt="Today: progress ring, next appointment and the tasks Claude added">&nbsp;
-<img src="docs/screenshots/agenda.jpg" width="190" alt="Agenda: meetings and tasks in time order">&nbsp;
-<img src="docs/screenshots/onboarding-color.jpg" width="190" alt="Onboarding: pick your accent color with a live preview">&nbsp;
-<img src="docs/screenshots/health-check.jpg" width="190" alt="Health check: app installed, notifications, Claude connected">
-
-<sub>Today · Agenda · Onboarding · Health check</sub>
-
-</div>
-
-> [!NOTE]
-> **Beta.** Every planned feature is in, tested and documented, but no public instance has run Taskly for long yet. [Feedback is welcome](https://github.com/ethanfrq/Taskly/issues).
-
-## Contents
-
-- [Highlights](#highlights)
-- [Quick start](#quick-start): [install](#install) · [connect Claude](#connect-claude)
-- [How it works](#how-it-works)
-- [Self-hosting](#self-hosting)
-- [Development](#development)
-- [Privacy and security](#privacy)
-- [Project status](#status)
-- [Contributing](#contributing)
-
-<a id="highlights"></a>
-
-## ✨ Highlights
-
-- 🤖 **Filled by Claude.** Say "Prepare my day in Taskly": Claude turns your Gmail, Outlook, calendars, Slack, Teams or Notion into tasks, each linked to its source.
-- 🔔 **Reminders that actually ring.** Push notifications at the exact minute, follow-ups for what matters, quiet hours, morning briefing and evening review.
-- ☀️ **One clear day.** A Today checklist with a progress ring and your next meeting, plus a two-week agenda.
-- ⌨️ **Type it like you say it.** "Call Paul tomorrow 2pm !!" sets the date, the time and the priority.
-- 📱 **An app, not a website.** Installs on iPhone, Android and desktop, and works offline.
-- 🔐 **Private by design.** No password, no API key, never your emails: only the tasks.
-
-<details>
-<summary><b>All features</b></summary>
-
-<br>
-
-| | |
-|---|---|
-| **Tasks** | Lists, tags, subtasks, priorities, drag to reorder, recurring tasks (daily, weekdays, weekly, monthly), natural language input |
-| **Your day** | Today view with progress ring and next appointment, two-week agenda in time order, carry-over to tomorrow |
-| **Claude** | MCP connector with OAuth, one-tap undo of what Claude added, duplicates skipped, cancelled meetings removed, health check, disconnect in one tap |
-| **Reminders** | Web Push at the exact minute, follow-ups for priority tasks, snooze, quiet hours, app badge, morning briefing, evening review; "Done" and "Later" from the notification on Android |
-| **Focus** | Focus timer (15, 25 or 50 min), weekly stats: streak, completion rate, what Claude helped with |
-| **Sharing** | Shared lists with an invite link, tasks assigned to someone |
-| **App** | Installable PWA, offline mode with sync, your accent color, light and dark mode with automatic contrast, French and English |
-| **Account** | Passkeys (Face ID, Touch ID) or a 6-digit email code, data export as JSON, account deletion |
-
-</details>
-
-<details>
-<summary><b>More screenshots</b></summary>
-
-<br>
-
 <p align="center">
-  <img src="docs/screenshots/today-light.jpg" width="190" alt="Today in light mode">&nbsp;
-  <img src="docs/screenshots/stats.jpg" width="190" alt="Weekly stats">&nbsp;
-  <img src="docs/screenshots/focus.jpg" width="190" alt="Focus timer">
+  <img src="docs/readme/hero-en.webp" alt="Taskly: your day, sorted by Claude. Mail, calendar and messages become one checklist, with reminders that actually ring." width="100%">
 </p>
 
-</details>
+<p align="center">
+  <a href="https://github.com/ethanfrq/Taskly/releases"><img src="https://img.shields.io/badge/version-0.5.0%20beta-F5A623" alt="Version 0.5.0 beta"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT license"></a>
+  <img src="https://img.shields.io/badge/PWA-iPhone%20%C2%B7%20Android%20%C2%B7%20Desktop-171717" alt="PWA for iPhone, Android and desktop">
+  <img src="https://img.shields.io/badge/Claude-MCP%20connector-D97757" alt="Claude MCP connector">
+</p>
 
-<a id="quick-start"></a>
+<p align="center">
+  <b><a href="#get-started">Get started</a></b> ·
+  <a href="docs/self-hosting.md">Self-hosting</a> ·
+  <a href="docs/connect-claude.md">Connect Claude</a> ·
+  <a href="CONTRIBUTING.md">Contributing</a> ·
+  <a href="README.fr.md">Français</a>
+</p>
 
-## 🚀 Quick start
+<br>
 
-| I want to… | Go to |
-|---|---|
-| Use Taskly on my phone | [Install it](#install), then [connect Claude](#connect-claude) |
-| Host Taskly for myself or my team | [Self-hosting](#self-hosting) |
-| Work on the code | [Development](#development) |
+Taskly is an **open-source daily to-do app** you install on your phone. You connect it to Claude once; then every morning Claude reads your mail, calendar and messages and fills your day with what actually needs doing. Taskly takes it from there: one clear checklist, and reminders at the right minute.
+
+> [!NOTE]
+> **Beta.** Every planned feature is in, tested and documented, but no public instance has run Taskly for long yet. [Feedback welcome.](https://github.com/ethanfrq/Taskly/issues)
+
+## ✨ What it does
+
+<table>
+<tr>
+<td align="center" valign="top" width="33%">
+<img src="docs/readme/today-dark.webp" width="240" alt="Today: progress ring, next appointment and the tasks Claude added"><br>
+<b>🤖 Claude prepares your day</b><br>
+<sub>Say “Prepare my day in Taskly”: your mail, calendar and messages become tasks, each linked to its source.</sub>
+</td>
+<td align="center" valign="top" width="33%">
+<img src="docs/readme/agenda.webp" width="240" alt="Agenda: meetings and tasks in time order"><br>
+<b>📅 One timeline</b><br>
+<sub>Meetings and tasks for the next two weeks, in order. Cancelled meetings disappear.</sub>
+</td>
+<td align="center" valign="top" width="33%">
+<img src="docs/readme/rhythm.webp" width="240" alt="Settings: morning briefing, evening review, quiet hours, reminder insistence"><br>
+<b>🔔 Reminders that ring</b><br>
+<sub>At the exact minute, with follow-ups for what matters and quiet hours for the rest.</sub>
+</td>
+</tr>
+<tr>
+<td align="center" valign="top" width="33%">
+<img src="docs/readme/review.webp" width="240" alt="Evening review: what's left, moved to tomorrow in one tap"><br>
+<b>🌙 Close the day</b><br>
+<sub>The evening review shows what's left and moves it to tomorrow in one tap.</sub>
+</td>
+<td align="center" valign="top" width="33%">
+<img src="docs/readme/onboarding-color.webp" width="240" alt="Onboarding: pick your accent color with a live preview"><br>
+<b>🎨 Make it yours</b><br>
+<sub>Your accent color, light or dark, with contrast adjusted so text stays readable.</sub>
+</td>
+<td align="center" valign="top" width="33%">
+<img src="docs/readme/stats.webp" width="240" alt="Weekly stats: tasks done, streak, completion rate, focus time"><br>
+<b>📊 See your week</b><br>
+<sub>Streak, completion rate, focus time and what Claude helped with.</sub>
+</td>
+</tr>
+</table>
+
+**And also**
+
+<table>
+<tr>
+<td valign="top" width="33%">⌨️ <b>Natural language</b><br><sub>“Call Paul tomorrow 2pm !!” sets date, time and priority</sub></td>
+<td valign="top" width="33%">🗂️ <b>Lists, tags, subtasks</b><br><sub>Priorities, drag to reorder, recurring tasks</sub></td>
+<td valign="top" width="33%">📴 <b>Works offline</b><br><sub>Check tasks without a connection, synced later</sub></td>
+</tr>
+<tr>
+<td valign="top" width="33%">👥 <b>Shared lists</b><br><sub>Invite link and tasks assigned to someone</sub></td>
+<td valign="top" width="33%">🎯 <b>Focus timer</b><br><sub>15, 25 or 50 minutes on one task</sub></td>
+<td valign="top" width="33%">🔐 <b>No password</b><br><sub>Face ID / passkeys, or a 6-digit email code</sub></td>
+</tr>
+<tr>
+<td valign="top" width="33%">🩺 <b>Health check</b><br><sub>See that the app, notifications and Claude really work</sub></td>
+<td valign="top" width="33%">🌍 <b>French and English</b><br><sub>The whole app, including notifications</sub></td>
+<td valign="top" width="33%">📤 <b>Your data</b><br><sub>Export everything as JSON, or delete your account</sub></td>
+</tr>
+</table>
+
+<a id="get-started"></a>
+
+## 🚀 Get started
+
+<table>
+<tr>
+<td valign="top" width="33%"><b>📱 Use it</b><br><sub>Open a Taskly instance on your phone, add it to the home screen, follow the two-minute onboarding.</sub><br><br>→ <a href="#install">Install</a> · <a href="#connect-claude">Connect Claude</a></td>
+<td valign="top" width="33%"><b>☁️ Host it</b><br><sub>One click on Vercel, or any Node.js server with Postgres. For you, your family or your team.</sub><br><br>→ <a href="#self-hosting">Self-hosting</a></td>
+<td valign="top" width="33%"><b>💻 Build it</b><br><sub>Clone, <code>npm install</code>, <code>npm run dev</code>. No account, no key, nothing to configure.</sub><br><br>→ <a href="#development">Development</a></td>
+</tr>
+</table>
 
 <a id="install"></a>
 
 ### 📱 Install it
 
 1. Open your Taskly instance in **Safari** (iPhone) or **Chrome** (Android, desktop).
-2. Install it: **Share › Add to Home Screen** on iPhone, **Install app** on Android and desktop.
-3. Open Taskly from your home screen and follow the onboarding: account, color, notifications, Claude, and a final check that everything works.
+2. Add it: **Share › Add to Home Screen** on iPhone, **Install app** on Android and desktop.
+3. Launch Taskly from the home screen and follow the onboarding: account, color, notifications, Claude.
 
 > [!IMPORTANT]
 > On iPhone, notifications only work once Taskly is on the home screen (iOS 16.4 or later).
@@ -110,22 +111,22 @@ Claude turns your mail, calendar and messages into a checklist, and Taskly makes
 ### 🤖 Connect Claude
 
 1. In Taskly, open **Settings › Connect Claude** and copy the connector address.
-2. In Claude, add it as a **custom connector** and sign in to Taskly to approve.
-3. Each morning, ask Claude: **"Prepare my day in Taskly"**.
+2. In Claude, add it as a **custom connector**, then sign in to Taskly to approve.
+3. Every morning, ask Claude: **“Prepare my day in Taskly”**.
 
-| Claude plan | What to know |
+| Your Claude plan | What to know |
 |---|---|
-| Free | One custom connector allowed, so Taskly can be it. Access to the mail and calendar connectors may be limited. |
+| Free | One custom connector allowed: Taskly can be it. Access to mail and calendar connectors may be limited. |
 | Pro / Max | Add Taskly in Claude's connector settings. |
 | Team / Enterprise | An organization owner adds Taskly once for everyone. |
 
-The tools Claude gets and the security model: [docs/connect-claude.md](docs/connect-claude.md).
+The tools Claude gets and how access is secured: [docs/connect-claude.md](docs/connect-claude.md).
 
 <a id="how-it-works"></a>
 
 ## 🧠 How it works
 
-Taskly doesn't call Claude. It's the other way around: Taskly exposes an [MCP](https://modelcontextprotocol.io) server, and Claude, which already reads your mail and calendar through its own connectors, writes the tasks into Taskly.
+Taskly never calls Claude. It's the other way around: Taskly exposes an [MCP](https://modelcontextprotocol.io) server, and Claude, which already reads your mail and calendar through its own connectors, writes the tasks into Taskly.
 
 ```mermaid
 flowchart LR
@@ -141,7 +142,7 @@ flowchart LR
   Q[Reminder scheduler] -- "Web Push" --> A
 ```
 
-- **Your Claude plan is enough.** No Anthropic API key, no AI cost for whoever hosts Taskly.
+- **Your Claude plan is enough.** No Anthropic API key, no AI bill for whoever hosts Taskly.
 - **Taskly never receives your emails.** Only the tasks Claude creates, with a link back to the source.
 - **Taskly works without Claude.** Manual tasks, reminders and the checklist stand on their own.
 
@@ -154,7 +155,7 @@ flowchart LR
 | You need | For | On Vercel |
 |---|---|---|
 | Postgres | Accounts, tasks, reminders | Neon, offered by the button |
-| [Resend](https://resend.com) | Sign-in codes by email | API key |
+| [Resend](https://resend.com) | Sign-in codes by email | An API key |
 | VAPID keys | Push notifications | `npx web-push generate-vapid-keys` |
 | A scheduler | Reminders at the exact minute | Upstash QStash, from the Marketplace |
 
@@ -179,40 +180,37 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:3000. Nothing to configure: the local database lives in `.data/`, sign-in codes are printed in the terminal and push keys are generated for you. Before pushing:
+Open http://localhost:3000. The local database lives in `.data/`, sign-in codes are printed in the terminal and push keys are generated for you. Before pushing:
 
 ```bash
 npm run lint && npm run typecheck && npm test
 ```
 
-All the commands, branch and commit conventions are in [CONTRIBUTING.md](CONTRIBUTING.md).
+Commands, branch and commit conventions: [CONTRIBUTING.md](CONTRIBUTING.md). Technical choices and their trade-offs: [docs/adr](docs/adr/README.md).
 
-**Stack:** [Next.js](https://nextjs.org) 16 (React 19, TypeScript) · Tailwind CSS 4 · Postgres with [Drizzle](https://orm.drizzle.team) ([PGlite](https://pglite.dev) locally) · [Better Auth](https://www.better-auth.com) (passkeys, email codes, OAuth 2.1) · [MCP TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk) · Web Push with [Upstash QStash](https://upstash.com/docs/qstash) · [Vitest](https://vitest.dev). Why each one: [docs/adr](docs/adr/README.md).
+| Layer | Built with |
+|---|---|
+| App | [Next.js](https://nextjs.org) 16, React 19, TypeScript, Tailwind CSS 4 |
+| Data | Postgres with [Drizzle](https://orm.drizzle.team); [PGlite](https://pglite.dev) locally and in tests |
+| Auth | [Better Auth](https://www.better-auth.com): passkeys, email codes, OAuth 2.1 server for Claude |
+| Claude | [MCP TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk) |
+| Reminders | Web Push, [Upstash QStash](https://upstash.com/docs/qstash) or the server itself |
+| Tests | [Vitest](https://vitest.dev) |
 
 <a id="privacy"></a>
 
 ## 🔒 Privacy and security
 
 - **Tasks, not emails.** Taskly stores the tasks Claude creates and a link to their source, never the content of your messages.
-- **You approve what Claude gets** on Taskly's consent screen, and **Settings › Connect Claude › Disconnect Claude** revokes it at once, even tokens that haven't expired yet.
-- **Your data is yours.** Export everything as JSON or delete your account in Settings.
-- **Found a vulnerability?** Report it privately, see [SECURITY.md](SECURITY.md).
+- **You decide what Claude gets** on Taskly's consent screen. **Settings › Connect Claude › Disconnect Claude** revokes it at once, even tokens that haven't expired.
+- **Your data is yours.** Export everything as JSON or delete your account from Settings.
+- **Found a vulnerability?** Report it privately: [SECURITY.md](SECURITY.md).
 
-<a id="status"></a>
+## 🗺️ Status and contributing
 
-## 🗺️ Project status
+All five milestones are shipped: **v0.1** Core · **v0.2** Claude · **v0.3** Reminders · **v0.4** Comfort · **v0.5** Sharing. What each one brought, with its pull requests: [v0.5.0 release notes](https://github.com/ethanfrq/Taskly/releases/tag/v0.5.0) and [milestones](https://github.com/ethanfrq/Taskly/milestones?state=closed).
 
-All five milestones are shipped: **v0.1** Core · **v0.2** Claude · **v0.3** Reminders · **v0.4** Comfort · **v0.5** Sharing. What each one brought, with the pull requests behind it, is in the [v0.5.0 release notes](https://github.com/ethanfrq/Taskly/releases/tag/v0.5.0) and the [milestones](https://github.com/ethanfrq/Taskly/milestones?state=closed).
-
-Next: real-world use. Ideas and bug reports go in [issues](https://github.com/ethanfrq/Taskly/issues).
-
-<a id="contributing"></a>
-
-## 🤝 Contributing
-
-Contributions are welcome, one small pull request at a time. Start with [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md).
-
-The design is documented too: a [clickable prototype](https://htmlpreview.github.io/?https://github.com/ethanfrq/Taskly/blob/main/docs/design/prototype.html) of the whole iPhone flow and every design decision in [docs/design](docs/design/README.md).
+Contributions are welcome, one small pull request at a time: start with [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md). The design is documented too: a [clickable prototype](https://htmlpreview.github.io/?https://github.com/ethanfrq/Taskly/blob/main/docs/design/prototype.html) of the whole iPhone flow and every decision in [docs/design](docs/design/README.md).
 
 ## ⚖️ License
 
