@@ -10,8 +10,8 @@
 An open-source daily to-do app you install on your phone.<br>
 Claude turns your mail, calendar and messages into a checklist, and Taskly makes sure you get reminded.
 
-[![Release](https://img.shields.io/github/v/release/ethanfrq/Taskly?include_prereleases&label=release&color=F5A623)](https://github.com/ethanfrq/Taskly/releases)
-[![License](https://img.shields.io/github/license/ethanfrq/Taskly?color=blue)](LICENSE)
+[![Version](https://img.shields.io/badge/version-0.5.0%20beta-F5A623)](https://github.com/ethanfrq/Taskly/releases)
+[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 ![PWA](https://img.shields.io/badge/PWA-iPhone%20%C2%B7%20Android%20%C2%B7%20Desktop-171717)
 ![MCP](https://img.shields.io/badge/Claude-MCP%20connector-D97757)
 

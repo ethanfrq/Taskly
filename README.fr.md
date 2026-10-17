@@ -10,8 +10,8 @@
 Une todo list du jour open source, à installer sur ton téléphone.<br>
 Claude transforme tes mails, ton agenda et tes messages en checklist, et Taskly s'assure que tu reçois tes rappels.
 
-[![Version](https://img.shields.io/github/v/release/ethanfrq/Taskly?include_prereleases&label=version&color=F5A623)](https://github.com/ethanfrq/Taskly/releases)
-[![Licence](https://img.shields.io/github/license/ethanfrq/Taskly?label=licence&color=blue)](LICENSE)
+[![Version](https://img.shields.io/badge/version-0.5.0%20b%C3%AAta-F5A623)](https://github.com/ethanfrq/Taskly/releases)
+[![Licence](https://img.shields.io/badge/licence-MIT-blue)](LICENSE)
 ![PWA](https://img.shields.io/badge/PWA-iPhone%20%C2%B7%20Android%20%C2%B7%20Ordinateur-171717)
 ![MCP](https://img.shields.io/badge/Claude-connecteur%20MCP-D97757)
 
