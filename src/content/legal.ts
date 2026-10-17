@@ -21,6 +21,7 @@ export const PRIVACY: Record<Locale, LegalDoc> = {
           "Pour chaque appareil qui reçoit des notifications : l'adresse technique du service de notifications et le navigateur utilisé.",
           "Tes clés d'identification (Face ID, Touch ID) : seulement leur partie publique, jamais tes données biométriques, qui ne quittent pas ton appareil.",
           "Les événements d'agenda et les tâches que Claude ajoute, avec un lien vers leur source.",
+          "Pour bloquer les abus : l'adresse IP des demandes de connexion, gardée le temps de la limite (une heure au plus en temps normal), et l'adresse IP et le navigateur de chaque session ouverte, effacés à la déconnexion. Une adresse email qui reçoit des codes n'est comptée que sous forme chiffrée (empreinte).",
         ],
       },
       {
@@ -62,6 +63,7 @@ export const PRIVACY: Record<Locale, LegalDoc> = {
           "For each device that receives notifications: the push service's technical address and the browser used.",
           "Your passkeys (Face ID, Touch ID): only their public part, never biometric data, which never leaves your device.",
           "Calendar events and tasks Claude adds, with a link to their source.",
+          "To stop abuse: the IP address of sign-in requests, kept for as long as the limit lasts (normally an hour at most), and the IP address and browser of each open session, deleted when you sign out. An address that receives codes is only counted as a hash.",
         ],
       },
       {

@@ -13,8 +13,10 @@ type Step = "start" | "code" | "passkey-offer";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function errorMessage(code: string | undefined, t: ReturnType<typeof useI18n>["t"]) {
-  switch (code) {
+function errorMessage(err: { code?: string; status?: number }, t: ReturnType<typeof useI18n>["t"]) {
+  // Per-IP limits answer 429 without a code; the per-address cap says TOO_MANY_CODES.
+  if (err.status === 429 || err.code === "TOO_MANY_CODES") return t.auth.errors.tooManyRequests;
+  switch (err.code) {
     case "INVALID_OTP":
       return t.auth.errors.invalidCode;
     case "OTP_EXPIRED":
@@ -80,7 +82,7 @@ export function SignInForm({ next, oauth = false }: { next: string; oauth?: bool
       setError(null);
       const { error: err } = await authClient.emailOtp.sendVerificationOtp({ email: address, type: "sign-in" });
       if (err) {
-        setError(errorMessage(err.code, t));
+        setError(errorMessage(err, t));
         return;
       }
       setEmail(address);
@@ -99,7 +101,7 @@ export function SignInForm({ next, oauth = false }: { next: string; oauth?: bool
       setError(null);
       const { error: err } = await authClient.signIn.emailOtp({ email, otp: code });
       if (err) {
-        setError(errorMessage(err.code, t));
+        setError(errorMessage(err, t));
         return;
       }
       if (passkeys && !oauth) setStep("passkey-offer");
