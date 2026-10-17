@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://taskly-day.vercel.app/sitemap.xml
