@@ -1,21 +1,23 @@
 /*
  * Taskly landing page. Plain CSS, no build step.
  * Shapes: interactive elements are pills, surfaces use --radius (24px).
- * One accent (the brand orange), light and dark from prefers-color-scheme.
+ * The app's own colors: iOS grays, and its default accent, system blue.
+ * Filled buttons use a deeper blue (#0071e3) so white labels stay above 4.5:1.
+ * Light and dark from prefers-color-scheme, like the app on "Auto".
  */
 
 :root {
-  --bg: #f5f3ed;
-  --surface: #fffdf8;
-  --surface-2: #ebe8e0;
-  --line: rgb(23 23 23 / 0.09);
-  --text: #171717;
-  --muted: #5e5c57;
-  --accent: #f5a623;
-  --accent-text: #8f5400;
-  --on-accent: #171717;
-  --glow: rgb(245 166 35 / 0.22);
-  --shadow: 0 24px 60px rgb(60 44 10 / 0.12);
+  --bg: #f2f2f7;
+  --surface: #ffffff;
+  --surface-2: #e5e5ea;
+  --line: rgb(60 60 67 / 0.12);
+  --text: #000000;
+  --muted: #6e6e73;
+  --accent: #0071e3;
+  --accent-text: #0066cc;
+  --on-accent: #ffffff;
+  --glow: rgb(0 122 255 / 0.2);
+  --shadow: 0 24px 60px rgb(0 30 80 / 0.12);
   --radius: 24px;
   --wrap: 1160px;
   --gutter: clamp(20px, 5vw, 40px);
@@ -28,15 +30,15 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #121212;
+    --bg: #000000;
     --surface: #1c1c1e;
-    --surface-2: #242426;
-    --line: rgb(245 243 237 / 0.08);
-    --text: #f5f3ed;
-    --muted: #a1a1a6;
-    --accent-text: #f5a623;
-    --glow: rgb(245 166 35 / 0.16);
-    --shadow: 0 24px 60px rgb(0 0 0 / 0.45);
+    --surface-2: #2c2c2e;
+    --line: rgb(255 255 255 / 0.1);
+    --text: #ffffff;
+    --muted: #98989d;
+    --accent-text: #2997ff;
+    --glow: rgb(10 132 255 / 0.22);
+    --shadow: 0 24px 60px rgb(0 0 0 / 0.6);
   }
 }
 

@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/ethanfrq/Taskly/releases"><img src="https://img.shields.io/badge/version-0.5.0%20beta-F5A623" alt="Version 0.5.0 beta"></a>
+  <a href="https://github.com/ethanfrq/Taskly/releases"><img src="https://img.shields.io/badge/version-0.5.0%20beta-0A84FF" alt="Version 0.5.0 beta"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT license"></a>
   <img src="https://img.shields.io/badge/PWA-iPhone%20%C2%B7%20Android%20%C2%B7%20Desktop-171717" alt="PWA for iPhone, Android and desktop">
   <img src="https://img.shields.io/badge/Claude-MCP%20connector-D97757" alt="Claude MCP connector">
