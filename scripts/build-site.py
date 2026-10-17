@@ -50,7 +50,7 @@ EN = {
     "description": "An open-source daily to-do app you install on your phone. Claude turns your mail, calendar and messages into one checklist, with reminders that actually ring.",
     "skip": "Skip to content",
     "nav_label": "Main",
-    "nav": ["How it works", "Features", "Open source"],
+    "nav": ["How it works", "Features", "Open source", "FAQ"],
     "eyebrow": "Free and open source",
     "h1": ["Your day,", "sorted by Claude."],
     "lead": "Claude turns your mail, calendar and messages into one checklist. Taskly makes sure you get reminded.",
@@ -116,6 +116,19 @@ EN = {
     "footer": [("GitHub", REPO), ("Self-hosting guide", f"{REPO}/blob/main/docs/self-hosting.md"), ("Connect Claude", f"{REPO}/blob/main/docs/connect-claude.md"), ("MIT license", f"{REPO}/blob/main/LICENSE")],
     "footer_label": "Project links",
     "disclaimer": "Taskly is an independent open-source project, not affiliated with Anthropic. Claude is a trademark of Anthropic.",
+    "faq_h2": "Questions, answered.",
+    "faq": [
+        ("Is it free?", "Yes. Taskly is open source under the MIT license. Your own instance fits in the free plans of Vercel and Neon, and Claude's free plan is enough for the connector.", None),
+        ("Which Claude plan do I need?", "Any. On the free plan, Taskly can be your one custom connector. On Pro and Max, add it in your connector settings. On Team and Enterprise, an organization owner adds it once.", ("How to connect Claude", f"{REPO}/blob/main/docs/connect-claude.md")),
+        ("Does Taskly read my email?", "No. Claude reads your email, calendar and messages with its own connectors. Taskly only receives the tasks and today's meetings Claude sends it, each task with a link back to its source.", None),
+        ("Do I have to ask Claude every morning?", "One tap is enough. The morning briefing opens Claude with “Prepare my day in Taskly” already typed, and the Prepare my day button in the app does the same. Taskly can't start Claude on its own.", None),
+        ("Which devices does it run on?", "iPhone, Android and computers, installed from the browser like an app. On iPhone, add it to the home screen from Safari: notifications need iOS 16.4 or later.", None),
+        ("How do I get my own Taskly?", "There's no public instance: everyone runs their own. The Deploy button creates it on Vercel with a Neon database, and personal mode lets only your email address sign in.", ("Self-hosting guide", f"{REPO}/blob/main/docs/self-hosting.md")),
+        ("What if Claude gets it wrong?", "Everything Claude adds can be undone in one tap, every task links to the email or message it came from, and a task you edited is never rewritten by Claude.", None),
+        ("Where is my data?", "In your instance's Postgres database, nowhere else. Settings lets you export everything as JSON or delete your account.", None),
+    ],
+    "closing_h2": "Your day starts here.",
+    "closing_lead": "Install Taskly on your phone, connect Claude once, and let it prepare your day.",
 }
 
 FR = {
@@ -127,7 +140,7 @@ FR = {
     "description": "Une todo list du jour open source, à installer sur ton téléphone. Claude transforme tes mails, ton agenda et tes messages en checklist, avec des rappels qui sonnent vraiment.",
     "skip": "Aller au contenu",
     "nav_label": "Navigation principale",
-    "nav": ["Comment ça marche", "Fonctions", "Open source"],
+    "nav": ["Comment ça marche", "Fonctions", "Open source", "FAQ"],
     "eyebrow": "Gratuit et open source",
     "h1": ["Ta journée,", "triée par Claude."],
     "lead": "Claude transforme tes mails, ton agenda et tes messages en une checklist. Taskly s'assure que tu reçois tes rappels.",
@@ -193,8 +206,28 @@ FR = {
     "footer": [("GitHub", REPO), ("Guide d'hébergement", f"{REPO}/blob/main/docs/self-hosting.md"), ("Connecter Claude", f"{REPO}/blob/main/docs/connect-claude.md"), ("Licence MIT", f"{REPO}/blob/main/LICENSE")],
     "footer_label": "Liens du projet",
     "disclaimer": "Taskly est un projet open source indépendant, non affilié à Anthropic. Claude est une marque d'Anthropic.",
+    "faq_h2": "Tes questions, nos réponses.",
+    "faq": [
+        ("C'est gratuit ?", "Oui. Taskly est open source, sous licence MIT. Ta propre instance tient dans les offres gratuites de Vercel et de Neon, et le plan gratuit de Claude suffit pour le connecteur.", None),
+        ("Quel abonnement Claude faut-il ?", "N'importe lequel. Avec le plan gratuit, Taskly peut être ton connecteur personnalisé. Avec Pro et Max, ajoute-le dans tes réglages de connecteurs. Avec Team et Entreprise, un propriétaire de l'organisation l'ajoute une fois.", ("Connecter Claude", f"{REPO}/blob/main/docs/connect-claude.md")),
+        ("Taskly lit-il mes mails ?", "Non. Claude lit tes mails, ton agenda et tes messages avec ses propres connecteurs. Taskly ne reçoit que les tâches et les rendez-vous du jour que Claude lui envoie, chaque tâche avec un lien vers sa source.", None),
+        ("Faut-il demander à Claude chaque matin ?", "Un geste suffit. Le briefing du matin ouvre Claude avec « Prépare ma journée dans Taskly » déjà écrit, et le bouton Préparer ma journée de l'app fait pareil. Taskly ne peut pas lancer Claude tout seul.", None),
+        ("Sur quels appareils ?", "iPhone, Android et ordinateur, installé depuis le navigateur comme une app. Sur iPhone, ajoute-le à l'écran d'accueil depuis Safari : les notifications demandent iOS 16.4 ou plus.", None),
+        ("Comment avoir mon Taskly ?", "Il n'y a pas d'instance publique : chacun héberge la sienne. Le bouton Déployer la crée sur Vercel avec une base Neon, et le mode personnel n'autorise que ton adresse mail.", ("Guide d'hébergement", f"{REPO}/blob/main/docs/self-hosting.md")),
+        ("Et si Claude se trompe ?", "Tout ce que Claude ajoute s'annule en un geste, chaque tâche garde un lien vers son mail ou son message, et une tâche que tu as modifiée n'est jamais réécrite par Claude.", None),
+        ("Où sont mes données ?", "Dans la base Postgres de ton instance, nulle part ailleurs. Les Réglages te permettent de tout exporter en JSON ou de supprimer ton compte.", None),
+    ],
+    "closing_h2": "Ta journée commence ici.",
+    "closing_lead": "Installe Taskly sur ton téléphone, connecte Claude une fois, et laisse-le préparer ta journée.",
 }
 
+
+
+def monogram(cls: str) -> str:
+    """The Taskly mark, inline and in currentColor, so CSS picks its color per theme."""
+    svg = (ROOT / "public/brand/taskly-monogram-graphite.svg").read_text().strip()
+    svg = svg.replace('fill="#171717"', 'fill="currentColor"').replace(' role="img" aria-label="Taskly"', "")
+    return svg.replace("<svg", f'<svg class="{cls}" aria-hidden="true" focusable="false"', 1)
 
 
 def page(t: dict) -> str:
@@ -222,6 +255,13 @@ def page(t: dict) -> str:
     sources = "".join(f"<li>{e(s)}</li>" for s in t["sources"])
     footer = "\n".join(f'          <li><a href="{e(href)}">{e(label)}</a></li>' for label, href in t["footer"])
     gh = icon("brand-github")
+    faq = "\n".join(
+        f'''            <details class="faq-item reveal">
+              <summary><span>{e(q)}</span>{icon("plus", "icon faq-icon")}</summary>
+              <p>{e(a)}{f' <a href="{e(link[1])}">{e(link[0])}</a>' if link else ""}</p>
+            </details>'''
+        for q, a, link in t["faq"]
+    )
 
     return f'''<!doctype html>
 <html lang="{t["lang"]}">
@@ -262,6 +302,7 @@ def page(t: dict) -> str:
             <li><a href="#how">{e(t["nav"][0])}</a></li>
             <li><a href="#features">{e(t["nav"][1])}</a></li>
             <li><a href="#open-source">{e(t["nav"][2])}</a></li>
+            <li><a href="#faq">{e(t["nav"][3])}</a></li>
           </ul>
         </nav>
         <div class="nav-actions">
@@ -275,7 +316,7 @@ def page(t: dict) -> str:
       <section class="hero">
         <div class="wrap">
           <div class="hero-copy">
-            <p class="eyebrow">{e(t["eyebrow"])}</p>
+            <p class="eyebrow"><img class="eyebrow-icon" src="/assets/app-icon.svg" alt="" width="28" height="28"><span>{e(t["eyebrow"])}</span></p>
             <h1><span>{e(t["h1"][0])}</span><br><span>{e(t["h1"][1])}</span></h1>
             <p class="lead">{e(t["lead"])}</p>
             <div class="ctas">
@@ -331,6 +372,7 @@ def page(t: dict) -> str:
       </section>
 
       <section class="section manifesto">
+        {monogram("watermark")}
         <div class="wrap">
           <h2 class="reveal">{e(t["privacy_h2"])}</h2>
           <p class="section-lead reveal">{e(t["privacy_lead"])}</p>
@@ -354,6 +396,27 @@ def page(t: dict) -> str:
 <span class="prompt-sign">$ </span>cd Taskly &amp;&amp; npm install
 <span class="prompt-sign">$ </span>npm run dev
 <span class="comment">{e(t["code_comment"])}</span></code></pre>
+        </div>
+      </section>
+
+      <section id="faq" class="section">
+        <div class="wrap faq">
+          <h2 class="reveal">{e(t["faq_h2"])}</h2>
+          <div class="faq-list">
+{faq}
+          </div>
+        </div>
+      </section>
+
+      <section class="section closing">
+        <div class="wrap">
+          <img class="closing-icon reveal" src="/assets/app-icon.svg" alt="" width="112" height="112">
+          <h2 class="reveal">{e(t["closing_h2"])}</h2>
+          <p class="section-lead reveal">{e(t["closing_lead"])}</p>
+          <div class="ctas reveal">
+            <a class="btn btn-primary" href="{REPO}">{gh}{e(t["cta_github"])}</a>
+            <a class="btn btn-secondary" href="{e(DEPLOY)}">{icon("rocket")}{e(t["cta_deploy"])}</a>
+          </div>
         </div>
       </section>
 
@@ -443,6 +506,7 @@ def main() -> None:
     shutil.copy(ROOT / "public/brand/taskly-logo-graphite.svg", ASSETS / "logo-graphite.svg")
     shutil.copy(ROOT / "public/brand/taskly-logo-ivory.svg", ASSETS / "logo-ivory.svg")
     shutil.copy(ROOT / "src/app/icon.svg", ASSETS / "icon.svg")
+    shutil.copy(ROOT / "public/brand/taskly-app-icon.svg", ASSETS / "app-icon.svg")
     shutil.copy(ROOT / "src/app/apple-icon.png", ASSETS / "apple-icon.png")
 
     (SITE / "index.html").write_text(versioned(page(EN)))

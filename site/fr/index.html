@@ -20,7 +20,7 @@
     <link rel="icon" href="/assets/icon.svg?v=804df3a4" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/assets/apple-icon.png?v=469fde9c">
     <link rel="preload" as="image" href="/assets/poster-fr.webp?v=caa1e9b7" type="image/webp">
-    <link rel="stylesheet" href="/styles.css?v=02f693b0">
+    <link rel="stylesheet" href="/styles.css?v=6b37f42c">
   </head>
   <body>
     <a class="skip" href="#main">Aller au contenu</a>
@@ -37,6 +37,7 @@
             <li><a href="#how">Comment ça marche</a></li>
             <li><a href="#features">Fonctions</a></li>
             <li><a href="#open-source">Open source</a></li>
+            <li><a href="#faq">FAQ</a></li>
           </ul>
         </nav>
         <div class="nav-actions">
@@ -50,7 +51,7 @@
       <section class="hero">
         <div class="wrap">
           <div class="hero-copy">
-            <p class="eyebrow">Gratuit et open source</p>
+            <p class="eyebrow"><img class="eyebrow-icon" src="/assets/app-icon.svg?v=3018dd30" alt="" width="28" height="28"><span>Gratuit et open source</span></p>
             <h1><span>Ta journée,</span><br><span>triée par Claude.</span></h1>
             <p class="lead">Claude transforme tes mails, ton agenda et tes messages en une checklist. Taskly s&#x27;assure que tu reçois tes rappels.</p>
             <div class="ctas">
@@ -128,6 +129,7 @@
       </section>
 
       <section class="section manifesto">
+        <svg class="watermark" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="94 138 327 334"><path fill="currentColor" d="M 117 142 H 396 C 413 142 422 153 416 167 C 414 171 409 175 403 179 L 328 226 C 318 233 307 239 296 239 H 211 C 202 239 195 236 188 230 L 108 170 C 91 156 97 142 117 142 Z"/><path fill="currentColor" d="M 303 255 L 364 216 C 377 208 389 216 389 232 V 389 C 389 398 385 407 377 412 L 293 464 C 273 476 255 463 255 443 V 330 C 255 307 269 277 303 255 Z"/></svg>
         <div class="wrap">
           <h2 class="reveal">Des tâches, pas des mails.</h2>
           <p class="section-lead reveal">Claude lit tes messages avec ses propres connecteurs. Taskly ne reçoit que les tâches qu&#x27;il crée, avec un lien vers la source.</p>
@@ -153,6 +155,58 @@
 <span class="prompt-sign">$ </span>cd Taskly &amp;&amp; npm install
 <span class="prompt-sign">$ </span>npm run dev
 <span class="comment"># Ouvre http://localhost:3000. Rien à configurer.</span></code></pre>
+        </div>
+      </section>
+
+      <section id="faq" class="section">
+        <div class="wrap faq">
+          <h2 class="reveal">Tes questions, nos réponses.</h2>
+          <div class="faq-list">
+            <details class="faq-item reveal">
+              <summary><span>C&#x27;est gratuit ?</span><svg class="icon faq-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg></summary>
+              <p>Oui. Taskly est open source, sous licence MIT. Ta propre instance tient dans les offres gratuites de Vercel et de Neon, et le plan gratuit de Claude suffit pour le connecteur.</p>
+            </details>
+            <details class="faq-item reveal">
+              <summary><span>Quel abonnement Claude faut-il ?</span><svg class="icon faq-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg></summary>
+              <p>N&#x27;importe lequel. Avec le plan gratuit, Taskly peut être ton connecteur personnalisé. Avec Pro et Max, ajoute-le dans tes réglages de connecteurs. Avec Team et Entreprise, un propriétaire de l&#x27;organisation l&#x27;ajoute une fois. <a href="https://github.com/ethanfrq/Taskly/blob/main/docs/connect-claude.md">Connecter Claude</a></p>
+            </details>
+            <details class="faq-item reveal">
+              <summary><span>Taskly lit-il mes mails ?</span><svg class="icon faq-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg></summary>
+              <p>Non. Claude lit tes mails, ton agenda et tes messages avec ses propres connecteurs. Taskly ne reçoit que les tâches et les rendez-vous du jour que Claude lui envoie, chaque tâche avec un lien vers sa source.</p>
+            </details>
+            <details class="faq-item reveal">
+              <summary><span>Faut-il demander à Claude chaque matin ?</span><svg class="icon faq-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg></summary>
+              <p>Un geste suffit. Le briefing du matin ouvre Claude avec « Prépare ma journée dans Taskly » déjà écrit, et le bouton Préparer ma journée de l&#x27;app fait pareil. Taskly ne peut pas lancer Claude tout seul.</p>
+            </details>
+            <details class="faq-item reveal">
+              <summary><span>Sur quels appareils ?</span><svg class="icon faq-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg></summary>
+              <p>iPhone, Android et ordinateur, installé depuis le navigateur comme une app. Sur iPhone, ajoute-le à l&#x27;écran d&#x27;accueil depuis Safari : les notifications demandent iOS 16.4 ou plus.</p>
+            </details>
+            <details class="faq-item reveal">
+              <summary><span>Comment avoir mon Taskly ?</span><svg class="icon faq-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg></summary>
+              <p>Il n&#x27;y a pas d&#x27;instance publique : chacun héberge la sienne. Le bouton Déployer la crée sur Vercel avec une base Neon, et le mode personnel n&#x27;autorise que ton adresse mail. <a href="https://github.com/ethanfrq/Taskly/blob/main/docs/self-hosting.md">Guide d&#x27;hébergement</a></p>
+            </details>
+            <details class="faq-item reveal">
+              <summary><span>Et si Claude se trompe ?</span><svg class="icon faq-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg></summary>
+              <p>Tout ce que Claude ajoute s&#x27;annule en un geste, chaque tâche garde un lien vers son mail ou son message, et une tâche que tu as modifiée n&#x27;est jamais réécrite par Claude.</p>
+            </details>
+            <details class="faq-item reveal">
+              <summary><span>Où sont mes données ?</span><svg class="icon faq-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg></summary>
+              <p>Dans la base Postgres de ton instance, nulle part ailleurs. Les Réglages te permettent de tout exporter en JSON ou de supprimer ton compte.</p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="section closing">
+        <div class="wrap">
+          <img class="closing-icon reveal" src="/assets/app-icon.svg?v=3018dd30" alt="" width="112" height="112">
+          <h2 class="reveal">Ta journée commence ici.</h2>
+          <p class="section-lead reveal">Installe Taskly sur ton téléphone, connecte Claude une fois, et laisse-le préparer ta journée.</p>
+          <div class="ctas reveal">
+            <a class="btn btn-primary" href="https://github.com/ethanfrq/Taskly"><svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" /></svg>Voir sur GitHub</a>
+            <a class="btn btn-secondary" href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fethanfrq%2FTaskly&amp;project-name=taskly&amp;repository-name=taskly&amp;env=BETTER_AUTH_SECRET,RESEND_API_KEY,EMAIL_FROM,NEXT_PUBLIC_VAPID_PUBLIC_KEY,VAPID_PRIVATE_KEY,VAPID_SUBJECT&amp;envDescription=Secrets%20for%20sign-in%2C%20email%20codes%20and%20push%20notifications.&amp;envLink=https%3A%2F%2Fgithub.com%2Fethanfrq%2FTaskly%2Fblob%2Fmain%2Fdocs%2Fself-hosting.md%23environment-variables&amp;stores=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22neon%22%2C%22productSlug%22%3A%22neon%22%2C%22protocol%22%3A%22storage%22%7D%5D"><svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 13a8 8 0 0 1 7 7a6 6 0 0 0 3 -5a9 9 0 0 0 6 -8a3 3 0 0 0 -3 -3a9 9 0 0 0 -8 6a6 6 0 0 0 -5 3" /><path d="M7 14a6 6 0 0 0 -3 6a6 6 0 0 0 6 -3" /><path d="M14 9a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></svg>Déployer ton instance</a>
+          </div>
         </div>
       </section>
 
