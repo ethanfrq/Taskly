@@ -91,6 +91,7 @@ What this design gives you:
 - **Your existing Claude plan is enough.** No Anthropic API key, no per-use cost for whoever hosts Taskly.
 - **Taskly never receives your emails.** It only stores the tasks Claude creates, with a link back to the source.
 - **Taskly works without Claude.** Manual tasks, reminders and the checklist are fully usable on their own.
+- **You can cut Claude off at any time.** **Settings › Connect Claude › Disconnect Claude** revokes its access at once, even tokens that haven't expired yet.
 
 | Claude plan | What to know |
 |---|---|

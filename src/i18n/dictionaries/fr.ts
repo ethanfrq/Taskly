@@ -217,6 +217,11 @@ export const fr = {
     share: "Partager",
     done: "J'ai ajouté Taskly dans Claude",
     morningTip: "Chaque matin, demande à Claude : « Prépare ma journée dans Taskly ».",
+    disconnect: "Déconnecter Claude",
+    disconnectHint: "Claude perd l'accès à Taskly tout de suite. Tes tâches restent là.",
+    disconnectTitle: "Déconnecter Claude ?",
+    disconnectBody: "Claude ne pourra plus lire ni ajouter de tâches. Pour le reconnecter, ajoute à nouveau Taskly dans ses connecteurs.",
+    disconnectConfirm: "Déconnecter",
   },
   health: {
     title: "Tout est prêt ?",

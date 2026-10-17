@@ -3,6 +3,7 @@ import { createMcpHandler } from "@modelcontextprotocol/server";
 import { getDb } from "@/db";
 import { getAuth } from "@/lib/auth";
 import { MCP_SCOPES, mcpResource } from "@/lib/auth/config";
+import { getDisconnectedAt, isRevoked } from "@/lib/claude-access";
 import { createTasklyServer } from "@/lib/mcp/server";
 import { reminderDeps } from "@/lib/reminders/runtime";
 import { syncTaskReminders } from "@/lib/reminders/service";
@@ -33,11 +34,29 @@ const mcp = createMcpHandler(
   { legacy: "stateless", onerror: (error) => console.error("MCP error", error) },
 );
 
+/** RFC 6750 answer for a token the user revoked: Claude starts the OAuth flow again. */
+function revoked(resource: string) {
+  const url = new URL(resource);
+  const metadata = `${url.origin}/.well-known/oauth-protected-resource${url.pathname}`;
+  return Response.json(
+    { error: "invalid_token", error_description: "Access was revoked in Taskly" },
+    {
+      status: 401,
+      headers: {
+        "WWW-Authenticate": `Bearer error="invalid_token", error_description="Access was revoked in Taskly", resource_metadata="${metadata}"`,
+      },
+    },
+  );
+}
+
 function handle(request: Request) {
+  const resource = mcpResource(getBaseUrl());
   const guarded = requireMcpAuth(
     getAuth(),
-    (req, claims) =>
-      mcp.fetch(req, {
+    async (req, claims) => {
+      // Signed and unexpired isn't enough: the user may have disconnected Claude since.
+      if (isRevoked(claims.iat, await getDisconnectedAt(getDb(), String(claims.sub)))) return revoked(resource);
+      return mcp.fetch(req, {
         authInfo: {
           token: "",
           clientId: String(claims.azp ?? claims.client_id ?? ""),
@@ -45,8 +64,9 @@ function handle(request: Request) {
           expiresAt: typeof claims.exp === "number" ? claims.exp : undefined,
           extra: { userId: claims.sub },
         },
-      }),
-    { resource: mcpResource(getBaseUrl()), requiredScopes: MCP_SCOPES },
+      });
+    },
+    { resource, requiredScopes: MCP_SCOPES },
   );
   return guarded(request);
 }

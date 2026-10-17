@@ -215,6 +215,11 @@ export const en: Dictionary = {
     share: "Share",
     done: "I added Taskly in Claude",
     morningTip: "Each morning, ask Claude: “Prepare my day in Taskly”.",
+    disconnect: "Disconnect Claude",
+    disconnectHint: "Claude loses access to Taskly right away. Your tasks stay.",
+    disconnectTitle: "Disconnect Claude?",
+    disconnectBody: "Claude won't be able to read or add tasks anymore. To reconnect it, add Taskly to its connectors again.",
+    disconnectConfirm: "Disconnect",
   },
   health: {
     title: "All set?",
