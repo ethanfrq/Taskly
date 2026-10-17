@@ -47,6 +47,7 @@ export const fr = {
       expiredCode: "Ce code a expiré. Demande-en un nouveau.",
       tooManyAttempts: "Trop d'essais. Demande un nouveau code.",
       tooManyRequests: "Trop de demandes d'un coup. Réessaie dans quelques minutes.",
+      notAllowed: "Cette instance Taskly est privée : cette adresse ne peut pas s'y connecter.",
       passkeyCancelled: "Connexion annulée.",
       passkeyFailed: "La clé d'identification n'a pas fonctionné. Utilise un code par email.",
       generic: "Quelque chose n'a pas marché. Réessaie.",

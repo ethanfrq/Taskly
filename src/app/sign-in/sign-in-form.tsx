@@ -16,6 +16,7 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 function errorMessage(err: { code?: string; status?: number }, t: ReturnType<typeof useI18n>["t"]) {
   // Per-IP limits answer 429 without a code; the per-address cap says TOO_MANY_CODES.
   if (err.status === 429 || err.code === "TOO_MANY_CODES") return t.auth.errors.tooManyRequests;
+  if (err.code === "EMAIL_NOT_ALLOWED") return t.auth.errors.notAllowed;
   switch (err.code) {
     case "INVALID_OTP":
       return t.auth.errors.invalidCode;

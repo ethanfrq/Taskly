@@ -112,6 +112,14 @@ With `TASKLY_INTERNAL_SCHEDULER=1`, the server checks for due reminders every 20
 
 To update: `git pull`, `npm ci`, `npm run db:migrate`, `npm run build`, then restart.
 
+<a id="personal-instance"></a>
+
+## 🔐 A personal instance
+
+To run Taskly for yourself only, set `TASKLY_ALLOWED_EMAILS` to your address. Other addresses are refused before any code is sent: nobody else can create an account, and nobody can use your instance to email strangers.
+
+It also makes the free email setup enough: without a verified domain, Resend only delivers to the address of your Resend account, which is the one you allow. Use `EMAIL_FROM="Taskly <onboarding@resend.dev>"` (or leave it unset).
+
 <a id="abuse-protection"></a>
 
 ## 🛡️ Abuse protection
@@ -143,6 +151,7 @@ The limits are on in production. They rely on the client IP: Vercel and a single
 | `QSTASH_TOKEN`, `QSTASH_CURRENT_SIGNING_KEY`, `QSTASH_NEXT_SIGNING_KEY` | One scheduler | Exact-time reminders through Upstash QStash. |
 | `CRON_SECRET` | One scheduler | Protects `/api/reminders/sweep` for an external cron. |
 | `TASKLY_INTERNAL_SCHEDULER` | One scheduler | `1` on a long-running server to send reminders from the process itself. |
+| `TASKLY_ALLOWED_EMAILS` | Personal instance | Comma-separated addresses allowed to sign in. Anyone else is refused before a code is sent, so no account can be created. Unset: anyone can sign up. |
 | `TASKLY_TRUSTED_PROXIES` | Behind a proxy chain | Comma-separated IPs or CIDR ranges of the proxies in front of Taskly (a CDN in front of your reverse proxy, for example), so rate limits see each visitor's own IP. Not needed on Vercel or behind a single Caddy. |
 | `NEXT_PUBLIC_SW_DEV` | No | `1` to register the service worker during `npm run dev`, to test push locally. |
 

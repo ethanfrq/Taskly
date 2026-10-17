@@ -28,7 +28,17 @@ export type AuthOptions = {
   nextjs?: boolean;
   /** Per-IP request limits. On in production; tests turn them on explicitly. */
   rateLimit?: boolean;
+  /** Only these addresses may get a sign-in code (a personal instance). Empty: anyone. */
+  allowedEmails?: string[];
 };
+
+/** TASKLY_ALLOWED_EMAILS: comma-separated addresses allowed to sign in. Unset: anyone. */
+export function allowedEmailsFromEnv(value = process.env.TASKLY_ALLOWED_EMAILS): string[] {
+  return (value ?? "")
+    .split(",")
+    .map((email) => email.trim().toLowerCase())
+    .filter(Boolean);
+}
 
 /** TASKLY_TRUSTED_PROXIES: comma-separated IPs or CIDR ranges of the proxies in front of Taskly. */
 function trustedProxies(): string[] | undefined {
@@ -55,6 +65,7 @@ export function createAuth({
   sendSignInCode,
   nextjs = true,
   rateLimit = process.env.NODE_ENV === "production",
+  allowedEmails = allowedEmailsFromEnv(),
 }: AuthOptions) {
   const url = new URL(baseURL);
   return betterAuth({
@@ -80,10 +91,19 @@ export function createAuth({
       ipAddress: { trustedProxies: trustedProxies() },
     },
     hooks: {
-      // Before any code is generated: a per-address cap, on top of the per-IP
-      // limit. Checked here because errors in sendVerificationOTP are swallowed.
+      // Before any code is generated: the allow list of a private instance, then
+      // a per-address cap on top of the per-IP limit. Checked here because errors
+      // in sendVerificationOTP are swallowed.
       before: createAuthMiddleware(async (ctx) => {
-        if (!rateLimit || ctx.path !== "/email-otp/send-verification-otp" || typeof ctx.body?.email !== "string") return;
+        if (ctx.path !== "/email-otp/send-verification-otp" || typeof ctx.body?.email !== "string") return;
+        // A private instance: no code (so no account) for anyone else.
+        if (allowedEmails.length && !allowedEmails.includes(ctx.body.email.trim().toLowerCase())) {
+          throw APIError.fromStatus("FORBIDDEN", {
+            message: "This Taskly instance is private.",
+            code: "EMAIL_NOT_ALLOWED",
+          });
+        }
+        if (!rateLimit) return;
         if (!(await consumeEmailCodeQuota(db, ctx.body.email))) {
           throw APIError.fromStatus("TOO_MANY_REQUESTS", {
             message: "Too many codes for this address. Try again later.",
