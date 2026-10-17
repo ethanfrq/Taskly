@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Taskly · Ta journée, triée par Claude</title>
+    <meta name="description" content="Une todo list du jour open source, à installer sur ton téléphone. Claude transforme tes mails, ton agenda et tes messages en checklist, avec des rappels qui sonnent vraiment.">
+    <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" content="#f5f3ed" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Taskly">
+    <meta property="og:title" content="Taskly · Ta journée, triée par Claude">
+    <meta property="og:description" content="Une todo list du jour open source, à installer sur ton téléphone. Claude transforme tes mails, ton agenda et tes messages en checklist, avec des rappels qui sonnent vraiment.">
+    <meta property="og:image" content="https://raw.githubusercontent.com/ethanfrq/Taskly/main/docs/brand/social-preview.png">
+    <meta property="og:image:width" content="1280">
+    <meta property="og:image:height" content="640">
+    <meta property="og:locale" content="fr_FR">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/assets/apple-icon.png">
+    <link rel="preload" as="image" href="/assets/today-dark.webp" type="image/webp">
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <a class="skip" href="#main">Aller au contenu</a>
+    <header class="nav">
+      <div class="wrap nav-inner">
+        <a class="brand" href="/fr">
+          <picture>
+            <source srcset="/assets/logo-ivory.svg" media="(prefers-color-scheme: dark)">
+            <img src="/assets/logo-graphite.svg" alt="Taskly" width="104" height="33">
+          </picture>
+        </a>
+        <nav aria-label="Navigation principale">
+          <ul class="nav-links">
+            <li><a href="#how">Comment ça marche</a></li>
+            <li><a href="#features">Fonctions</a></li>
+            <li><a href="#open-source">Open source</a></li>
+          </ul>
+        </nav>
+        <div class="nav-actions">
+          <a class="lang" href="/" hreflang="en" lang="en" title="English version">EN</a>
+          <a class="btn btn-secondary btn-sm" href="https://github.com/ethanfrq/Taskly" aria-label="Voir sur GitHub"><svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" /></svg><span>Voir sur GitHub</span></a>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero">
+        <div class="wrap hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">Gratuit et open source</p>
+            <h1><span>Ta journée,</span><br><span>triée par Claude.</span></h1>
+            <p class="lead">Claude transforme tes mails, ton agenda et tes messages en une checklist. Taskly s&#x27;assure que tu reçois tes rappels.</p>
+            <div class="ctas">
+              <a class="btn btn-primary" href="https://github.com/ethanfrq/Taskly"><svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" /></svg>Voir sur GitHub</a>
+              <a class="btn btn-secondary" href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fethanfrq%2FTaskly&amp;project-name=taskly&amp;repository-name=taskly&amp;env=BETTER_AUTH_SECRET,RESEND_API_KEY,EMAIL_FROM,NEXT_PUBLIC_VAPID_PUBLIC_KEY,VAPID_PRIVATE_KEY,VAPID_SUBJECT&amp;envDescription=Secrets%20for%20sign-in%2C%20email%20codes%20and%20push%20notifications.&amp;envLink=https%3A%2F%2Fgithub.com%2Fethanfrq%2FTaskly%2Fblob%2Fmain%2Fdocs%2Fself-hosting.md%23environment-variables&amp;stores=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22neon%22%2C%22productSlug%22%3A%22neon%22%2C%22protocol%22%3A%22storage%22%7D%5D"><svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 13a8 8 0 0 1 7 7a6 6 0 0 0 3 -5a9 9 0 0 0 6 -8a3 3 0 0 0 -3 -3a9 9 0 0 0 -8 6a6 6 0 0 0 -5 3" /><path d="M7 14a6 6 0 0 0 -3 6a6 6 0 0 0 6 -3" /><path d="M14 9a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></svg>Déployer ton instance</a>
+            </div>
+          </div>
+          <div class="hero-visual">
+            <img class="phone phone-left" src="/assets/agenda.webp" alt="L&#x27;agenda : réunions et tâches dans l&#x27;ordre de la journée" width="540" height="1052" decoding="async">
+            <img class="phone phone-right" src="/assets/stats.webp" alt="Les stats de la semaine : tâches faites, série, taux de réalisation et temps de focus" width="540" height="1052" decoding="async">
+            <img class="phone phone-front" src="/assets/today-dark.webp" alt="L&#x27;écran Aujourd&#x27;hui de Taskly : anneau de progression, prochain rendez-vous et les trois tâches ajoutées par Claude depuis Gmail, Slack et l&#x27;agenda" width="540" height="1052" fetchpriority="high">
+          </div>
+        </div>
+      </section>
+
+      <section id="how" class="section">
+        <div class="wrap">
+          <h2 class="reveal">Une phrase chaque matin.</h2>
+          <p class="section-lead reveal">Taskly n&#x27;appelle jamais Claude et n&#x27;a pas besoin de clé API. Ton propre plan Claude fait la lecture.</p>
+          <ol class="steps">
+          <li class="step reveal"><h3>Connecter</h3><p>Ajoute Taskly à Claude comme connecteur personnalisé, une seule fois. Tu choisis ce qu&#x27;il peut faire, et tu le déconnectes en un geste.</p></li>
+          <li class="step reveal"><h3>Demander</h3><p>Dis « Prépare ma journée dans Taskly ». Claude lit tes mails, ton agenda et tes messages et ajoute ce qu&#x27;il y a à faire, chaque tâche reliée à sa source.</p></li>
+          <li class="step reveal"><h3>Être rappelé</h3><p>Taskly prend le relais : une checklist claire, et une notification à la bonne minute, même Claude fermé.</p></li>
+          </ol>
+        </div>
+      </section>
+
+      <section id="features" class="section">
+        <div class="wrap">
+          <h2 class="reveal">Tout ce qu&#x27;il faut pour ta journée.</h2>
+          <div class="bento">
+            <article class="tile tile-claude reveal">
+              <div class="tile-text"><h3>Claude prépare ta journée</h3><p>Avec les connecteurs que Claude utilise déjà. Un geste annule ce qu&#x27;il a ajouté, et les doublons sont ignorés.</p></div>
+              <p class="prompt"><svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M16 18a2 2 0 0 1 2 2a2 2 0 0 1 2 -2a2 2 0 0 1 -2 -2a2 2 0 0 1 -2 2m0 -12a2 2 0 0 1 2 2a2 2 0 0 1 2 -2a2 2 0 0 1 -2 -2a2 2 0 0 1 -2 2m-7 12a6 6 0 0 1 6 -6a6 6 0 0 1 -6 -6a6 6 0 0 1 -6 6a6 6 0 0 1 6 6" /></svg><span>« Prépare ma journée dans Taskly »</span></p>
+              <ul class="sources" aria-label="Sources que Claude peut lire"><li>Gmail</li><li>Outlook</li><li>Google Agenda</li><li>Slack</li><li>Teams</li><li>Notion</li></ul>
+            </article>
+          <article class="tile tile-reminders reveal">
+            <div class="tile-text"><h3>Des rappels qui sonnent</h3><p>À la minute près, avec des relances pour ce qui compte et des heures calmes pour le reste.</p></div>
+            <img class="tile-shot" src="/assets/rhythm.webp" alt="Réglages des rappels : briefing du matin, bilan du soir, heures calmes et insistance" width="540" height="1052" loading="lazy" decoding="async">
+          </article>
+          <article class="tile tile-review reveal">
+            <div class="tile-text"><h3>Boucle ta journée</h3><p>Le bilan du soir montre ce qui reste et le reporte à demain en un geste.</p></div>
+            <img class="tile-shot" src="/assets/review.webp" alt="Le bilan du soir : ce qui reste, avec un bouton pour le reporter à demain" width="540" height="1052" loading="lazy" decoding="async">
+          </article>
+          <article class="tile tile-colors reveal">
+            <div class="tile-text"><h3>À ton image</h3><p>Ta couleur d&#x27;accent, clair ou sombre, avec un contraste ajusté pour que le texte reste lisible.</p></div>
+            <img class="tile-shot" src="/assets/onboarding-color.webp" alt="Le choix de la couleur d&#x27;accent, avec un aperçu en direct" width="540" height="1052" loading="lazy" decoding="async">
+          </article>
+          </div>
+          <ul class="pills reveal" aria-label="Autres fonctions">
+          <li><svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 18l.01 0" /><path d="M9.172 15.172a4 4 0 0 1 5.656 0" /><path d="M6.343 12.343a7.963 7.963 0 0 1 3.864 -2.14m4.163 .155a7.965 7.965 0 0 1 3.287 2" /><path d="M3.515 9.515a12 12 0 0 1 3.544 -2.455m3.101 -.92a12 12 0 0 1 10.325 3.374" /><path d="M3 3l18 18" /></svg>Hors-ligne</li>
+          <li><svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /><path d="M21 21v-2a4 4 0 0 0 -3 -3.85" /></svg>Listes partagées</li>
+          <li><svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M7 12a5 5 0 1 0 10 0a5 5 0 1 0 -10 0" /><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /></svg>Minuteur focus</li>
+          <li><svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 13a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -6" /><path d="M15 9a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -10" /><path d="M9 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -14" /><path d="M4 20h14" /></svg>Stats de la semaine</li>
+          <li><svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M10 12h4" /><path d="M9 4a3 3 0 0 1 3 3v10a3 3 0 0 1 -3 3" /><path d="M15 4a3 3 0 0 0 -3 3v10a3 3 0 0 0 3 3" /></svg>Saisie en langage naturel</li>
+          <li><svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 12v-3a3 3 0 0 1 3 -3h13m-3 -3l3 3l-3 3" /><path d="M20 12v3a3 3 0 0 1 -3 3h-13m3 3l-3 -3l3 -3" /></svg>Tâches récurrentes</li>
+          <li><svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M6 9l6 0" /><path d="M4 5l4 0" /><path d="M6 5v11a1 1 0 0 0 1 1h5" /><path d="M12 8a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-6a1 1 0 0 1 -1 -1l0 -2" /><path d="M12 16a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-6a1 1 0 0 1 -1 -1l0 -2" /></svg>Sous-tâches et tags</li>
+          <li><svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M18.9 7a8 8 0 0 1 1.1 5v1a6 6 0 0 0 .8 3" /><path d="M8 11a4 4 0 0 1 8 0v1a10 10 0 0 0 2 6" /><path d="M12 11v2a14 14 0 0 0 2.5 8" /><path d="M8 15a18 18 0 0 0 1.8 6" /><path d="M4.9 19a22 22 0 0 1 -.9 -7v-1a8 8 0 0 1 12 -6.95" /></svg>Passkeys, sans mot de passe</li>
+          <li><svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M9 6.371c0 4.418 -2.239 6.629 -5 6.629" /><path d="M4 6.371h7" /><path d="M5 9c0 2.144 2.252 3.908 6 4" /><path d="M12 20l4 -9l4 9" /><path d="M19.1 18h-6.2" /><path d="M6.694 3l.793 .582" /></svg>Français et anglais</li>
+          <li><svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" /><path d="M7 11l5 5l5 -5" /><path d="M12 4l0 12" /></svg>Export ou suppression des données</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section manifesto">
+        <div class="wrap">
+          <h2 class="reveal">Des tâches, pas des mails.</h2>
+          <p class="section-lead reveal">Claude lit tes messages avec ses propres connecteurs. Taskly ne reçoit que les tâches qu&#x27;il crée, avec un lien vers la source.</p>
+          <ul class="facts reveal">
+          <li><svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M18.9 7a8 8 0 0 1 1.1 5v1a6 6 0 0 0 .8 3" /><path d="M8 11a4 4 0 0 1 8 0v1a10 10 0 0 0 2 6" /><path d="M12 11v2a14 14 0 0 0 2.5 8" /><path d="M8 15a18 18 0 0 0 1.8 6" /><path d="M4.9 19a22 22 0 0 1 -.9 -7v-1a8 8 0 0 1 12 -6.95" /></svg>Jamais de mot de passe</li>
+          <li><svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M20 16l-4 4" /><path d="M7 12l5 5l-1.5 1.5a3.536 3.536 0 1 1 -5 -5l1.5 -1.5" /><path d="M17 12l-5 -5l1.5 -1.5a3.536 3.536 0 1 1 5 5l-1.5 1.5" /><path d="M3 21l2.5 -2.5" /><path d="M18.5 5.5l2.5 -2.5" /><path d="M10 11l-2 2" /><path d="M13 14l-2 2" /><path d="M16 16l4 4" /></svg>Claude déconnecté en un geste</li>
+          <li><svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" /><path d="M7 11l5 5l5 -5" /><path d="M12 4l0 12" /></svg>Tout exporter ou tout supprimer</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="open-source" class="section">
+        <div class="wrap open">
+          <div class="reveal">
+            <h2>Open source. À toi de l&#x27;héberger.</h2>
+            <p class="section-lead">Sous licence MIT et construit en public. Lance ta propre instance sur Vercel avec Postgres, ou sur n&#x27;importe quel serveur Node.js.</p>
+            <div class="ctas">
+              <a class="btn btn-primary" href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fethanfrq%2FTaskly&amp;project-name=taskly&amp;repository-name=taskly&amp;env=BETTER_AUTH_SECRET,RESEND_API_KEY,EMAIL_FROM,NEXT_PUBLIC_VAPID_PUBLIC_KEY,VAPID_PRIVATE_KEY,VAPID_SUBJECT&amp;envDescription=Secrets%20for%20sign-in%2C%20email%20codes%20and%20push%20notifications.&amp;envLink=https%3A%2F%2Fgithub.com%2Fethanfrq%2FTaskly%2Fblob%2Fmain%2Fdocs%2Fself-hosting.md%23environment-variables&amp;stores=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22neon%22%2C%22productSlug%22%3A%22neon%22%2C%22protocol%22%3A%22storage%22%7D%5D"><svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 13a8 8 0 0 1 7 7a6 6 0 0 0 3 -5a9 9 0 0 0 6 -8a3 3 0 0 0 -3 -3a9 9 0 0 0 -8 6a6 6 0 0 0 -5 3" /><path d="M7 14a6 6 0 0 0 -3 6a6 6 0 0 0 6 -3" /><path d="M14 9a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></svg>Déployer ton instance</a>
+              <a class="btn btn-secondary" href="https://github.com/ethanfrq/Taskly/blob/main/docs/self-hosting.md">Lire le guide</a>
+            </div>
+          </div>
+          <pre class="code reveal" aria-label="Lancer Taskly sur ton ordinateur"><code><span class="prompt-sign">$ </span>git clone https://github.com/ethanfrq/Taskly.git
+<span class="prompt-sign">$ </span>cd Taskly &amp;&amp; npm install
+<span class="prompt-sign">$ </span>npm run dev
+<span class="comment"># Ouvre http://localhost:3000. Rien à configurer.</span></code></pre>
+        </div>
+      </section>
+
+      <p class="creator">
+        <img src="https://github.com/ethanfrq.png?size=88" alt="" width="44" height="44" loading="lazy">
+        <span>Créé par <a href="https://github.com/ethanfrq">Ethan</a></span>
+      </p>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap">
+        <div class="footer-inner">
+          <picture>
+            <source srcset="/assets/logo-ivory.svg" media="(prefers-color-scheme: dark)">
+            <img src="/assets/logo-graphite.svg" alt="Taskly" width="84" height="27">
+          </picture>
+          <nav aria-label="Liens du projet">
+            <ul class="footer-links">
+          <li><a href="https://github.com/ethanfrq/Taskly">GitHub</a></li>
+          <li><a href="https://github.com/ethanfrq/Taskly/blob/main/docs/self-hosting.md">Guide d&#x27;hébergement</a></li>
+          <li><a href="https://github.com/ethanfrq/Taskly/blob/main/docs/connect-claude.md">Connecter Claude</a></li>
+          <li><a href="https://github.com/ethanfrq/Taskly/blob/main/LICENSE">Licence MIT</a></li>
+            </ul>
+          </nav>
+        </div>
+        <p class="disclaimer">Taskly est un projet open source indépendant, non affilié à Anthropic. Claude est une marque d&#x27;Anthropic.</p>
+      </div>
+    </footer>
+  </body>
+</html>
