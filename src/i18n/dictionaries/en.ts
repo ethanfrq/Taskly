@@ -45,6 +45,7 @@ export const en: Dictionary = {
       expiredCode: "That code expired. Ask for a new one.",
       tooManyAttempts: "Too many attempts. Ask for a new code.",
       tooManyRequests: "Too many requests at once. Try again in a few minutes.",
+      notAllowed: "This Taskly instance is private: this address can't sign in here.",
       passkeyCancelled: "Sign-in cancelled.",
       passkeyFailed: "The passkey didn't work. Use an email code instead.",
       generic: "Something went wrong. Try again.",
