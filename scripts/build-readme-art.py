@@ -1,8 +1,12 @@
-"""Builds the README visuals: iPhone-framed screenshots and the hero banners.
+"""Builds the README visuals: iPhone-framed screenshots, the video posters and the video cards.
 
-Regenerate after new screenshots (macOS, needs Pillow and the SF Pro system font):
+Regenerate after new screenshots or a new video render (macOS, needs Pillow and the
+SF Pro system font). The fourth argument is the folder of video stills, written by
+`node scripts/stills.mjs <composition> 480` in video/ for the four compositions:
 
-    python3 scripts/build-readme-art.py docs/screenshots docs/brand/social-preview.png docs/readme
+    python3 scripts/build-readme-art.py docs/screenshots docs/brand/social-preview.png docs/readme video/out/stills
+
+Without it, only the screenshots are rebuilt.
 """
 import os
 import sys
@@ -10,6 +14,7 @@ import sys
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 SRC, SOCIAL, OUT = sys.argv[1:4]
+STILLS = sys.argv[4] if len(sys.argv) > 4 else None
 os.makedirs(OUT, exist_ok=True)
 
 GRAPHITE = (23, 23, 23)
@@ -66,83 +71,52 @@ def phone(name, inner_w=440):
     return canvas
 
 
-def logo_from_social():
-    """The ivory logo, cut out of the brand social preview (graphite background)."""
-    im = Image.open(SOCIAL).convert("RGB")
-    band = im.crop((0, 140, im.width, 410))
-    lum = band.convert("L").point(lambda v: 255 if v > 120 else 0)
-    box = lum.getbbox()
-    crop = band.crop(box)
-    alpha = crop.convert("L").point(lambda v: max(0, min(255, round((v - 23) * 255 / (245 - 23)))))
-    out = Image.new("RGBA", crop.size, IVORY + (255,))
-    out.putalpha(alpha)
-    return out
+def still(composition):
+    return Image.open(os.path.join(STILLS, composition, "f480.png")).convert("RGBA")
 
 
-def pill(draw, x, y, text, f):
-    tw = draw.textlength(text, font=f)
-    h = 52
-    draw.rounded_rectangle((x, y, x + tw + 44, y + h), h // 2, fill=(38, 38, 40), outline=(60, 60, 64), width=2)
-    draw.text((x + 22, y + h // 2), text, font=f, fill=IVORY, anchor="lm")
-    return x + tw + 44 + 14
+def poster(composition, name, size):
+    """A plain frame of the video, the <video> poster on the landing page."""
+    still(composition).resize(size, Image.LANCZOS).convert("RGB").save(os.path.join(OUT, f"{name}.webp"), quality=86, method=6)
 
 
-def hero(lang, headline, sub, chips):
-    W, H = 1760, 880
-    base = Image.new("RGBA", (W, H), GRAPHITE + (255,))
-    # Accent glow behind the phones.
-    glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    ImageDraw.Draw(glow).ellipse((880, 180, 1640, 940), fill=ACCENT + (70,))
-    base = Image.alpha_composite(base, glow.filter(ImageFilter.GaussianBlur(140)))
-
-    # Phones: agenda and review behind, today in front.
-    def place(name, width, cx, top):
-        p = phone(name)
-        p = p.resize((width, round(width * p.height / p.width)), Image.LANCZOS)
-        base.alpha_composite(p, (cx - width // 2, top))
-
-    place("agenda.jpg", 360, 1010, 230)
-    place("review.jpg", 360, 1500, 230)
-    place("today-dark.jpg", 420, 1255, 120)
-
+def play_pill(base, x, y, text, f):
+    """A translucent dark pill with a play triangle and light text, bottom-left of the card."""
     d = ImageDraw.Draw(base)
-    logo = logo_from_social()
-    lw = 330
-    logo = logo.resize((lw, round(lw * logo.height / logo.width)), Image.LANCZOS)
-    base.alpha_composite(logo, (110, 190))
-    y = 190 + logo.height + 64
-    for line in headline:
-        d.text((110, y), line, font=font(60, "Bold"), fill=IVORY)
-        y += 74
-    y += 22
-    for line in sub:
-        d.text((110, y), line, font=font(30, "Regular"), fill=GRAY)
-        y += 42
-    y += 40
-    x = 110
-    for chip in chips:
-        x = pill(d, x, y, chip, font(24, "Medium"))
+    tw = d.textlength(text, font=f)
+    h = 64
+    tri_w = 20
+    w = 26 + tri_w + 16 + round(tw) + 28
+    layer = Image.new("RGBA", base.size, (0, 0, 0, 0))
+    ImageDraw.Draw(layer).rounded_rectangle((x, y, x + w, y + h), h // 2, fill=(0, 0, 0, 160), outline=(255, 255, 255, 46), width=2)
+    base.alpha_composite(layer)
+    tri = Image.new("L", (tri_w * SS, h * SS), 0)
+    ImageDraw.Draw(tri).polygon([(0, 20 * SS), (0, 44 * SS), (tri_w * SS, 32 * SS)], fill=255)
+    base.paste(Image.new("RGBA", (tri_w, h), IVORY + (255,)), (x + 26, y), tri.resize((tri_w, h), Image.LANCZOS))
+    ImageDraw.Draw(base).text((x + 26 + tri_w + 16, y + h // 2), text, font=f, fill=IVORY, anchor="lm")
 
-    # Rounded corners so the banner sits well on light and dark GitHub themes.
+
+def video_card(lang, caption):
+    """The README's first image: a frame of the video with a play pill. Links to the file."""
+    W, H = 1760, 990
+    base = still(f"TasklyPromo{lang.upper()}").resize((W, H), Image.LANCZOS)
+    play_pill(base, 40, H - 40 - 64, f"{caption}  ·  0:30", font(28, "Semibold"))
+
+    # Rounded corners so the card sits well on light and dark GitHub themes.
     out = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     out.paste(base, (0, 0), rounded_mask((W, H), 36))
-    out.save(os.path.join(OUT, f"hero-{lang}.webp"), quality=90, method=6)
+    out.save(os.path.join(OUT, f"video-{lang}.webp"), quality=90, method=6)
 
 
 for name in ["today-dark", "agenda", "review", "rhythm", "onboarding-color", "stats"]:
     phone(f"{name}.jpg").save(os.path.join(OUT, f"{name}.webp"), quality=88, method=6)
 
-hero(
-    "en",
-    ["Your day,", "sorted by Claude."],
-    ["Mail, calendar and messages become", "one checklist, with reminders", "that actually ring."],
-    ["iPhone · Android · Desktop", "Open source · MIT"],
-)
-hero(
-    "fr",
-    ["Ta journée,", "triée par Claude."],
-    ["Tes mails, ton agenda et tes messages", "deviennent une checklist, avec des", "rappels qui sonnent vraiment."],
-    ["iPhone · Android · Ordinateur", "Open source · MIT"],
-)
+if STILLS:
+    poster("TasklyPromoEN", "poster-en", (1280, 720))
+    poster("TasklyPromoFR", "poster-fr", (1280, 720))
+    poster("TasklyPromoEN-Vertical", "poster-en-vertical", (720, 1280))
+    poster("TasklyPromoFR-Vertical", "poster-fr-vertical", (720, 1280))
+    video_card("en", "Taskly in 30 seconds")
+    video_card("fr", "Taskly en 30 secondes")
 for f in sorted(os.listdir(OUT)):
     print(f, os.path.getsize(os.path.join(OUT, f)) // 1024, "KB", Image.open(os.path.join(OUT, f)).size)

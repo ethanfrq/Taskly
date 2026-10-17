@@ -1,5 +1,9 @@
 <p align="center">
-  <img src="docs/readme/hero-en.webp" alt="Taskly: your day, sorted by Claude. Mail, calendar and messages become one checklist, with reminders that actually ring." width="100%">
+  <a href="site/assets/taskly-30s-en.mp4"><img src="docs/readme/video-en.webp" alt="Watch Taskly in 30 seconds: Claude reads your mail, calendar and messages, and the day's tasks appear in Taskly, each linked to its source." width="100%"></a>
+</p>
+
+<p align="center">
+  <sub>▶ <a href="site/assets/taskly-30s-en.mp4"><b>Watch the 30-second video</b></a> · <a href="site/assets/taskly-30s-en-vertical.mp4">portrait cut</a> · <a href="https://taskly-day.vercel.app">plays on the website</a></sub>
 </p>
 
 <p align="center">
@@ -300,6 +304,7 @@ src/
 drizzle/            SQL migrations
 public/sw.js        Service worker: offline pages, push, notification actions
 site/               Static landing page (EN and FR), built by scripts/build-site.py
+video/              The 30-second video (FR, EN, landscape, portrait), a Remotion project
 docs/               Decision records, design, self-hosting, Claude connection
 ```
 

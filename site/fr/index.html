@@ -19,8 +19,8 @@
     <meta name="twitter:card" content="summary_large_image">
     <link rel="icon" href="/assets/icon.svg?v=804df3a4" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/assets/apple-icon.png?v=469fde9c">
-    <link rel="preload" as="image" href="/assets/today-dark.webp?v=174c0194" type="image/webp">
-    <link rel="stylesheet" href="/styles.css?v=b69a5426">
+    <link rel="preload" as="image" href="/assets/poster-fr.webp?v=caa1e9b7" type="image/webp">
+    <link rel="stylesheet" href="/styles.css?v=02f693b0">
   </head>
   <body>
     <a class="skip" href="#main">Aller au contenu</a>
@@ -48,7 +48,7 @@
 
     <main id="main">
       <section class="hero">
-        <div class="wrap hero-grid">
+        <div class="wrap">
           <div class="hero-copy">
             <p class="eyebrow">Gratuit et open source</p>
             <h1><span>Ta journée,</span><br><span>triée par Claude.</span></h1>
@@ -58,10 +58,22 @@
               <a class="btn btn-secondary" href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fethanfrq%2FTaskly&amp;project-name=taskly&amp;repository-name=taskly&amp;env=BETTER_AUTH_SECRET,RESEND_API_KEY,EMAIL_FROM,NEXT_PUBLIC_VAPID_PUBLIC_KEY,VAPID_PRIVATE_KEY,VAPID_SUBJECT&amp;envDescription=Secrets%20for%20sign-in%2C%20email%20codes%20and%20push%20notifications.&amp;envLink=https%3A%2F%2Fgithub.com%2Fethanfrq%2FTaskly%2Fblob%2Fmain%2Fdocs%2Fself-hosting.md%23environment-variables&amp;stores=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22neon%22%2C%22productSlug%22%3A%22neon%22%2C%22protocol%22%3A%22storage%22%7D%5D"><svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 13a8 8 0 0 1 7 7a6 6 0 0 0 3 -5a9 9 0 0 0 6 -8a3 3 0 0 0 -3 -3a9 9 0 0 0 -8 6a6 6 0 0 0 -5 3" /><path d="M7 14a6 6 0 0 0 -3 6a6 6 0 0 0 6 -3" /><path d="M14 9a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></svg>Déployer ton instance</a>
             </div>
           </div>
-          <div class="hero-visual">
-            <img class="phone phone-left" src="/assets/agenda.webp?v=a8dbb91c" alt="L&#x27;agenda : réunions et tâches dans l&#x27;ordre de la journée" width="540" height="1052" decoding="async">
-            <img class="phone phone-right" src="/assets/stats.webp?v=aae06aa0" alt="Les stats de la semaine : tâches faites, série, taux de réalisation et temps de focus" width="540" height="1052" decoding="async">
-            <img class="phone phone-front" src="/assets/today-dark.webp?v=174c0194" alt="L&#x27;écran Aujourd&#x27;hui de Taskly : anneau de progression, prochain rendez-vous et les trois tâches ajoutées par Claude depuis Gmail, Slack et l&#x27;agenda" width="540" height="1052" fetchpriority="high">
+          <div class="hero-stage">
+            <figure class="hero-video" data-vertical="/assets/taskly-30s-fr-vertical.mp4?v=047cc43c" data-vertical-poster="/assets/poster-fr-vertical.webp?v=acd80bc8">
+              <video src="/assets/taskly-30s-fr.mp4?v=54dd56dc" poster="/assets/poster-fr.webp?v=caa1e9b7" width="1920" height="1080" autoplay muted loop playsinline preload="metadata" aria-label="Taskly en 30 secondes"></video>
+              <button class="video-toggle" type="button" aria-pressed="true" data-play="Lecture" data-pause="Pause"><svg class="icon icon-pause" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M6 6a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v12a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1l0 -12" /><path d="M14 6a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v12a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1l0 -12" /></svg><svg class="icon icon-play" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M7 4v16l13 -8l-13 -8" /></svg><span>Pause</span></button>
+              <figcaption class="sr-only">Taskly en 30 secondes. Ce matin : 47 mails, 12 messages, 3 réunions, et aucune liste. Une phrase à Claude, et la liste se remplit, chaque tâche reliée à sa source. Deux tâches cochées, un rappel sonne à la bonne minute. Des tâches, pas des mails : open source, pas de mot de passe, Claude déconnecté en un geste.</figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="screens" aria-label="Écrans de l&#x27;application">
+        <div class="wrap">
+          <div class="phones">
+            <img class="phone phone-left" src="/assets/agenda.webp?v=a8dbb91c" alt="L&#x27;agenda : réunions et tâches dans l&#x27;ordre de la journée" width="540" height="1052" loading="lazy" decoding="async">
+            <img class="phone phone-front" src="/assets/today-dark.webp?v=174c0194" alt="L&#x27;écran Aujourd&#x27;hui de Taskly : anneau de progression, prochain rendez-vous et les trois tâches ajoutées par Claude depuis Gmail, Slack et l&#x27;agenda" width="540" height="1052" decoding="async">
+            <img class="phone phone-right" src="/assets/stats.webp?v=aae06aa0" alt="Les stats de la semaine : tâches faites, série, taux de réalisation et temps de focus" width="540" height="1052" loading="lazy" decoding="async">
           </div>
         </div>
       </section>
@@ -169,5 +181,42 @@
         <p class="disclaimer">Taskly est un projet open source indépendant, non affilié à Anthropic. Claude est une marque d&#x27;Anthropic.</p>
       </div>
     </footer>
+    <script>
+      (() => {
+        const figure = document.querySelector(".hero-video");
+        const video = figure.querySelector("video");
+        const toggle = figure.querySelector(".video-toggle");
+        if (matchMedia("(max-width: 640px)").matches) {
+          video.poster = figure.dataset.verticalPoster;
+          video.src = figure.dataset.vertical;
+          figure.classList.add("is-vertical");
+        }
+        if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          video.removeAttribute("autoplay");
+          video.controls = true;
+          toggle.hidden = true;
+          return;
+        }
+        let wanted = true;
+        const label = () => {
+          const playing = !video.paused;
+          toggle.setAttribute("aria-pressed", String(playing));
+          toggle.classList.toggle("is-paused", !playing);
+          toggle.querySelector("span").textContent = playing ? toggle.dataset.pause : toggle.dataset.play;
+        };
+        toggle.addEventListener("click", () => {
+          wanted = video.paused;
+          if (wanted) video.play();
+          else video.pause();
+        });
+        video.addEventListener("play", label);
+        video.addEventListener("pause", label);
+        new IntersectionObserver(([entry]) => {
+          if (!wanted) return;
+          if (entry.isIntersecting) video.play().catch(() => {});
+          else video.pause();
+        }, { threshold: 0.2 }).observe(video);
+      })();
+    </script>
   </body>
 </html>
