@@ -28,7 +28,7 @@
     <link rel="icon" href="/assets/icon.svg?v=804df3a4" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/assets/apple-icon.png?v=469fde9c">
     <link rel="preload" as="image" href="/assets/poster-fr.webp?v=caa1e9b7" type="image/webp">
-    <link rel="stylesheet" href="/styles.css?v=a01e9586">
+    <link rel="stylesheet" href="/styles.css?v=7c6b8e1b">
   </head>
   <body>
     <a class="skip" href="#main">Aller au contenu</a>
@@ -141,6 +141,29 @@
           <h2 class="reveal">Sur ton ordinateur aussi.</h2>
           <p class="section-lead reveal">Une barre latérale, ta journée et la suite côte à côte, et N pour ajouter une tâche. Installe-le depuis ton navigateur, comme une app.</p>
           <img class="desktop-shot reveal" src="/assets/desktop-fr.webp?v=439ecae6" alt="Taskly sur un ordinateur : une barre latérale, les tâches du jour venues de Gmail, de l&#x27;agenda et de Slack, et à droite la progression, le prochain rendez-vous et Claude" width="2000" height="1128" loading="lazy" decoding="async">
+        </div>
+      </section>
+
+      <section id="films" class="section">
+        <div class="wrap">
+          <h2 class="reveal">Trois films, vingt secondes chacun.</h2>
+          <p class="section-lead reveal">Les rappels, tes données, ta journée : chaque fonction en action, sans le son.</p>
+          <div class="films reveal" data-films>
+            <div class="film-tabs" role="tablist" aria-label="Films">
+              <button type="button" class="film-tab" role="tab" id="film-tab-reminders" aria-controls="film-player" aria-selected="true"
+                data-src="/assets/taskly-reminders-fr.mp4?v=41cfcb49" data-poster="/assets/poster-reminders-fr.webp?v=07e4737f"
+                data-vertical="/assets/taskly-reminders-fr-vertical.mp4?v=eaa1f7de" data-vertical-poster="/assets/poster-reminders-fr-vertical.webp?v=b70bea81"><svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M10 5a2 2 0 0 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" /><path d="M9 17v1a3 3 0 0 0 6 0v-1" /><path d="M21 6.727a11.05 11.05 0 0 0 -2.794 -3.727" /><path d="M3 6.727a11.05 11.05 0 0 1 2.792 -3.727" /></svg><span>Des rappels qui sonnent</span><span class="film-length">21 s</span></button>
+              <button type="button" class="film-tab" role="tab" id="film-tab-privacy" aria-controls="film-player" aria-selected="false"
+                data-src="/assets/taskly-privacy-fr.mp4?v=2d1d81b9" data-poster="/assets/poster-privacy-fr.webp?v=038adbba"
+                data-vertical="/assets/taskly-privacy-fr-vertical.mp4?v=d782442d" data-vertical-poster="/assets/poster-privacy-fr-vertical.webp?v=6286e310"><svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6" /><path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0" /><path d="M8 11v-4a4 4 0 1 1 8 0v4" /></svg><span>Des tâches, pas des mails</span><span class="film-length">20 s</span></button>
+              <button type="button" class="film-tab" role="tab" id="film-tab-day" aria-controls="film-player" aria-selected="false"
+                data-src="/assets/taskly-day-fr.mp4?v=c9a55024" data-poster="/assets/poster-day-fr.webp?v=24576a73"
+                data-vertical="/assets/taskly-day-fr-vertical.mp4?v=eaf2aa70" data-vertical-poster="/assets/poster-day-fr-vertical.webp?v=1dfc7f8c"><svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M8 12a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7" /></svg><span>Toute ta journée</span><span class="film-length">21 s</span></button>
+            </div>
+            <figure class="film-player" id="film-player" role="tabpanel" aria-labelledby="film-tab-reminders">
+              <video src="/assets/taskly-reminders-fr.mp4?v=41cfcb49" poster="/assets/poster-reminders-fr.webp?v=07e4737f" width="1920" height="1080" muted playsinline controls preload="none" aria-label="Des rappels qui sonnent"></video>
+            </figure>
+          </div>
         </div>
       </section>
 
@@ -286,6 +309,59 @@
           if (entry.isIntersecting) video.play().catch(() => {});
           else video.pause();
         }, { threshold: 0.2 }).observe(video);
+      })();
+    </script>
+    <script>
+      (() => {
+        const root = document.querySelector("[data-films]");
+        if (!root) return;
+        const tabs = [...root.querySelectorAll("[role=tab]")];
+        const figure = root.querySelector(".film-player");
+        const video = figure.querySelector("video");
+        const vertical = matchMedia("(max-width: 640px)").matches;
+        const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+        figure.classList.toggle("is-vertical", vertical);
+        let current = 0;
+        let seen = false;
+        let userPaused = false;
+        const load = (i, play) => {
+          current = i;
+          tabs.forEach((tab, j) => {
+            tab.setAttribute("aria-selected", String(j === i));
+            tab.tabIndex = j === i ? 0 : -1;
+          });
+          const tab = tabs[i];
+          figure.setAttribute("aria-labelledby", tab.id);
+          video.setAttribute("aria-label", tab.querySelector("span").textContent);
+          video.poster = vertical ? tab.dataset.verticalPoster : tab.dataset.poster;
+          video.src = vertical ? tab.dataset.vertical : tab.dataset.src;
+          if (play) video.play().catch(() => {});
+        };
+        load(0, false);
+        tabs.forEach((tab, i) => {
+          tab.addEventListener("click", () => {
+            userPaused = false;
+            load(i, true);
+          });
+          tab.addEventListener("keydown", (event) => {
+            const step = { ArrowRight: 1, ArrowLeft: -1 }[event.key];
+            if (!step) return;
+            const next = (current + step + tabs.length) % tabs.length;
+            load(next, !video.paused);
+            tabs[next].focus();
+          });
+        });
+        video.addEventListener("pause", () => {
+          if (!video.ended && document.visibilityState === "visible" && seen) userPaused = true;
+        });
+        video.addEventListener("play", () => (userPaused = false));
+        video.addEventListener("ended", () => load((current + 1) % tabs.length, true));
+        if (still) return;
+        new IntersectionObserver(([entry]) => {
+          seen = entry.isIntersecting;
+          if (entry.isIntersecting && !userPaused) video.play().catch(() => {});
+          else if (!entry.isIntersecting) video.pause();
+        }, { threshold: 0.5 }).observe(video);
       })();
     </script>
   </body>
