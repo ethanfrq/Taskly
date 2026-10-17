@@ -35,7 +35,8 @@ Running "Prepare my day" twice is safe: Taskly skips tasks that are already ther
 | `add_tasks` | write | Up to 25 tasks, with source (`gmail`, `outlook`, `calendar`, `slack`, `teams`, `notion`, `other`) and link; duplicates skipped |
 | `complete_task` | write | Checks a task off; recurring tasks get their next occurrence |
 | `update_task` | write | Title, notes, day, time, priority |
-| `add_calendar_events` | write | Up to 50 events; resent events (same calendar id) are updated, not duplicated |
+| `add_calendar_events` | write | Up to 50 events; resent events (same calendar id) are updated, not duplicated. With `replace_day`, the day's events Claude didn't resend are removed (cancelled meetings) |
+| `remove_calendar_events` | write | Removes events by the ids `get_today` returns, when the user says a meeting was cancelled |
 | `report_connections` | write | The sources Claude can read, for the health check |
 
 The server also sends Claude instructions on how to prepare a day: one short task per actionable item, a verb first, a link to the source, no tasks for newsletters or receipts.

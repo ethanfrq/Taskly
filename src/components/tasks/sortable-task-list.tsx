@@ -19,7 +19,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { IconGripVertical } from "@tabler/icons-react";
-import { useState, useTransition } from "react";
+import { useId, useState, useTransition } from "react";
 import { reorderTasksAction } from "@/app/(app)/actions";
 import { GroupList } from "@/components/ui/group";
 import { useI18n } from "@/i18n/client";
@@ -79,6 +79,9 @@ export function SortableTaskList({
   onToggle: (task: TaskView) => void;
   showDate?: boolean;
 }) {
+  // dnd-kit numbers its accessibility ids with a module counter, which differs
+  // between the server and the client render; a React id keeps them in sync.
+  const dndId = useId();
   const [order, setOrder] = useState(tasks);
   const [source, setSource] = useState(tasks);
   const [, startTransition] = useTransition();
@@ -103,7 +106,7 @@ export function SortableTaskList({
   };
 
   return (
-    <DndContext sensors={sensors} collisionDetection={closestCenter} modifiers={[restrictToVerticalAxis]} onDragEnd={onDragEnd}>
+    <DndContext id={dndId} sensors={sensors} collisionDetection={closestCenter} modifiers={[restrictToVerticalAxis]} onDragEnd={onDragEnd}>
       <SortableContext items={order.map((task) => task.id)} strategy={verticalListSortingStrategy}>
         <GroupList>
           {order.map((task) => (

@@ -4,7 +4,7 @@ import { user } from "@/db/schema";
 import { getPreferences, savePreferences } from "@/lib/preferences";
 import { createList, getLatestImport } from "@/lib/tasks/service";
 import { createTestDb } from "@/test/db";
-import { type McpContext, addEvents, addTasks, completeTask, getToday, reportConnections } from "./handlers";
+import { type McpContext, addEvents, addTasks, completeTask, getToday, removeCalendarEvents, reportConnections } from "./handlers";
 
 let db: Database;
 let ctx: McpContext;
@@ -64,7 +64,38 @@ describe("other tools", () => {
     await addEvents(ctx, [event]);
     await addEvents(ctx, [{ ...event, title: "Démo client Acme" }]);
     const today = await getToday(ctx);
-    expect(today.events).toEqual([{ title: "Démo client Acme", start: "14:00", end: "15:00", all_day: false, location: null }]);
+    expect(today.events).toEqual([{ id: "cal-1", title: "Démo client Acme", start: "14:00", end: "15:00", all_day: false, location: null }]);
+  });
+
+  it("forgets the day's events Claude no longer sends with replace_day", async () => {
+    await addEvents(ctx, [
+      { title: "Démo", start: "2026-10-16T14:00:00+02:00", id: "cal-1" },
+      { title: "Late call", start: "2026-10-16T23:30:00+02:00", id: "cal-2" },
+      { title: "Tomorrow", start: "2026-10-17T00:30:00+02:00", id: "cal-3" },
+    ]);
+    await db.insert(user).values({ id: "kim", name: "Kim", email: "kim@example.com" });
+    await addEvents({ ...ctx, userId: "kim" }, [{ title: "Kim's meeting", start: "2026-10-16T10:00:00+02:00", id: "cal-1" }]);
+
+    // The late call was cancelled: Claude resends the rest of the day.
+    const result = await addEvents(ctx, [{ title: "Démo", start: "2026-10-16T14:00:00+02:00", id: "cal-1" }], "2026-10-16");
+    expect(result).toEqual({ saved: 1, removed: 1 });
+    expect((await getToday(ctx)).events.map((e) => e.title)).toEqual(["Démo"]);
+
+    // Nothing left that day; other days and other users are untouched.
+    expect(await addEvents(ctx, [], "2026-10-16")).toEqual({ saved: 0, removed: 1 });
+    const tomorrow = await getToday({ ...ctx, now: () => new Date("2026-10-17T07:00:00Z") });
+    expect(tomorrow.events.map((e) => e.title)).toEqual(["Tomorrow"]);
+    expect((await getToday({ ...ctx, userId: "kim" })).events).toHaveLength(1);
+  });
+
+  it("removes a cancelled event by its calendar id or Taskly's", async () => {
+    await addEvents(ctx, [
+      { title: "Démo", start: "2026-10-16T14:00:00+02:00", id: "cal-1" },
+      { title: "No calendar id", start: "2026-10-16T16:00:00+02:00" },
+    ]);
+    const [, untracked] = (await getToday(ctx)).events;
+    expect(await removeCalendarEvents(ctx, ["cal-1", untracked.id, "unknown"])).toEqual({ removed: 2 });
+    expect((await getToday(ctx)).events).toEqual([]);
   });
 
   it("records the connectors Claude sees for the health check", async () => {

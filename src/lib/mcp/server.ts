@@ -13,10 +13,12 @@ export const INSTRUCTIONS = `Taskly is the user's daily to-do list with reminder
 
 When the user asks to prepare their day (for example "Prepare my day in Taskly"):
 1. Call get_today to see what is already planned.
-2. Read today's events from the user's calendar connectors and save them with add_calendar_events (pass the calendar's event id as "id").
+2. Read today's events from all of the user's calendar connectors and save them with add_calendar_events: pass each calendar event id as "id", and today's date as replace_day so meetings cancelled since last time disappear. Leave replace_day out if you could not read every calendar.
 3. Read recent unread or important emails and messages from the user's connectors. For each one that needs an action from the user, create ONE short, actionable task with add_tasks: start with a verb ("Reply to Sarah about the Q4 plan"), set source.kind and source.url (link to the email or message) so the user can open it. Use due_time only when the source names a time. Use priority 3 only for real urgency.
 4. Never create tasks for newsletters, notifications, receipts or things already done. Taskly skips duplicates, so running this twice is safe.
 5. Finish with a two-sentence summary of the day.
+
+When the user says a meeting was cancelled, remove it with remove_calendar_events (ids from get_today).
 
 When the user says "Taskly, check my connections", call report_connections with the connectors you can actually use right now.`;
 
@@ -134,8 +136,12 @@ export function createTasklyServer(ctx: h.McpContext): McpServer {
     {
       title: "Add calendar events",
       description:
-        "Copies events from the user's calendars so Taskly can show the day's agenda and the next meeting. Pass the calendar's event id as `id` to avoid duplicates.",
+        "Copies events from the user's calendars so Taskly can show the day's agenda and the next meeting. Pass the calendar's event id as `id` to avoid duplicates. With `replace_day`, the events are the whole day: the ones Taskly had for that day and you didn't send are removed.",
       inputSchema: z.object({
+        replace_day: z.iso
+          .date()
+          .optional()
+          .describe("YYYY-MM-DD. Only when `events` holds every event of that day from all the user's calendars (it may then be empty)."),
         events: z
           .array(
             z.object({
@@ -149,12 +155,22 @@ export function createTasklyServer(ctx: h.McpContext): McpServer {
               kind: sourceKind.optional(),
             }),
           )
-          .min(1)
           .max(50),
       }),
       annotations: { idempotentHint: true },
     },
-    async ({ events }) => touched(() => h.addEvents(ctx, events)),
+    async ({ events, replace_day }) => touched(() => h.addEvents(ctx, events, replace_day)),
+  );
+
+  server.registerTool(
+    "remove_calendar_events",
+    {
+      title: "Remove calendar events",
+      description: "Removes events from Taskly's agenda, for example a meeting the user says was cancelled. Use the ids from get_today.",
+      inputSchema: z.object({ ids: z.array(z.string().min(1).max(256)).min(1).max(50) }),
+      annotations: { destructiveHint: true, idempotentHint: true },
+    },
+    async ({ ids }) => touched(() => h.removeCalendarEvents(ctx, ids)),
   );
 
   server.registerTool(

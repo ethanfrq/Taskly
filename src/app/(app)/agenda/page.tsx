@@ -1,10 +1,10 @@
-import { IconCalendarEvent } from "@tabler/icons-react";
 import type { Metadata } from "next";
 import { Group } from "@/components/ui/group";
 import { dayLabel } from "@/lib/date-label";
+import { buildAgenda } from "@/lib/agenda";
 import { getEventsBetween } from "@/lib/events/service";
 import { getTodayTasks, getUpcomingTasks } from "@/lib/tasks/service";
-import { addDays, startOfDayUtc, timeIn, todayIn } from "@/lib/time";
+import { addDays, startOfDayUtc } from "@/lib/time";
 import { getAppContext } from "../context";
 import { AgendaList } from "./agenda-list";
 
@@ -25,44 +25,18 @@ export default async function AgendaPage() {
     getEventsBetween(db, user.id, startOfToday, startOfDayUtc(addDays(until, 1), prefs.timeZone)),
   ]);
 
-  const days = new Map<string, { tasks: typeof upcoming; events: typeof events }>();
-  const bucket = (day: string) => {
-    if (!days.has(day)) days.set(day, { tasks: [], events: [] });
-    return days.get(day)!;
-  };
-  bucket(today).tasks.push(...todayTasks.today);
-  for (const task of upcoming) bucket(task.dueDate!).tasks.push(task);
-  for (const event of events) bucket(todayIn(prefs.timeZone, event.startsAt)).events.push(event);
-  const ordered = [...days.entries()].sort(([a], [b]) => a.localeCompare(b));
+  // Today's section holds the open tasks for today (overdue ones live on Today).
+  const agenda = buildAgenda(events, [...todayTasks.today, ...upcoming], prefs.timeZone, today);
 
   return (
     <div className="flex flex-col gap-5 px-4 pt-[max(1.25rem,env(safe-area-inset-top))] pb-6">
       <h1 className="px-1 text-[34px] font-bold tracking-tight">{t.agenda.title}</h1>
-      {ordered.map(([day, { tasks, events: dayEvents }]) =>
-        tasks.length + dayEvents.length > 0 ? (
-          <Group key={day} title={dayLabel(day, today, locale, t)}>
-            {dayEvents.length > 0 ? (
-              <ul className="divide-y divide-separator">
-                {dayEvents.map((event) => (
-                  <li key={event.id} className="flex items-center gap-3 px-4 py-2.5">
-                    <span className="w-12 shrink-0 text-[14px] font-semibold text-accent-text tabular-nums">
-                      {event.allDay ? "—" : timeIn(prefs.timeZone, event.startsAt)}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-[16px]">{event.title}</span>
-                      {event.location ? <span className="block truncate text-[13px] text-text-secondary">{event.location}</span> : null}
-                    </span>
-                    <IconCalendarEvent size={16} stroke={1.8} className="text-text-secondary" aria-hidden />
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-            {dayEvents.length > 0 && tasks.length > 0 ? <div className="h-px bg-separator" /> : null}
-            {tasks.length > 0 ? <AgendaList tasks={tasks} today={today} /> : null}
-          </Group>
-        ) : null,
-      )}
-      {ordered.every(([, d]) => d.tasks.length + d.events.length === 0) ? (
+      {agenda.map(([day, items]) => (
+        <Group key={day} title={dayLabel(day, today, locale, t)}>
+          <AgendaList items={items} today={today} />
+        </Group>
+      ))}
+      {agenda.length === 0 ? (
         <p className="rounded-xl bg-card px-4 py-8 text-center text-text-secondary">{t.agenda.empty}</p>
       ) : null}
     </div>
