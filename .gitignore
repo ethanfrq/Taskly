@@ -43,3 +43,7 @@ next-env.d.ts
 
 # local database
 /.data/
+
+# motion design video (video/README.md): its own dependencies and renders
+/video/node_modules/
+/video/out/

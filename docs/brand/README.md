@@ -41,6 +41,10 @@ The logo is graphite or ivory, nothing else. The accent color belongs to the use
 
 The PNG icons, the favicon and the social preview are rasterized from the official paths, not redrawn. If the artwork changes, regenerate them from the new SVGs rather than editing the PNGs.
 
+## Video
+
+[`video/`](../../video/README.md) holds the 30-second motion design video (French and English) as a Remotion project: it draws the logo from the same paths and the screens with the app's tokens, so it never drifts from the brand. Render it with `npm run render` in that folder.
+
 ## GitHub social preview
 
 GitHub doesn't allow setting the repository card through its API. To use [social-preview.png](social-preview.png), go to the repository's **Settings › General › Social preview** and upload it.

@@ -1,0 +1,28 @@
+{
+  "name": "taskly-video",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Taskly's 30-second motion design video, built with Remotion.",
+  "license": "MIT",
+  "scripts": {
+    "studio": "remotion studio",
+    "render": "npm run render:fr && npm run render:en",
+    "render:fr": "remotion render TasklyPromoFR out/taskly-30s-fr.mp4",
+    "render:en": "remotion render TasklyPromoEN out/taskly-30s-en.mp4",
+    "still": "remotion still",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.536",
+    "@remotion/transitions": "4.0.536",
+    "@tabler/icons-react": "^3.49.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "remotion": "4.0.536"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "^5"
+  }
+}
