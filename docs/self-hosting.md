@@ -11,6 +11,7 @@ Taskly is one Next.js app and one Postgres database. Everything else is optional
 | [Resend](https://resend.com) | Sends the 6-digit sign-in codes | Environment variable | Environment variable |
 | VAPID keys | Identify your instance to push services | Environment variables | Environment variables |
 | Reminder scheduler | Sends each reminder at its minute | Upstash QStash, from the Marketplace | The server itself (`TASKLY_INTERNAL_SCHEDULER=1`) |
+| Daily housekeeping | Deletes expired codes, counters and old reminders | Vercel Cron (`vercel.json`), with `CRON_SECRET` | The server itself, or your own cron |
 | HTTPS | Passkeys, push, the service worker and OAuth all require it | Built in | A reverse proxy (Caddy, nginx…) |
 
 Nothing calls the Anthropic API: users connect their own Claude to your instance ([connect-claude.md](connect-claude.md)), so hosting Taskly has no AI cost.
@@ -21,7 +22,7 @@ Nothing calls the Anthropic API: users connect their own Claude to your instance
 
 ### 1. Deploy
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fethanfrq%2FTaskly&project-name=taskly&repository-name=taskly&env=BETTER_AUTH_SECRET,RESEND_API_KEY,EMAIL_FROM,NEXT_PUBLIC_VAPID_PUBLIC_KEY,VAPID_PRIVATE_KEY,VAPID_SUBJECT&envDescription=Secrets%20for%20sign-in%2C%20email%20codes%20and%20push%20notifications.&envLink=https%3A%2F%2Fgithub.com%2Fethanfrq%2FTaskly%2Fblob%2Fmain%2Fdocs%2Fself-hosting.md%23environment-variables&stores=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22neon%22%2C%22productSlug%22%3A%22neon%22%2C%22protocol%22%3A%22storage%22%7D%5D)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fethanfrq%2FTaskly&project-name=taskly&repository-name=taskly&env=BETTER_AUTH_SECRET,RESEND_API_KEY,EMAIL_FROM,NEXT_PUBLIC_VAPID_PUBLIC_KEY,VAPID_PRIVATE_KEY,VAPID_SUBJECT,CRON_SECRET&envDescription=Secrets%20for%20sign-in%2C%20email%20codes%2C%20push%20notifications%20and%20the%20daily%20cron.&envLink=https%3A%2F%2Fgithub.com%2Fethanfrq%2FTaskly%2Fblob%2Fmain%2Fdocs%2Fself-hosting.md%23environment-variables&stores=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22neon%22%2C%22productSlug%22%3A%22neon%22%2C%22protocol%22%3A%22storage%22%7D%5D)
 
 The button copies the repository to your GitHub account, asks for the variables below and offers to create a Neon database. Prepare the values first:
 
@@ -41,6 +42,7 @@ npx web-push generate-vapid-keys
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | The public key from `web-push generate-vapid-keys`. |
 | `VAPID_PRIVATE_KEY` | The private key from the same command. |
 | `VAPID_SUBJECT` | `mailto:` followed by an address push services can reach you at. |
+| `CRON_SECRET` | Another `openssl rand -base64 32`. Vercel sends it to the daily housekeeping cron ([step 4](#housekeeping)). |
 
 ### 2. Database
 
@@ -58,13 +60,31 @@ Vercel functions don't run in the background, so something has to wake Taskly up
 > [!NOTE]
 > QStash has to reach your deployment. Production domains are public by default; if you turn on Deployment Protection for production, reminders stop arriving.
 
-### 4. Redeploy and check
+<a id="housekeeping"></a>
+
+### 4. Housekeeping
+
+Once a day, Taskly deletes what nothing reads any more, so the database doesn't grow forever:
+
+| Rows | Deleted when |
+|---|---|
+| Sign-in codes and other verification rows | Expired |
+| Rate-limit counters | Not touched for a day (the longest limit window is one hour) |
+| Reminders already sent or cancelled | Over 30 days ago |
+| Claude's refresh history (what it changed, for the undo banner) | Over 30 days old |
+| OAuth clients that registered but never connected, or disconnected since | Registered over 30 days ago, with no consent or token left |
+
+Tasks, lists, events, preferences, sessions, passkeys and push subscriptions are never touched: users export or delete their own data in **Settings**.
+
+On Vercel, the cron declared in [`vercel.json`](../vercel.json) calls `GET /api/housekeeping` every day around 04:00 UTC (the Hobby plan runs a cron once a day, somewhere within that hour). It needs `CRON_SECRET`: Vercel sends it as `Authorization: Bearer <CRON_SECRET>`, and without it the call is refused with a 401. Each run answers with the number of rows deleted per table; the project's **Logs** keep them.
+
+### 5. Redeploy and check
 
 Environment variables only apply to new deployments: after adding the database, QStash or a variable, redeploy (**Deployments › ⋯ › Redeploy**).
 
 Then open your instance on your phone, install it, and go through the onboarding. **Settings › Connect Claude** shows a health check: app installed, notifications allowed, test notification received, Claude connected.
 
-### 5. Custom domain (optional)
+### 6. Custom domain (optional)
 
 Add it under **Settings › Domains**, then set `BETTER_AUTH_URL=https://your-domain` and redeploy. Without it, Taskly uses the project's production URL.
 
@@ -108,7 +128,7 @@ taskly.your-domain.com {
 }
 ```
 
-With `TASKLY_INTERNAL_SCHEDULER=1`, the server checks for due reminders every 20 seconds; no QStash or cron needed. Keep the process running with systemd, pm2 or your platform's equivalent. Each reminder is claimed in the database before it is sent, so a second instance can't send it twice.
+With `TASKLY_INTERNAL_SCHEDULER=1`, the server checks for due reminders every 20 seconds and cleans the database once a day (at start, then every 24 hours, see [Housekeeping](#housekeeping)); no QStash or cron needed. If you'd rather run the cleanup from your own cron, call `GET /api/housekeeping` once a day with `Authorization: Bearer <CRON_SECRET>` instead. Keep the process running with systemd, pm2 or your platform's equivalent. Each reminder is claimed in the database before it is sent, so a second instance can't send it twice.
 
 To update: `git pull`, `npm ci`, `npm run db:migrate`, `npm run build`, then restart.
 
@@ -158,8 +178,8 @@ The limits are on in production. They rely on the client IP: Vercel and a single
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` | For push | `npx web-push generate-vapid-keys`. Without them in production, notifications are off. Locally they are generated in `.data/vapid.json`. |
 | `VAPID_SUBJECT` | For push | `mailto:` contact for push services. |
 | `QSTASH_TOKEN`, `QSTASH_CURRENT_SIGNING_KEY`, `QSTASH_NEXT_SIGNING_KEY` | One scheduler | Exact-time reminders through Upstash QStash. |
-| `CRON_SECRET` | One scheduler | Protects `/api/reminders/sweep` for an external cron. |
-| `TASKLY_INTERNAL_SCHEDULER` | One scheduler | `1` on a long-running server to send reminders from the process itself. |
+| `CRON_SECRET` | Vercel, or an external cron | Protects `/api/housekeeping` (daily cleanup, called by the cron in `vercel.json`) and `/api/reminders/sweep` (an external cron, every minute). `openssl rand -base64 32`. |
+| `TASKLY_INTERNAL_SCHEDULER` | One scheduler | `1` on a long-running server to send reminders and clean the database from the process itself. |
 | `TASKLY_ALLOWED_EMAILS` | Personal instance | Comma-separated addresses allowed to sign in. Anyone else is refused before a code is sent, so no account can be created. Unset: anyone can sign up. |
 | `TASKLY_TRUSTED_PROXIES` | Behind a proxy chain | Comma-separated IPs or CIDR ranges of the proxies in front of Taskly (a CDN in front of your reverse proxy, for example), so rate limits see each visitor's own IP. Not needed on Vercel or behind a single Caddy. |
 | `NEXT_PUBLIC_SW_DEV` | No | `1` to register the service worker during `npm run dev`, to test push locally. |
@@ -175,6 +195,7 @@ The limits are on in production. They rely on the client IP: Vercel and a single
 | Codes never arrive | `EMAIL_FROM` isn't on a domain verified in Resend; check the Resend dashboard. |
 | No notifications on iPhone | Taskly must be installed on the home screen (iOS 16.4 or later), and notifications allowed in its onboarding. |
 | Notifications arrive but late | No scheduler configured: add QStash, a cron or `TASKLY_INTERNAL_SCHEDULER=1`. |
+| The daily `/api/housekeeping` cron logs a 401 | `CRON_SECRET` isn't set on the project. Set it and redeploy. |
 | Claude can't connect | The address must be `https://your-domain/api/mcp`, and the instance must be reachable from the internet. |
 
 Your users can export all their data or delete their account at any time in **Settings**. Back up the database with your provider's tools.

@@ -16,7 +16,9 @@ import { createTaskAction, deleteTaskAction, snoozeTaskAction, toggleTaskAction,
 type ListOption = { id: string; name: string; color: string | null };
 
 const rowClass = "flex items-center justify-between gap-3 px-4 py-3 text-[16px]";
-const inputClass = "bg-transparent text-right text-[16px] text-text-secondary outline-none";
+// Transparent fields on a card: the keyboard focus ring sits just outside the text.
+const focusRing = "outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-card";
+const inputClass = `rounded-md bg-transparent text-right text-[16px] text-text-secondary ${focusRing}`;
 
 export function TaskEditor({
   task,
@@ -76,7 +78,7 @@ export function TaskEditor({
             rows={1}
             onChange={(e) => setTitle(e.target.value)}
             onBlur={() => title.trim() && title !== task.title && save({ title })}
-            className="field-sizing-content resize-none bg-transparent text-[20px] font-semibold outline-none"
+            className={`field-sizing-content resize-none rounded-md bg-transparent text-[20px] font-semibold ${focusRing}`}
           />
           <label htmlFor="notes" className="sr-only">
             {t.task.notesLabel}
@@ -87,7 +89,7 @@ export function TaskEditor({
             placeholder={t.task.notesPlaceholder}
             onChange={(e) => setNotes(e.target.value)}
             onBlur={() => notes !== (task.notes ?? "") && save({ notes: notes || null })}
-            className="field-sizing-content min-h-[1.5em] resize-none bg-transparent text-[15px] text-text-secondary outline-none placeholder:text-text-secondary"
+            className={`field-sizing-content min-h-[1.5em] resize-none rounded-md bg-transparent text-[15px] text-text-secondary placeholder:text-text-secondary ${focusRing}`}
           />
         </div>
       </div>
@@ -288,7 +290,7 @@ export function TaskEditor({
                 value={subtask}
                 onChange={(e) => setSubtask(e.target.value)}
                 placeholder={t.task.addSubtask}
-                className="w-full bg-transparent py-1.5 text-[16px] outline-none placeholder:text-accent-text"
+                className={`w-full rounded-md bg-transparent py-1.5 text-[16px] placeholder:text-accent-text ${focusRing}`}
               />
             </form>
           </li>

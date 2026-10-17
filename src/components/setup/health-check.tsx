@@ -61,9 +61,9 @@ export function HealthCheck({ data, onFinish }: { data: HealthData; onFinish?: {
     revealed <= index ? (
       <IconLoader2 size={20} className="shrink-0 animate-spin text-text-secondary" aria-label={t.common.loading} />
     ) : ok ? (
-      <IconCircleCheck size={22} stroke={1.8} className="shrink-0 text-[#34C759]" aria-hidden />
+      <IconCircleCheck size={22} stroke={1.8} className="shrink-0 text-success" aria-hidden />
     ) : (
-      <IconAlertTriangle size={20} stroke={1.8} className="shrink-0 text-[#FF9500]" aria-hidden />
+      <IconAlertTriangle size={20} stroke={1.8} className="shrink-0 text-warning" aria-hidden />
     );
 
   return (

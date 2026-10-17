@@ -88,7 +88,7 @@ export function QuickAdd({ dueDate, today, listId, listNames = [], onDraft }: Pr
   return (
     <form
       onSubmit={submit}
-      className="sticky bottom-[calc(4.75rem+env(safe-area-inset-bottom))] z-10 mx-4 mt-4 rounded-xl bg-card px-3 shadow-[0_1px_8px_rgba(0,0,0,0.08)] lg:bottom-6"
+      className="sticky bottom-[calc(4.75rem+env(safe-area-inset-bottom))] z-10 mx-4 mt-4 rounded-xl bg-card px-3 shadow-[0_1px_8px_rgba(0,0,0,0.08)] has-[input:focus-visible]:ring-2 has-[input:focus-visible]:ring-accent lg:bottom-6"
     >
       {chips.length > 0 ? (
         <div aria-live="polite" className="flex flex-wrap items-center gap-1.5 pt-2.5">
