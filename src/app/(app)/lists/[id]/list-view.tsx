@@ -101,7 +101,7 @@ export function ListView({ list, title, tasks, today, listNames, sharing }: Prop
         )}
       </div>
 
-      <div className="mt-auto">
+      <div className="mt-auto lg:mt-0">
         <QuickAdd dueDate={null} today={today} listId={list?.id ?? null} listNames={listNames} />
       </div>
     </div>

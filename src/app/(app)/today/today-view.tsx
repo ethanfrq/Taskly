@@ -109,14 +109,14 @@ export function TodayView({ tasks, today, dateLabel, next, latestImport, latestR
   );
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div data-wide className="flex flex-1 flex-col">
       <AppBadge count={overdue.length + todo.length} />
       <header className="flex items-end px-5 pt-[max(1.25rem,env(safe-area-inset-top))]">
         <div className="flex-1">
           <p className="text-[13px] text-text-secondary">{dateLabel}</p>
           <h1 className="text-[34px] font-bold tracking-tight">{t.today.title}</h1>
         </div>
-        <nav className="flex gap-1 pb-2 text-accent-text">
+        <nav className="flex gap-1 pb-2 text-accent-text lg:hidden">
           <Link href="/focus" aria-label={t.focus.open} className="rounded-full p-2">
             <IconTarget size={24} stroke={1.8} aria-hidden />
           </Link>
@@ -126,104 +126,109 @@ export function TodayView({ tasks, today, dateLabel, next, latestImport, latestR
         </nav>
       </header>
 
-      <div className="mt-3 grid grid-cols-2 gap-3 px-4">
-        <div className="flex items-center gap-3 rounded-xl bg-card p-3">
-          <ProgressRing done={done.length} total={total} size={44} />
-          <div>
-            <p className="text-[20px] font-semibold leading-tight">
-              {done.length}/{total}
+      {/* From 1280px the tiles move to a column on the right, next to the list. */}
+      <div className="flex flex-1 flex-col xl:grid xl:grid-cols-[minmax(0,1fr)_17rem] xl:gap-6">
+        <aside className="mt-3 grid grid-cols-2 gap-3 px-4 xl:sticky xl:top-6 xl:order-2 xl:grid-cols-1 xl:self-start xl:px-0">
+          <div className="flex items-center gap-3 rounded-xl bg-card p-3">
+            <ProgressRing done={done.length} total={total} size={44} />
+            <div>
+              <p className="text-[20px] font-semibold leading-tight">
+                {done.length}/{total}
+              </p>
+              <p className="text-[13px] text-text-secondary">{t.today.doneTile}</p>
+            </div>
+          </div>
+          <div className="min-w-0 rounded-xl bg-card p-3">
+            <p className="flex items-center gap-1 text-[13px] font-medium text-accent-text">
+              <IconCalendarEvent size={15} stroke={1.8} aria-hidden />
+              {t.today.nextTile}
             </p>
-            <p className="text-[13px] text-text-secondary">{t.today.doneTile}</p>
+            {next ? (
+              <>
+                <p className="mt-0.5 text-[20px] font-semibold leading-tight">{next.time}</p>
+                <p className="truncate text-[13px] text-text-secondary">{next.title}</p>
+              </>
+            ) : (
+              <p className="mt-1 text-[15px] text-text-secondary">{t.today.nothingNext}</p>
+            )}
           </div>
-        </div>
-        <div className="min-w-0 rounded-xl bg-card p-3">
-          <p className="flex items-center gap-1 text-[13px] font-medium text-accent-text">
-            <IconCalendarEvent size={15} stroke={1.8} aria-hidden />
-            {t.today.nextTile}
-          </p>
-          {next ? (
-            <>
-              <p className="mt-0.5 text-[20px] font-semibold leading-tight">{next.time}</p>
-              <p className="truncate text-[13px] text-text-secondary">{next.title}</p>
-            </>
-          ) : (
-            <p className="mt-1 text-[15px] text-text-secondary">{t.today.nothingNext}</p>
-          )}
-        </div>
-      </div>
+        </aside>
 
-      {latestImport && !notice ? (
-        <div className="mx-4 mt-3 flex items-center gap-2 rounded-xl bg-[color-mix(in_srgb,var(--accent)_14%,var(--card))] px-3 py-2.5 text-[14px]">
-          <IconSparkles size={18} stroke={1.8} className="shrink-0 text-accent-text" aria-hidden />
-          <span className="flex-1">
-            {format(plural(locale, latestImport.count, t.today.importBanner), {
-              sources: latestImport.kinds.map((k) => t.task.sources[k]).join(", ") || "Claude",
-            })}
-          </span>
-          <button
-            type="button"
-            disabled={pending}
-            onClick={() => undo(latestImport.batchId)}
-            aria-label={t.today.importUndoLabel}
-            className="font-medium text-accent-text"
-          >
-            {t.today.importUndo}
-          </button>
-        </div>
-      ) : null}
-      {latestRefresh && !notice ? <RefreshBanner refresh={latestRefresh} onUndone={setNotice} /> : null}
-      {notice ? (
-        <p role="status" className="mx-4 mt-3 rounded-xl bg-card px-3 py-2.5 text-[14px] text-text-secondary">
-          {notice}
-        </p>
-      ) : null}
+        <div className="flex flex-1 flex-col xl:order-1">
+          {latestImport && !notice ? (
+            <div className="mx-4 mt-3 flex items-center gap-2 rounded-xl bg-[color-mix(in_srgb,var(--accent)_14%,var(--card))] px-3 py-2.5 text-[14px]">
+              <IconSparkles size={18} stroke={1.8} className="shrink-0 text-accent-text" aria-hidden />
+              <span className="flex-1">
+                {format(plural(locale, latestImport.count, t.today.importBanner), {
+                  sources: latestImport.kinds.map((k) => t.task.sources[k]).join(", ") || "Claude",
+                })}
+              </span>
+              <button
+                type="button"
+                disabled={pending}
+                onClick={() => undo(latestImport.batchId)}
+                aria-label={t.today.importUndoLabel}
+                className="font-medium text-accent-text"
+              >
+                {t.today.importUndo}
+              </button>
+            </div>
+          ) : null}
+          {latestRefresh && !notice ? <RefreshBanner refresh={latestRefresh} onUndone={setNotice} /> : null}
+          {notice ? (
+            <p role="status" className="mx-4 mt-3 rounded-xl bg-card px-3 py-2.5 text-[14px] text-text-secondary">
+              {notice}
+            </p>
+          ) : null}
 
-      <div className="mt-5 flex flex-col gap-5 px-4">
-        {overdue.length > 0 ? (
-          <Group title={<span className="text-[#FF3B30]">{t.today.overdue}</span>}>
-            <GroupList>{overdue.map((task) => row(task, true))}</GroupList>
-          </Group>
-        ) : null}
-
-        {todo.length > 0 ? (
-          <Group title={t.today.todo}>
-            {timed.length > 0 ? <GroupList>{timed.map((task) => row(task))}</GroupList> : null}
-            {timed.length > 0 && anytime.length > 0 ? <div className="h-px bg-separator" /> : null}
-            {anytime.length > 0 ? <SortableTaskList tasks={anytime} today={today} onToggle={toggle} /> : null}
-          </Group>
-        ) : total === 0 ? (
-          <div className="rounded-xl bg-card px-5 py-8 text-center">
-            <p className="text-[17px] font-semibold">{t.today.emptyTitle}</p>
-            <p className="mt-1 text-[15px] text-text-secondary">{t.today.emptyBody}</p>
-          </div>
-        ) : overdue.length === 0 ? (
-          <div className="rounded-xl bg-card px-5 py-8 text-center">
-            <p className="text-[17px] font-semibold">{t.today.allDoneTitle}</p>
-            <p className="mt-1 text-[15px] text-text-secondary">{t.today.allDoneBody}</p>
-          </div>
-        ) : null}
-
-        {done.length > 0 ? (
-          <div>
-            <button
-              type="button"
-              aria-expanded={showDone}
-              onClick={() => setShowDone((v) => !v)}
-              className="px-4 pb-1.5 text-[13px] text-accent-text"
-            >
-              {showDone ? t.today.hideDone : format(t.today.showDone, { count: done.length })}
-            </button>
-            {showDone ? (
-              <Group>
-                <GroupList>{done.map((task) => row(task))}</GroupList>
+          <div className="mt-5 flex flex-col gap-5 px-4">
+            {overdue.length > 0 ? (
+              <Group title={<span className="text-[#FF3B30]">{t.today.overdue}</span>}>
+                <GroupList>{overdue.map((task) => row(task, true))}</GroupList>
               </Group>
             ) : null}
-          </div>
-        ) : null}
-      </div>
 
-      <div className="mt-auto">
-        <QuickAdd dueDate={today} today={today} listNames={listNames} />
+            {todo.length > 0 ? (
+              <Group title={t.today.todo}>
+                {timed.length > 0 ? <GroupList>{timed.map((task) => row(task))}</GroupList> : null}
+                {timed.length > 0 && anytime.length > 0 ? <div className="h-px bg-separator" /> : null}
+                {anytime.length > 0 ? <SortableTaskList tasks={anytime} today={today} onToggle={toggle} /> : null}
+              </Group>
+            ) : total === 0 ? (
+              <div className="rounded-xl bg-card px-5 py-8 text-center">
+                <p className="text-[17px] font-semibold">{t.today.emptyTitle}</p>
+                <p className="mt-1 text-[15px] text-text-secondary">{t.today.emptyBody}</p>
+              </div>
+            ) : overdue.length === 0 ? (
+              <div className="rounded-xl bg-card px-5 py-8 text-center">
+                <p className="text-[17px] font-semibold">{t.today.allDoneTitle}</p>
+                <p className="mt-1 text-[15px] text-text-secondary">{t.today.allDoneBody}</p>
+              </div>
+            ) : null}
+
+            {done.length > 0 ? (
+              <div>
+                <button
+                  type="button"
+                  aria-expanded={showDone}
+                  onClick={() => setShowDone((v) => !v)}
+                  className="px-4 pb-1.5 text-[13px] text-accent-text"
+                >
+                  {showDone ? t.today.hideDone : format(t.today.showDone, { count: done.length })}
+                </button>
+                {showDone ? (
+                  <Group>
+                    <GroupList>{done.map((task) => row(task))}</GroupList>
+                  </Group>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
+
+          <div className="mt-auto lg:mt-0">
+            <QuickAdd dueDate={today} today={today} listNames={listNames} />
+          </div>
+        </div>
       </div>
     </div>
   );
