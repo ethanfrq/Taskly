@@ -31,7 +31,16 @@ function errorMessage(err: { code?: string; status?: number }, t: ReturnType<typ
   }
 }
 
-export function SignInForm({ next, oauth = false }: { next: string; oauth?: boolean }) {
+export function SignInForm({
+  next,
+  oauth = false,
+  codeInLogs = false,
+}: {
+  next: string;
+  oauth?: boolean;
+  /** No email provider: the code is in the server logs, say so instead of "sent to". */
+  codeInLogs?: boolean;
+}) {
   const { t } = useI18n();
   const router = useRouter();
   const [step, setStep] = useState<Step>("start");
@@ -66,7 +75,8 @@ export function SignInForm({ next, oauth = false }: { next: string; oauth?: bool
       const { error: err } = await authClient.signIn.passkey();
       if (err) {
         const cancelled = "code" in err && err.code === "AUTH_CANCELLED";
-        setError(cancelled ? t.auth.errors.passkeyCancelled : t.auth.errors.passkeyFailed);
+        const method = passkeys === "face-id" ? "Face ID" : passkeys === "touch-id" ? "Touch ID" : t.auth.passkeyGeneric;
+        setError(format(cancelled ? t.auth.errors.passkeyCancelled : t.auth.errors.passkeyFailed, { method }));
         return;
       }
       finish();
@@ -140,8 +150,8 @@ export function SignInForm({ next, oauth = false }: { next: string; oauth?: bool
   if (step === "code") {
     return (
       <form onSubmit={verifyCode} className="flex flex-1 flex-col" noValidate>
-        <h1 className="text-[28px] font-semibold tracking-tight">{t.auth.codeTitle}</h1>
-        <p className="mt-2 text-text-secondary">{format(t.auth.codeSubtitle, { email })}</p>
+        <h1 className="text-[28px] font-semibold tracking-tight">{codeInLogs ? t.auth.codeInLogsTitle : t.auth.codeTitle}</h1>
+        <p className="mt-2 text-text-secondary">{codeInLogs ? t.auth.codeInLogs : format(t.auth.codeSubtitle, { email })}</p>
         <div className="mt-8">
           <Field
             id="otp"
@@ -193,7 +203,7 @@ export function SignInForm({ next, oauth = false }: { next: string; oauth?: bool
   return (
     <form onSubmit={sendCode} className="flex flex-1 flex-col" noValidate>
       <h1 className="text-[28px] font-semibold tracking-tight">{t.auth.signInTitle}</h1>
-      <p className="mt-2 text-text-secondary">{t.auth.signInSubtitle}</p>
+      <p className="mt-2 text-text-secondary">{codeInLogs ? t.auth.signInSubtitleNoEmail : t.auth.signInSubtitle}</p>
       <div className="mt-8 flex flex-col gap-3">
         {passkeys ? (
           <>

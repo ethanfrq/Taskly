@@ -10,3 +10,11 @@ export function allowedEmailsFromEnv(value = process.env.TASKLY_ALLOWED_EMAILS):
 export function isPersonalInstance(env: Record<string, string | undefined> = process.env): boolean {
   return allowedEmailsFromEnv(env.TASKLY_ALLOWED_EMAILS).length > 0;
 }
+
+/**
+ * Without an email provider, sign-in codes are printed in the server logs:
+ * in development, and on a personal instance (a public one refuses to run).
+ */
+export function signInCodesInLogs(env: Record<string, string | undefined> = process.env): boolean {
+  return !env.RESEND_API_KEY;
+}
