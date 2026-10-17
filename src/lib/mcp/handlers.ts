@@ -3,6 +3,7 @@ import type { Database } from "@/db";
 import { tasks } from "@/db/schema";
 import { getEventsBetween, pruneEvents, removeEvents, upsertEvents } from "@/lib/events/service";
 import { getPreferences, savePreferences } from "@/lib/preferences";
+import { type RefreshAction, applyRefresh, listClaudeTasks } from "@/lib/tasks/refresh";
 import type { Recurrence } from "@/lib/tasks/recurrence";
 import {
   createTask,
@@ -173,9 +174,66 @@ export async function editTask(
     dueDate: patch.due_date,
     dueTime: patch.due_time,
     priority: patch.priority,
-  });
+  }, "claude");
   await ctx.onTaskChanged(task.id);
   return { id: task.id, title: task.title, due_date: task.dueDate, due_time: task.dueTime, priority: task.priority };
+}
+
+/** The open tasks Claude created, to re-check against their sources. */
+export async function getClaudeTasks(ctx: McpContext) {
+  const rows = await listClaudeTasks(ctx.db, ctx.userId);
+  return {
+    tasks: rows.map((t) => ({
+      id: t.id,
+      title: t.title,
+      notes: t.notes,
+      due_date: t.dueDate,
+      due_time: t.dueTime,
+      priority: t.priority,
+      source: t.sourceKind ? { kind: t.sourceKind, url: t.sourceUrl, label: t.sourceLabel } : null,
+      added_at: t.createdAt.toISOString(),
+      edited_by_user: !!t.userEditedAt,
+    })),
+  };
+}
+
+export type RefreshInput = {
+  task_id: string;
+  action: RefreshAction;
+  reason: string;
+  title?: string;
+  notes?: string;
+  due_date?: string | null;
+  due_time?: string | null;
+  priority?: number;
+};
+
+/** "Refresh my day": applies what changed in the sources, keeps reminders in step. */
+export async function refreshTasks(ctx: McpContext, changes: RefreshInput[]) {
+  const result = await applyRefresh(
+    ctx.db,
+    ctx.userId,
+    changes.map((c) => ({
+      id: c.task_id,
+      action: c.action,
+      reason: c.reason,
+      title: c.title,
+      notes: c.notes,
+      dueDate: c.due_date,
+      dueTime: c.due_time,
+      priority: c.priority,
+    })),
+    now(ctx),
+  );
+  // A removed task's reminders went with it (foreign key).
+  for (const { id, action } of result.applied) if (action !== "remove") await ctx.onTaskChanged(id);
+  return {
+    applied: result.applied.map(({ id, action }) => ({ task_id: id, action })),
+    skipped: result.skipped.map(({ id, reason }) => ({ task_id: id, reason })),
+    message: result.applied.length
+      ? "Taskly shows these changes with your reasons, and the user can undo them."
+      : "Nothing changed.",
+  };
 }
 
 export async function listLists(ctx: McpContext) {

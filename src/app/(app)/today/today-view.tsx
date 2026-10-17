@@ -13,8 +13,10 @@ import { ProgressRing } from "@/components/ui/progress-ring";
 import { useI18n } from "@/i18n/client";
 import { format, plural } from "@/i18n/format";
 import { enqueue, isNetworkError } from "@/lib/offline/outbox";
+import type { RefreshSummary } from "@/lib/tasks/refresh";
 import type { ImportSummary, TaskView } from "@/lib/tasks/service";
 import { toggleTaskAction, undoImportAction } from "../actions";
+import { RefreshBanner } from "./refresh-banner";
 
 type Props = {
   tasks: TaskView[];
@@ -22,10 +24,11 @@ type Props = {
   dateLabel: string;
   next: { time: string; title: string } | null;
   latestImport: ImportSummary | null;
+  latestRefresh: RefreshSummary | null;
   listNames: string[];
 };
 
-export function TodayView({ tasks, today, dateLabel, next, latestImport, listNames }: Props) {
+export function TodayView({ tasks, today, dateLabel, next, latestImport, latestRefresh, listNames }: Props) {
   const { locale, t } = useI18n();
   const [pending, startTransition] = useTransition();
   const outbox = useOutbox();
@@ -54,6 +57,7 @@ export function TodayView({ tasks, today, dateLabel, next, latestImport, listNam
               sourceUrl: null,
               sourceLabel: null,
               importBatchId: null,
+              userEditedAt: null,
               tagNames: op.input.tags,
               subtasks: { done: 0, total: 0 },
               position: Number.MAX_SAFE_INTEGER,
@@ -160,12 +164,14 @@ export function TodayView({ tasks, today, dateLabel, next, latestImport, listNam
             type="button"
             disabled={pending}
             onClick={() => undo(latestImport.batchId)}
+            aria-label={t.today.importUndoLabel}
             className="font-medium text-accent-text"
           >
             {t.today.importUndo}
           </button>
         </div>
       ) : null}
+      {latestRefresh && !notice ? <RefreshBanner refresh={latestRefresh} onUndone={setNotice} /> : null}
       {notice ? (
         <p role="status" className="mx-4 mt-3 rounded-xl bg-card px-3 py-2.5 text-[14px] text-text-secondary">
           {notice}

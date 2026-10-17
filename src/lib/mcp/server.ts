@@ -13,10 +13,18 @@ export const INSTRUCTIONS = `Taskly is the user's daily to-do list with reminder
 
 When the user asks to prepare their day (for example "Prepare my day in Taskly"):
 1. Call get_today to see what is already planned.
-2. Read today's events from all of the user's calendar connectors and save them with add_calendar_events: pass each calendar event id as "id", and today's date as replace_day so meetings cancelled since last time disappear. Leave replace_day out if you could not read every calendar.
-3. Read recent unread or important emails and messages from the user's connectors. For each one that needs an action from the user, create ONE short, actionable task with add_tasks: start with a verb ("Reply to Sarah about the Q4 plan"), set source.kind and source.url (link to the email or message) so the user can open it. Use due_time only when the source names a time. Use priority 3 only for real urgency.
-4. Never create tasks for newsletters, notifications, receipts or things already done. Taskly skips duplicates, so running this twice is safe.
-5. Finish with a two-sentence summary of the day.
+2. Refresh the tasks you added earlier (see below).
+3. Read today's events from all of the user's calendar connectors and save them with add_calendar_events: pass each calendar event id as "id", and today's date as replace_day so meetings cancelled since last time disappear. Leave replace_day out if you could not read every calendar.
+4. Read recent unread or important emails and messages from the user's connectors. For each one that needs an action from the user, create ONE short, actionable task with add_tasks: start with a verb ("Reply to Sarah about the Q4 plan"), set source.kind and source.url (link to the email or message) so the user can open it. Use due_time only when the source names a time. Use priority 3 only for real urgency.
+5. Never create tasks for newsletters, notifications, receipts or things already done. Taskly skips duplicates, so running this twice is safe.
+6. Finish with a two-sentence summary of the day, including what you changed.
+
+When the user asks to refresh or update their tasks (for example "Refresh my day in Taskly", "Actualise ma journée dans Taskly"), or as step 2 above:
+1. Call get_claude_tasks: the open tasks you created, with their source links.
+2. Re-read each task's source. Only act when the source shows something new: the user already replied or did it (complete), a date, time or detail changed (update), or it no longer applies, e.g. the meeting was cancelled (remove).
+3. Send all of it in one refresh_tasks call, each with a short reason in the user's language ("Sarah a répondu", "Réunion déplacée à 15h"). Never change a task just to reword it, and leave tasks marked edited_by_user alone: the user's version wins.
+4. Add new tasks with add_tasks and refresh today's events with add_calendar_events as in "prepare my day".
+5. Tell the user in one or two sentences what changed. Taskly shows it with your reasons and lets them undo it.
 
 When the user says a meeting was cancelled, remove it with remove_calendar_events (ids from get_today).
 
@@ -119,6 +127,45 @@ export function createTasklyServer(ctx: h.McpContext): McpServer {
       annotations: { idempotentHint: true },
     },
     async ({ task_id, ...patch }) => touched(() => h.editTask(ctx, task_id, patch)),
+  );
+
+  server.registerTool(
+    "get_claude_tasks",
+    {
+      title: "Get the tasks Claude added",
+      description:
+        "The open tasks you created from the user's sources, any date, with their source links: what to re-check when refreshing. Tasks with edited_by_user: true were changed by the user; leave them alone.",
+      annotations: { readOnlyHint: true },
+    },
+    async () => touched(() => h.getClaudeTasks(ctx)),
+  );
+
+  server.registerTool(
+    "refresh_tasks",
+    {
+      title: "Refresh tasks",
+      description:
+        "Applies what changed in the sources of tasks you created: update (new day, time, title, notes or priority), complete (the source shows it's done, e.g. the user already replied), remove (no longer relevant, e.g. the meeting was cancelled). Each change needs a short reason the user will see; they can undo the whole refresh. Tasks the user created or edited are skipped and reported back.",
+      inputSchema: z.object({
+        changes: z
+          .array(
+            z.object({
+              task_id: z.string().min(1).max(64),
+              action: z.enum(["update", "complete", "remove"]),
+              reason: z.string().trim().min(3).max(140).describe("Shown to the user, in their language: \"Sarah a répondu\""),
+              title: z.string().trim().min(1).max(300).optional(),
+              notes: z.string().max(2000).optional(),
+              due_date: day.nullable().optional(),
+              due_time: time.nullable().optional(),
+              priority: z.number().int().min(0).max(3).optional(),
+            }),
+          )
+          .min(1)
+          .max(50),
+      }),
+      annotations: { destructiveHint: true },
+    },
+    async ({ changes }) => touched(() => h.refreshTasks(ctx, changes)),
   );
 
   server.registerTool(

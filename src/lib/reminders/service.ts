@@ -223,7 +223,7 @@ export async function moveTaskToTomorrow(deps: ReminderDeps, userId: string, tas
   const tomorrow = addDays(todayIn(prefs.timeZone, nowOf(deps)), 1);
   await deps.db
     .update(tasks)
-    .set({ dueDate: tomorrow, updatedAt: nowOf(deps) })
+    .set({ dueDate: tomorrow, updatedAt: nowOf(deps), userEditedAt: nowOf(deps) })
     .where(and(eq(tasks.id, taskId), eq(tasks.userId, userId)));
   await syncTaskReminders(deps, userId, taskId);
 }

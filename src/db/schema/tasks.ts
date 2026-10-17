@@ -67,6 +67,8 @@ export const tasks = pgTable(
     importBatchId: text("import_batch_id"),
     /** Recurrence rule, see src/lib/tasks/recurrence.ts. */
     recurrence: text("recurrence"),
+    /** Last time the user changed the task in the app. Claude's refresh leaves it alone after that. */
+    userEditedAt: timestamp("user_edited_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },

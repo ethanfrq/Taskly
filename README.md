@@ -112,7 +112,7 @@ Taskly is an **open-source daily to-do app** you install on your phone. You conn
 
 1. In Taskly, open **Settings › Connect Claude** and copy the connector address.
 2. In Claude, add it as a **custom connector**, then sign in to Taskly to approve.
-3. Every morning, ask Claude: **“Prepare my day in Taskly”**.
+3. Every morning, ask Claude: **“Prepare my day in Taskly”**. Later in the day, **“Refresh my day in Taskly”** updates what changed: done, moved or cancelled.
 
 | Your Claude plan | What to know |
 |---|---|
@@ -216,7 +216,7 @@ Contributions are welcome, one small pull request at a time: start with [CONTRIB
 
 | MCP tools | Database tables | Migrations | Tests | Decision records | Languages |
 |:-:|:-:|:-:|:-:|:-:|:-:|
-| **9** | **23** | **8** | **142** | **7** | **2** |
+| **11** | **25** | **10** | **155** | **8** | **2** |
 
 What happens when you say *“Prepare my day in Taskly”*:
 

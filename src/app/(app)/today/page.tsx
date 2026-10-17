@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { longDate } from "@/lib/date-label";
 import { getLatestImport, getLists, getTodayTasks } from "@/lib/tasks/service";
 import { getEventsBetween } from "@/lib/events/service";
+import { getLatestRefresh } from "@/lib/tasks/refresh";
 import { addDays, startOfDayUtc, timeIn } from "@/lib/time";
 import { getAppContext } from "../context";
 import { TodayView } from "./today-view";
@@ -13,9 +14,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function TodayPage() {
   const { db, user, prefs, locale, today, startOfToday } = await getAppContext();
-  const [sections, latestImport, lists, events] = await Promise.all([
+  const [sections, latestImport, latestRefresh, lists, events] = await Promise.all([
     getTodayTasks(db, user.id, today, startOfToday),
     getLatestImport(db, user.id, startOfToday),
+    getLatestRefresh(db, user.id, startOfToday),
     getLists(db, user.id),
     getEventsBetween(db, user.id, new Date(), startOfDayUtc(addDays(today, 1), prefs.timeZone)),
   ]);
@@ -34,6 +36,7 @@ export default async function TodayPage() {
       dateLabel={longDate(today, locale)}
       next={candidates[0] ?? null}
       latestImport={latestImport}
+      latestRefresh={latestRefresh}
       listNames={lists.map((l) => l.name)}
     />
   );

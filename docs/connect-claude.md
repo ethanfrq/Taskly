@@ -19,11 +19,14 @@ Taskly doesn't call Claude. Claude calls Taskly: Taskly is an [MCP](https://mode
 | Say to Claude | What happens |
 |---|---|
 | "Prepare my day in Taskly" | Claude reads today's events and recent emails and messages, adds the actionable ones as tasks with a link to their source, and summarizes the day |
+| "Refresh my day in Taskly" | Claude re-reads the sources of the tasks it added: completes what you already did, moves what was rescheduled, removes what was cancelled, adds what's new. Today shows each change with its reason and an Undo |
 | "Taskly, check my connections" | Claude reports which sources it can read; Taskly's health check shows them |
 | "What's left today?" | Claude reads your Taskly day |
 | "Mark the PR review as done" | Claude checks the task off |
 
 Running "Prepare my day" twice is safe: Taskly skips tasks that are already there (same source link, or same title on the same day). Every batch Claude adds can be undone in one tap from the Today screen.
+
+"Prepare my day" also refreshes the tasks from earlier days. Claude only changes **tasks it created**, never one you edited yourself since, and every refresh can be undone from Today. The rules are in [ADR 0008](adr/0008-claude-refreshes-its-own-tasks.md).
 
 ## Tools
 
@@ -35,6 +38,8 @@ Running "Prepare my day" twice is safe: Taskly skips tasks that are already ther
 | `add_tasks` | write | Up to 25 tasks, with source (`gmail`, `outlook`, `calendar`, `slack`, `teams`, `notion`, `other`) and link; duplicates skipped |
 | `complete_task` | write | Checks a task off; recurring tasks get their next occurrence |
 | `update_task` | write | Title, notes, day, time, priority |
+| `get_claude_tasks` | read | The open tasks Claude created, any date, with their source links and whether the user edited them |
+| `refresh_tasks` | write | Up to 50 changes to tasks Claude created: `update`, `complete` or `remove`, each with a reason shown to the user; tasks the user created or edited are skipped and reported back. The whole refresh can be undone in Taskly |
 | `add_calendar_events` | write | Up to 50 events; resent events (same calendar id) are updated, not duplicated. With `replace_day`, the day's events Claude didn't resend are removed (cancelled meetings) |
 | `remove_calendar_events` | write | Removes events by the ids `get_today` returns, when the user says a meeting was cancelled |
 | `report_connections` | write | The sources Claude can read, for the health check |

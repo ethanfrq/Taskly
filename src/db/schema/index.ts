@@ -7,3 +7,4 @@ export * from "./focus";
 export * from "./events";
 export * from "./oauth";
 export * from "./rate-limit";
+export * from "./claude-changes";

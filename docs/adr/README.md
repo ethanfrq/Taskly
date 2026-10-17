@@ -11,5 +11,6 @@ Short records of the technical choices behind Taskly: the context, the decision,
 | [0005](0005-web-push-with-qstash-scheduling.md) | Web Push, scheduled with Upstash QStash | Accepted |
 | [0006](0006-cache-components-off.md) | Cache Components turned off | Accepted, in place |
 | [0007](0007-oauth-and-mcp-with-better-auth.md) | OAuth and MCP served by the app itself | Accepted, in place |
+| [0008](0008-claude-refreshes-its-own-tasks.md) | Claude refreshes the tasks it created, with guardrails | Accepted, in place |
 
 To propose a new decision or revisit one, open an issue first, then add a numbered file in a pull request.

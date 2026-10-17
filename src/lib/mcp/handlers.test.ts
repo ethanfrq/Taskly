@@ -4,7 +4,8 @@ import { user } from "@/db/schema";
 import { getPreferences, savePreferences } from "@/lib/preferences";
 import { createList, getLatestImport } from "@/lib/tasks/service";
 import { createTestDb } from "@/test/db";
-import { type McpContext, addEvents, addTasks, completeTask, getToday, removeCalendarEvents, reportConnections } from "./handlers";
+import { updateTask } from "@/lib/tasks/service";
+import { type McpContext, addEvents, addTasks, completeTask, getClaudeTasks, getToday, refreshTasks, removeCalendarEvents, reportConnections } from "./handlers";
 
 let db: Database;
 let ctx: McpContext;
@@ -49,6 +50,43 @@ describe("add_tasks", () => {
     ]);
     expect(again.created.map((t) => t.title)).toEqual(["Book the venue"]);
     expect(again.skipped).toHaveLength(2);
+  });
+});
+
+describe("refresh", () => {
+  it("shows Claude its tasks, flags the user's edits, and resyncs reminders after a change", async () => {
+    const { created } = await addTasks(ctx, [
+      { title: "Reply to Sarah", source: { kind: "gmail", url: "https://mail.example/1" } },
+      { title: "Send the quote", due_time: "10:30", source: { kind: "gmail", url: "https://mail.example/2" } },
+      { title: "Prepare the demo", source: { kind: "calendar" } },
+    ]);
+    const [reply, quote, demo] = created;
+    await updateTask(db, "sam", demo.id, { priority: 2 }); // edited in the app
+    changed = [];
+
+    const listed = await getClaudeTasks(ctx);
+    // By day, then time: the timed task first.
+    expect(listed.tasks.map((t) => [t.title, t.source?.url ?? null, t.edited_by_user])).toEqual([
+      ["Send the quote", "https://mail.example/2", false],
+      ["Reply to Sarah", "https://mail.example/1", false],
+      ["Prepare the demo", null, true],
+    ]);
+
+    const result = await refreshTasks(ctx, [
+      { task_id: reply.id, action: "complete", reason: "Tu as répondu hier soir" },
+      { task_id: quote.id, action: "update", reason: "Dupont le veut pour 14h", due_time: "14:00" },
+      { task_id: demo.id, action: "remove", reason: "Démo annulée" },
+    ]);
+    expect(result.applied).toEqual([
+      { task_id: reply.id, action: "complete" },
+      { task_id: quote.id, action: "update" },
+    ]);
+    expect(result.skipped).toEqual([{ task_id: demo.id, reason: "edited_by_user" }]);
+    expect(changed).toEqual([reply.id, quote.id]);
+    expect((await getToday(ctx)).to_do.map((t) => [t.title, t.due_time])).toEqual([
+      ["Send the quote", "14:00"],
+      ["Prepare the demo", null],
+    ]);
   });
 });
 
