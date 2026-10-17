@@ -7,9 +7,11 @@ export default defineConfig({
   test: {
     include: ["src/**/*.test.ts"],
     environment: "node",
-    // Backstop for overloaded machines: a file's first hook migrates the test
-    // database template (src/test/db.ts), about 0.5 s alone but over 10 s when
-    // the CPU is several times oversubscribed. A real hang still fails, later.
+    // Migrates one database for the whole run; tests load copies of it (src/test/db.ts).
+    globalSetup: ["./src/test/global-setup.ts"],
+    // Backstop for overloaded machines: the first database in each worker compiles
+    // PGlite's WebAssembly, quick alone but over 10 s when the CPU is several times
+    // oversubscribed. A real hang still fails, later.
     hookTimeout: 30_000,
   },
 });
