@@ -119,4 +119,31 @@ describe("briefing and review", () => {
     const next = (await db.select().from(reminders).where(eq(reminders.kind, "review"))).find((r) => !r.sentAt && !r.cancelledAt);
     expect(next?.dueAt.toISOString()).toBe("2026-10-17T16:30:00.000Z");
   });
+  // Saturday 17 October, 07:30 in Paris: the briefing is due.
+  const briefing = async () => {
+    await syncDailyReminders(deps, "sam");
+    clock = new Date("2026-10-17T05:30:00Z");
+    await fireDueReminders(deps);
+    return sent.find((s) => s.payload.tag === "briefing")!.payload;
+  };
+
+  it("opens Claude with the request typed when Claude hasn't prepared the day yet", async () => {
+    await savePreferences(db, "sam", { claudeSeenAt: new Date("2026-10-16T18:00:00Z") });
+    expect(await briefing()).toMatchObject({
+      body: "Touche pour demander à Claude : « Prépare ma journée dans Taskly »",
+      url: "https://claude.ai/new?q=Pr%C3%A9pare%20ma%20journ%C3%A9e%20dans%20Taskly",
+      actions: [{ action: "open-app", title: "Ouvrir Taskly" }],
+    });
+  });
+
+  it("opens Taskly when Claude already came by this morning", async () => {
+    await savePreferences(db, "sam", { claudeSeenAt: new Date("2026-10-17T05:10:00Z") });
+    const payload = await briefing();
+    expect(payload.url).toBe("/today");
+    expect(payload.actions).toBeUndefined();
+  });
+
+  it("opens Taskly when Claude isn't connected", async () => {
+    expect(await briefing()).toMatchObject({ body: "Ouvre Taskly pour voir ta journée.", url: "/today" });
+  });
 });
