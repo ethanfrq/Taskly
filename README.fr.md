@@ -298,6 +298,7 @@ src/
 └── components/     Interface
 drizzle/            Migrations SQL
 public/sw.js        Service worker : pages hors-ligne, push, actions des notifications
+site/               Landing page statique (EN et FR), générée par scripts/build-site.py
 docs/               Décisions, design, hébergement, connexion à Claude
 ```
 
