@@ -7,6 +7,7 @@ framed screenshots from docs/readme/ and the brand files, and inlines Tabler
 icons from node_modules (run `npm install` first). The page has no build step
 on Vercel: commit what this script writes.
 """
+import hashlib
 import html
 import re
 import shutil
@@ -358,6 +359,21 @@ def page(t: dict) -> str:
 '''
 
 
+def versioned(page_html: str) -> str:
+    """Adds ?v=<content hash> to every local asset URL, so a changed file gets a new URL.
+
+    Lets site/vercel.json cache them for a year: returning visitors see new
+    screenshots right after a deploy instead of a day later.
+    """
+
+    def stamp(match: re.Match) -> str:
+        path = match.group(1)
+        digest = hashlib.sha256((SITE / path.lstrip("/")).read_bytes()).hexdigest()[:8]
+        return f"{path}?v={digest}"
+
+    return re.sub(r'(?<=")(/assets/[\w.-]+|/styles\.css)(?=")', stamp, page_html)
+
+
 def main() -> None:
     ASSETS.mkdir(parents=True, exist_ok=True)
     for name in SHOTS:
@@ -367,13 +383,14 @@ def main() -> None:
     shutil.copy(ROOT / "src/app/icon.svg", ASSETS / "icon.svg")
     shutil.copy(ROOT / "src/app/apple-icon.png", ASSETS / "apple-icon.png")
 
-    (SITE / "index.html").write_text(page(EN))
+    (SITE / "index.html").write_text(versioned(page(EN)))
     (SITE / "fr").mkdir(exist_ok=True)
-    (SITE / "fr/index.html").write_text(page(FR))
+    (SITE / "fr/index.html").write_text(versioned(page(FR)))
 
     for path in [SITE / "index.html", SITE / "fr/index.html"]:
         text = path.read_text()
         assert "—" not in text and "–" not in text, f"dash found in {path}"
+        assert not re.search(r'"/(assets/[\w.-]+|styles\.css)"', text), f"unversioned asset URL in {path}"
     print("site/ built:", ", ".join(sorted(p.name for p in ASSETS.iterdir())))
 
 

@@ -28,4 +28,4 @@ The official page runs at **https://taskly-day.vercel.app** (Vercel project `tas
 
 `.vercelignore` keeps this README and any `.env*` file out of the upload: `vercel link` writes a `.env.local` with a Vercel token next to the files, and a static site would publish it.
 
-This project is separate from the app itself: it costs nothing to host and stores no data. `vercel.json` here turns on clean URLs, caches the images for a day and adds basic security headers.
+This project is separate from the app itself: it costs nothing to host and stores no data. `vercel.json` here turns on clean URLs, adds basic security headers and caches the images and the stylesheet for a year: `build-site.py` adds a hash of each file to its URL (`?v=…`), so a changed file gets a new URL and returning visitors see it right after a deploy.
