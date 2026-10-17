@@ -11,6 +11,9 @@
   --accent: #007aff;
   --accent-text: #007aff;
   --on-accent: #ffffff;
+  --danger: #ff3b30;
+  --success: #34c759;
+  --warning: #ff9500;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,6 +26,9 @@
     --fill: #2c2c2e;
     --accent: #0a84ff;
     --accent-text: #0a84ff;
+    --danger: #ff453a;
+    --success: #30d158;
+    --warning: #ff9f0a;
   }
 }
 
@@ -36,6 +42,9 @@
   --color-accent: var(--accent);
   --color-accent-text: var(--accent-text);
   --color-on-accent: var(--on-accent);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, system-ui, sans-serif;
 }
 

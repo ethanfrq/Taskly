@@ -45,7 +45,7 @@ export function NewListForm() {
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder={t.lists.newListPlaceholder}
-        className="rounded-[10px] bg-fill px-3 py-2.5 text-[16px] outline-none"
+        className="rounded-[10px] bg-fill px-3 py-2.5 text-[16px] outline-none focus-visible:ring-2 focus-visible:ring-accent"
       />
       <div role="radiogroup" aria-label={t.lists.color} className="flex flex-wrap gap-2.5">
         {LIST_COLORS.map((c) => (

@@ -44,7 +44,7 @@ export function TaskRow({
   }
   if (showDate && task.dueDate) {
     meta.push(
-      <span key="date" className={task.dueDate < today && !done ? "text-[#FF3B30]" : undefined}>
+      <span key="date" className={task.dueDate < today && !done ? "text-danger" : undefined}>
         {dayLabel(task.dueDate, today, locale, t)}
       </span>,
     );

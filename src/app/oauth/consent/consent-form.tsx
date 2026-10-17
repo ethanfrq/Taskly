@@ -76,7 +76,7 @@ export function ConsentForm({ email, clientId, scopes }: { email: string; client
       </ul>
       <p className="mt-3 px-1 text-[13px] text-text-secondary">{t.consent.note}</p>
       {error ? (
-        <p role="alert" className="mt-3 px-1 text-[14px] text-[#FF3B30]">
+        <p role="alert" className="mt-3 px-1 text-[14px] text-danger">
           {error}
         </p>
       ) : null}

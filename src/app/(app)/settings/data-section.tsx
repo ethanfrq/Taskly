@@ -26,7 +26,7 @@ export function DataSection() {
             <span className="block text-[13px] text-text-secondary">{t.privacy.exportHint}</span>
           </span>
         </a>
-        <button type="button" onClick={() => setConfirming(true)} className="flex w-full items-center gap-3 px-4 py-3 text-left text-[#FF3B30]">
+        <button type="button" onClick={() => setConfirming(true)} className="flex w-full items-center gap-3 px-4 py-3 text-left text-danger">
           <IconTrash size={20} stroke={1.8} aria-hidden />
           <span className="text-[16px]">{t.privacy.delete}</span>
         </button>
@@ -66,7 +66,7 @@ export function DataSection() {
             <button
               type="submit"
               disabled={pending || !email}
-              className="inline-flex w-full items-center justify-center rounded-xl bg-[#FF3B30] px-4 py-3 text-[15px] font-medium text-white disabled:opacity-50"
+              className="inline-flex w-full items-center justify-center rounded-xl bg-danger px-4 py-3 text-[15px] font-medium text-white disabled:opacity-50"
             >
               {t.privacy.deleteConfirm}
             </button>

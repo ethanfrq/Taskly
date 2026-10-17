@@ -6,7 +6,7 @@ const VARIANTS: Record<Variant, string> = {
   primary: "bg-accent text-on-accent",
   secondary: "bg-card text-accent-text",
   plain: "bg-transparent text-accent-text",
-  destructive: "bg-card text-[#FF3B30]",
+  destructive: "bg-card text-danger",
 };
 
 export function buttonClass(variant: Variant = "primary", extra = "") {
