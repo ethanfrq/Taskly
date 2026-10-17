@@ -7,6 +7,8 @@ import { useI18n } from "@/i18n/client";
 import { dayLabel } from "@/lib/date-label";
 import { parseTask } from "@/lib/nlp/parse";
 import { enqueue, isNetworkError } from "@/lib/offline/outbox";
+import type { TaskView } from "@/lib/tasks/service";
+import { draftTask } from "./draft-task";
 
 type Props = {
   /** Day given to tasks that name none: today in Today, null in a list. */
@@ -14,10 +16,12 @@ type Props = {
   today: string;
   listId?: string | null;
   listNames?: string[];
+  /** Shows the task before the server confirms it. */
+  onDraft?: (task: TaskView) => void;
 };
 
 /** The "new task" bar pinned above the tab bar, with natural language parsing. */
-export function QuickAdd({ dueDate, today, listId, listNames = [] }: Props) {
+export function QuickAdd({ dueDate, today, listId, listNames = [], onDraft }: Props) {
   const { locale, t } = useI18n();
   const [text, setText] = useState("");
   const [pending, startTransition] = useTransition();
@@ -71,6 +75,7 @@ export function QuickAdd({ dueDate, today, listId, listNames = [] }: Props) {
       listName: parsed.listName,
     };
     startTransition(async () => {
+      onDraft?.(draftTask(`draft-${crypto.randomUUID()}`, input, Date.now()));
       try {
         await createTaskAction(input);
       } catch (error) {

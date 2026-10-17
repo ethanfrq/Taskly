@@ -7,7 +7,9 @@ import { AppBadge } from "@/components/pwa/app-badge";
 import { useOutbox } from "@/components/pwa/offline-sync";
 import { QuickAdd } from "@/components/tasks/quick-add";
 import { SortableTaskList } from "@/components/tasks/sortable-task-list";
+import { draftTask } from "@/components/tasks/draft-task";
 import { TaskRow } from "@/components/tasks/task-row";
+import { useSettledToggle } from "@/components/tasks/use-settled-toggle";
 import { Group, GroupList } from "@/components/ui/group";
 import { ProgressRing } from "@/components/ui/progress-ring";
 import { useI18n } from "@/i18n/client";
@@ -37,46 +39,18 @@ export function TodayView({ tasks, today, dateLabel, next, latestImport, latestR
   // Changes queued offline stay visible until they reach the server.
   const withOffline = useMemo(() => {
     const toggles = new Map(outbox.flatMap((op) => (op.kind === "toggle" ? [[op.taskId, op.done] as const] : [])));
-    const created: TaskView[] = outbox.flatMap((op) =>
-      op.kind === "create" && op.input.dueDate === today
-        ? [
-            {
-              id: op.id,
-              title: op.input.title,
-              dueDate: op.input.dueDate,
-              dueTime: op.input.dueTime,
-              priority: op.input.priority,
-              completedAt: null,
-              list: null,
-              listId: null,
-              parentId: null,
-              assigneeId: null,
-              assignee: null,
-              notes: null,
-              recurrence: op.input.recurrence,
-              source: "manual" as const,
-              sourceKind: null,
-              sourceUrl: null,
-              sourceLabel: null,
-              importBatchId: null,
-              userEditedAt: null,
-              tagNames: op.input.tags,
-              subtasks: { done: 0, total: 0 },
-              position: Number.MAX_SAFE_INTEGER,
-              userId: "",
-              createdAt: new Date(op.at),
-              updatedAt: new Date(op.at),
-            },
-          ]
-        : [],
+    const created = outbox.flatMap((op) =>
+      op.kind === "create" && op.input.dueDate === today ? [draftTask(op.id, op.input, op.at)] : [],
     );
     return [
       ...tasks.map((task) => (toggles.has(task.id) ? { ...task, completedAt: toggles.get(task.id) ? new Date() : null } : task)),
       ...created,
     ];
   }, [tasks, outbox, today]);
-  const [optimistic, toggleOptimistic] = useOptimistic(withOffline, (state, id: string) =>
-    state.map((task) => (task.id === id ? { ...task, completedAt: task.completedAt ? null : new Date() } : task)),
+  const [optimistic, change] = useOptimistic(withOffline, (state, c: { toggle: string } | { add: TaskView }) =>
+    "add" in c
+      ? [...state, c.add]
+      : state.map((task) => (task.id === c.toggle ? { ...task, completedAt: task.completedAt ? null : new Date() } : task)),
   );
   const [showDone, setShowDone] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -89,9 +63,9 @@ export function TodayView({ tasks, today, dateLabel, next, latestImport, latestR
   const done = optimistic.filter((x) => x.completedAt);
   const total = optimistic.length;
 
-  const toggle = (task: TaskView) =>
+  const commit = (task: TaskView) =>
     startTransition(async () => {
-      toggleOptimistic(task.id);
+      change({ toggle: task.id });
       try {
         await toggleTaskAction(task.id, !task.completedAt);
       } catch (error) {
@@ -100,6 +74,12 @@ export function TodayView({ tasks, today, dateLabel, next, latestImport, latestR
       }
     });
 
+  const { toggle, shown } = useSettledToggle(commit);
+  // What was just typed shows at once; the server's copy replaces it when the action returns.
+  const draft = (task: TaskView) => {
+    if (task.dueDate === today) change({ add: task });
+  };
+
   const undo = (batchId: string) =>
     startTransition(async () => {
       const { removed } = await undoImportAction(batchId);
@@ -107,7 +87,7 @@ export function TodayView({ tasks, today, dateLabel, next, latestImport, latestR
     });
 
   const row = (task: TaskView, showDate = false) => (
-    <TaskRow key={task.id} task={task} today={today} onToggle={toggle} showDate={showDate} />
+    <TaskRow key={task.id} task={shown(task)} today={today} onToggle={toggle} showDate={showDate} />
   );
 
   return (
@@ -195,7 +175,7 @@ export function TodayView({ tasks, today, dateLabel, next, latestImport, latestR
               <Group title={t.today.todo}>
                 {timed.length > 0 ? <GroupList>{timed.map((task) => row(task))}</GroupList> : null}
                 {timed.length > 0 && anytime.length > 0 ? <div className="h-px bg-separator" /> : null}
-                {anytime.length > 0 ? <SortableTaskList tasks={anytime} today={today} onToggle={toggle} /> : null}
+                {anytime.length > 0 ? <SortableTaskList tasks={anytime.map(shown)} today={today} onToggle={toggle} /> : null}
               </Group>
             ) : total === 0 ? (
               <div className="rounded-xl bg-card px-5 py-8 text-center">
@@ -229,7 +209,7 @@ export function TodayView({ tasks, today, dateLabel, next, latestImport, latestR
           </div>
 
           <div className="mt-auto lg:mt-0">
-            <QuickAdd dueDate={today} today={today} listNames={listNames} />
+            <QuickAdd dueDate={today} today={today} listNames={listNames} onDraft={draft} />
           </div>
         </div>
       </div>

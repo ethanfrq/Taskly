@@ -22,14 +22,14 @@ export function CheckCircle({
       aria-label={label}
       disabled={disabled}
       onClick={onToggle}
-      className="-m-2 flex size-10 shrink-0 items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-accent"
+      className="group -m-2 flex size-10 shrink-0 items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-accent"
     >
       <span
-        className={`flex size-[22px] items-center justify-center rounded-full border-[1.5px] transition-colors ${
+        className={`flex size-[22px] items-center justify-center rounded-full border-[1.5px] transition-[background-color,border-color,scale] duration-200 group-active:scale-85 ${
           checked ? "border-accent bg-accent text-on-accent" : "border-text-secondary"
         }`}
       >
-        {checked ? <IconCheck size={14} stroke={3} aria-hidden /> : null}
+        {checked ? <IconCheck size={14} stroke={3} className="animate-[check-in_220ms_ease-out]" aria-hidden /> : null}
       </span>
     </button>
   );
