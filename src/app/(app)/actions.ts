@@ -7,6 +7,7 @@ import { getDb } from "@/db";
 import { requireUser } from "@/lib/auth/session";
 import { recordFocusSession } from "@/lib/stats";
 import * as service from "@/lib/tasks/service";
+import { undoRefresh } from "@/lib/tasks/refresh";
 import { getPreferences } from "@/lib/preferences";
 import { reminderDeps } from "@/lib/reminders/runtime";
 import { moveTaskToTomorrow, snoozeTask, syncTaskReminders } from "@/lib/reminders/service";
@@ -99,6 +100,15 @@ export async function undoImportAction(batchId: string) {
   const removed = await service.undoImport(getDb(), user.id, id.parse(batchId));
   refresh();
   return { removed };
+}
+
+/** Undoes Claude's latest refresh: every task goes back as it was (unless the user edited it since). */
+export async function undoRefreshAction(batchId: string) {
+  const user = await requireUser();
+  const restored = await undoRefresh(getDb(), user.id, id.parse(batchId));
+  await syncReminders(user.id, ...restored);
+  refresh();
+  return { restored: restored.length };
 }
 
 const listSchema = z.object({ name: z.string().trim().min(1).max(80), color: hex.optional() });

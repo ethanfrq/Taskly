@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { beforeEach, describe, expect, it } from "vitest";
 import type { Database } from "@/db";
-import { lists, preferences, pushSubscriptions, reminders, session, tags, tasks, user } from "@/db/schema";
+import { claudeChanges, lists, preferences, pushSubscriptions, reminders, session, tags, tasks, user } from "@/db/schema";
 import { savePreferences } from "@/lib/preferences";
 import { saveSubscription } from "@/lib/push/subscriptions";
 import { createList, createTask } from "@/lib/tasks/service";
@@ -54,6 +54,7 @@ describe("deleteUserData", () => {
       [pushSubscriptions, pushSubscriptions.userId],
       [reminders, reminders.userId],
       [session, session.userId],
+      [claudeChanges, claudeChanges.userId],
     ] as const) {
       expect(await db.select().from(table).where(eq(column, "sam"))).toHaveLength(0);
     }

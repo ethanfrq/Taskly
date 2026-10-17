@@ -95,7 +95,7 @@ async function assertAssignee(db: Database, listId: string | null, assigneeId: s
   if (!listId || !(await listParticipants(db, listId)).includes(assigneeId)) throw new NotFoundError("Assignee");
 }
 
-async function setTags(db: Database, userId: string, taskId: string, names: string[]) {
+export async function setTags(db: Database, userId: string, taskId: string, names: string[]) {
   const clean = [...new Set(names.map((n) => n.trim().replace(/^#/, "").toLowerCase()).filter(Boolean))];
   await db.delete(taskTags).where(eq(taskTags.taskId, taskId));
   if (clean.length === 0) return;
@@ -155,7 +155,17 @@ export async function createTask(
   return task;
 }
 
-export async function updateTask(db: Database, userId: string, id: string, patch: TaskPatch): Promise<Task> {
+/**
+ * Changes a task. `by` says who: an edit by the user is remembered, and
+ * Claude's refresh leaves the task alone from then on (src/lib/tasks/refresh.ts).
+ */
+export async function updateTask(
+  db: Database,
+  userId: string,
+  id: string,
+  patch: TaskPatch,
+  by: "user" | "claude" = "user",
+): Promise<Task> {
   const current = await ownedTask(db, userId, id);
   if (patch.listId !== undefined) await assertList(db, userId, patch.listId);
   const listId = patch.listId !== undefined ? patch.listId : current.listId;
@@ -175,6 +185,7 @@ export async function updateTask(db: Database, userId: string, id: string, patch
       ...(patch.assigneeId !== undefined && { assigneeId: patch.assigneeId }),
       // Leaving a shared list drops the assignment.
       ...(patch.listId !== undefined && patch.listId !== current.listId && { assigneeId: null }),
+      ...(by === "user" && { userEditedAt: new Date() }),
       updatedAt: new Date(),
     })
     .where(eq(tasks.id, id))

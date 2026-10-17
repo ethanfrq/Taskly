@@ -112,7 +112,7 @@ Taskly est une **todo list du jour open source** que tu installes sur ton télé
 
 1. Dans Taskly, ouvre **Réglages › Connecte Claude** et copie l'adresse du connecteur.
 2. Dans Claude, ajoute-la comme **connecteur personnalisé**, puis connecte-toi à Taskly pour autoriser l'accès.
-3. Chaque matin, demande à Claude : **« Prépare ma journée dans Taskly »**.
+3. Chaque matin, demande à Claude : **« Prépare ma journée dans Taskly »**. Dans la journée, **« Actualise ma journée dans Taskly »** met à jour ce qui a changé : fait, déplacé ou annulé.
 
 | Ton plan Claude | À savoir |
 |---|---|
@@ -216,7 +216,7 @@ Les contributions sont les bienvenues, une petite pull request à la fois : comm
 
 | Outils MCP | Tables | Migrations | Tests | Décisions documentées | Langues |
 |:-:|:-:|:-:|:-:|:-:|:-:|
-| **9** | **23** | **8** | **142** | **7** | **2** |
+| **11** | **25** | **10** | **155** | **8** | **2** |
 
 Ce qui se passe quand tu dis *« Prépare ma journée dans Taskly »* :
 

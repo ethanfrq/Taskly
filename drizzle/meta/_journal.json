@@ -64,6 +64,13 @@
       "when": 1792231814075,
       "tag": "0008_rate_limits",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1792233947251,
+      "tag": "0009_claude_refresh",
+      "breakpoints": true
     }
   ]
 }
