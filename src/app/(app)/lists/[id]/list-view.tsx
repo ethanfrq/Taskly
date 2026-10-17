@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useOptimistic, useTransition } from "react";
 import { QuickAdd } from "@/components/tasks/quick-add";
 import { SortableTaskList } from "@/components/tasks/sortable-task-list";
+import { useSettledToggle } from "@/components/tasks/use-settled-toggle";
 import { Group } from "@/components/ui/group";
 import { useI18n } from "@/i18n/client";
 import { format } from "@/i18n/format";
@@ -28,13 +29,16 @@ export function ListView({ list, title, tasks, today, listNames, sharing }: Prop
   const { t } = useI18n();
   const router = useRouter();
   const [pending, startTransition] = useTransition();
-  const [optimistic, hide] = useOptimistic(tasks, (state, id: string) => state.filter((task) => task.id !== id));
+  const [optimistic, change] = useOptimistic(tasks, (state, c: { hide: string } | { add: TaskView }) =>
+    "add" in c ? [...state, c.add] : state.filter((task) => task.id !== c.hide),
+  );
 
-  const toggle = (task: TaskView) =>
+  const { toggle, shown } = useSettledToggle((task) =>
     startTransition(async () => {
-      hide(task.id);
+      change({ hide: task.id });
       await toggleTaskAction(task.id, true);
-    });
+    }),
+  );
 
   return (
     <div className="flex flex-1 flex-col">
@@ -94,7 +98,7 @@ export function ListView({ list, title, tasks, today, listNames, sharing }: Prop
       <div className="mt-5 px-4">
         {optimistic.length > 0 ? (
           <Group>
-            <SortableTaskList tasks={optimistic} today={today} onToggle={toggle} showDate />
+            <SortableTaskList tasks={optimistic.map(shown)} today={today} onToggle={toggle} showDate />
           </Group>
         ) : (
           <p className="rounded-xl bg-card px-4 py-8 text-center text-text-secondary">{t.lists.empty}</p>
@@ -102,7 +106,13 @@ export function ListView({ list, title, tasks, today, listNames, sharing }: Prop
       </div>
 
       <div className="mt-auto lg:mt-0">
-        <QuickAdd dueDate={null} today={today} listId={list?.id ?? null} listNames={listNames} />
+        <QuickAdd
+          dueDate={null}
+          today={today}
+          listId={list?.id ?? null}
+          listNames={listNames}
+          onDraft={(task) => change({ add: task })}
+        />
       </div>
     </div>
   );
