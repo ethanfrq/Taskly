@@ -9,12 +9,19 @@ It is a [Remotion](https://www.remotion.dev) project: every frame is React, so t
 ```bash
 cd video
 npm install
-npm run render          # the four files, in out/
+npm run render             # the four files, written to ../site/assets/
 npm run render:landscape   # taskly-30s-fr.mp4, taskly-30s-en.mp4
 npm run render:vertical    # taskly-30s-fr-vertical.mp4, taskly-30s-en-vertical.mp4
 ```
 
-The first render downloads a headless Chrome (about 170 MB) next to `node_modules`. A full render takes a few minutes on a laptop.
+The first render downloads a headless Chrome (about 170 MB) next to `node_modules`. A full render takes a few minutes on a laptop. The files land in `site/assets/`, where the landing page plays them and the README links to them; commit them with the source change that produced them.
+
+After a render, rebuild the posters and the README cards from frame 480 of each composition, then the landing page:
+
+```bash
+for id in TasklyPromoFR TasklyPromoEN TasklyPromoFR-Vertical TasklyPromoEN-Vertical; do node scripts/stills.mjs $id 480; done
+cd .. && python3 scripts/build-readme-art.py docs/screenshots docs/brand/social-preview.png docs/readme video/out/stills && python3 scripts/build-site.py
+```
 
 Useful while editing:
 

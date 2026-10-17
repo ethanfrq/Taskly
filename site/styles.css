@@ -228,18 +228,16 @@ p {
   gap: 12px;
 }
 
-/* Hero */
+/* Hero: the headline, then the video in one wide card. */
 
 .hero {
-  overflow: hidden;
-  padding-block: clamp(40px, 7vw, 88px) clamp(48px, 7vw, 96px);
+  padding-block: clamp(40px, 7vw, 88px) clamp(24px, 4vw, 48px);
 }
 
-.hero-grid {
-  display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  align-items: center;
-  gap: clamp(32px, 5vw, 64px);
+.hero-copy {
+  max-width: 800px;
+  margin-inline: auto;
+  text-align: center;
 }
 
 .eyebrow {
@@ -263,48 +261,139 @@ p {
 }
 
 .lead {
-  max-width: 34ch;
-  margin-block: 22px 32px;
+  max-width: 40ch;
+  margin: 22px auto 32px;
   color: var(--muted);
   font-size: clamp(18px, 1.6vw, 21px);
   line-height: 1.5;
 }
 
-.hero-visual {
-  position: relative;
-  aspect-ratio: 1 / 1.08;
-  max-height: 640px;
+.hero .ctas {
+  justify-content: center;
 }
 
-.hero-visual::before {
+.hero-stage {
+  position: relative;
+  margin-top: clamp(40px, 6vw, 72px);
+}
+
+.hero-stage::before {
   content: "";
   position: absolute;
-  inset: 12% 8% 4%;
+  inset: 12% 6% -8%;
+  border-radius: 50%;
+  background: var(--glow);
+  filter: blur(90px);
+}
+
+.hero-video {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #000;
+  box-shadow: var(--shadow), 0 0 0 1px var(--line);
+}
+
+/* On a phone the script swaps in the portrait cut. */
+.hero-video.is-vertical {
+  aspect-ratio: 9 / 16;
+  max-width: 380px;
+  margin-inline: auto;
+}
+
+.hero-video video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #000;
+}
+
+.video-toggle {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px 9px 11px;
+  border: 0;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 0.55);
+  color: #fff;
+  font: 600 14px/1 var(--font);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  cursor: pointer;
+  transition: background 0.2s var(--ease);
+}
+
+.video-toggle:hover {
+  background: rgb(0 0 0 / 0.78);
+}
+
+.video-toggle .icon {
+  width: 16px;
+  height: 16px;
+}
+
+.video-toggle .icon-play,
+.video-toggle.is-paused .icon-pause {
+  display: none;
+}
+
+.video-toggle.is-paused .icon-play {
+  display: block;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Screens: the three phones under the video */
+
+.screens {
+  padding-block: clamp(32px, 5vw, 64px) 0;
+}
+
+.phones {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: end;
+  gap: clamp(16px, 3vw, 40px);
+  max-width: 920px;
+  margin-inline: auto;
+  padding-inline: 4%;
+}
+
+.phones::before {
+  content: "";
+  position: absolute;
+  inset: 24% 10% 0;
   border-radius: 50%;
   background: var(--glow);
   filter: blur(70px);
 }
 
 .phone {
-  position: absolute;
-  width: 46%;
+  position: relative;
+  width: 100%;
 }
 
 .phone-front {
-  left: 27%;
-  top: 0;
-  width: 52%;
   z-index: 2;
-}
-
-.phone-left {
-  left: 0;
-  top: 12%;
-}
-
-.phone-right {
-  right: 0;
-  top: 12%;
+  margin-bottom: 7%;
 }
 
 /* Sections */
@@ -695,14 +784,8 @@ p {
     display: none;
   }
 
-  .hero-grid,
   .open {
     grid-template-columns: 1fr;
-  }
-
-  .hero-visual {
-    width: min(100%, 520px);
-    margin-inline: auto;
   }
 
   .bento {
@@ -739,6 +822,22 @@ p {
   .step {
     grid-template-columns: 1fr;
     gap: 6px;
+  }
+}
+
+@media (max-width: 640px) {
+  .phones {
+    grid-template-columns: 1fr;
+    max-width: 280px;
+  }
+
+  .phone-left,
+  .phone-right {
+    display: none;
+  }
+
+  .phone-front {
+    margin-bottom: 0;
   }
 }
 

@@ -3,9 +3,10 @@
     python3 scripts/build-site.py
 
 One template, two languages, so the pages can't drift apart. Copies the
-framed screenshots from docs/readme/ and the brand files, and inlines Tabler
-icons from node_modules (run `npm install` first). The page has no build step
-on Vercel: commit what this script writes.
+framed screenshots and the video posters from docs/readme/ and the brand files,
+and inlines Tabler icons from node_modules (run `npm install` first). The videos
+themselves are rendered straight into site/assets/ by the Remotion project in
+video/. The page has no build step on Vercel: commit what this script writes.
 """
 import hashlib
 import html
@@ -29,13 +30,14 @@ DEPLOY = (
 )
 OG_IMAGE = "https://raw.githubusercontent.com/ethanfrq/Taskly/main/docs/brand/social-preview.png"
 SHOTS = ["today-dark", "agenda", "stats", "rhythm", "review", "onboarding-color"]
+POSTERS = ["poster-en", "poster-fr", "poster-en-vertical", "poster-fr-vertical"]
 
 
-def icon(name: str) -> str:
+def icon(name: str, cls: str = "icon") -> str:
     svg = (ICONS / f"{name}.svg").read_text()
     svg = re.sub(r'\s+class="[^"]*"', "", svg)
     svg = re.sub(r'\s+width="24"\s+height="24"', "", svg)
-    svg = svg.replace("<svg", '<svg class="icon" aria-hidden="true" focusable="false"', 1)
+    svg = svg.replace("<svg", f'<svg class="{cls}" aria-hidden="true" focusable="false"', 1)
     return re.sub(r"\s*\n\s*", " ", svg).replace("> <", "><").strip()
 
 
@@ -54,6 +56,11 @@ EN = {
     "lead": "Claude turns your mail, calendar and messages into one checklist. Taskly makes sure you get reminded.",
     "cta_github": "View on GitHub",
     "cta_deploy": "Deploy your own",
+    "video_label": "Taskly in 30 seconds",
+    "video_desc": "Taskly in 30 seconds. This morning's pile: 47 emails, 12 messages, 3 meetings, and no list. One sentence to Claude, and the list fills itself, each task linked to its source. Two tasks ticked, a reminder rings at the right minute. Tasks, not emails: open source, no password, disconnect Claude in one tap.",
+    "video_play": "Play",
+    "video_pause": "Pause",
+    "screens_label": "Screens of the app",
     "alt": {
         "today-dark": "Taskly's Today screen: progress ring, next appointment and the three tasks Claude added from Gmail, Slack and the calendar",
         "agenda": "The agenda: meetings and tasks in time order",
@@ -126,6 +133,11 @@ FR = {
     "lead": "Claude transforme tes mails, ton agenda et tes messages en une checklist. Taskly s'assure que tu reçois tes rappels.",
     "cta_github": "Voir sur GitHub",
     "cta_deploy": "Déployer ton instance",
+    "video_label": "Taskly en 30 secondes",
+    "video_desc": "Taskly en 30 secondes. Ce matin : 47 mails, 12 messages, 3 réunions, et aucune liste. Une phrase à Claude, et la liste se remplit, chaque tâche reliée à sa source. Deux tâches cochées, un rappel sonne à la bonne minute. Des tâches, pas des mails : open source, pas de mot de passe, Claude déconnecté en un geste.",
+    "video_play": "Lecture",
+    "video_pause": "Pause",
+    "screens_label": "Écrans de l'application",
     "alt": {
         "today-dark": "L'écran Aujourd'hui de Taskly : anneau de progression, prochain rendez-vous et les trois tâches ajoutées par Claude depuis Gmail, Slack et l'agenda",
         "agenda": "L'agenda : réunions et tâches dans l'ordre de la journée",
@@ -187,6 +199,7 @@ FR = {
 
 def page(t: dict) -> str:
     e = html.escape
+    lang = t["lang"]
     other_href, other_lang, other_label, other_title = t["other"]
 
     def shot(name: str, cls: str, extra: str = 'loading="lazy" decoding="async"') -> str:
@@ -231,7 +244,7 @@ def page(t: dict) -> str:
     <meta name="twitter:card" content="summary_large_image">
     <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/assets/apple-icon.png">
-    <link rel="preload" as="image" href="/assets/today-dark.webp" type="image/webp">
+    <link rel="preload" as="image" href="/assets/poster-{t["lang"]}.webp" type="image/webp">
     <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
@@ -260,7 +273,7 @@ def page(t: dict) -> str:
 
     <main id="main">
       <section class="hero">
-        <div class="wrap hero-grid">
+        <div class="wrap">
           <div class="hero-copy">
             <p class="eyebrow">{e(t["eyebrow"])}</p>
             <h1><span>{e(t["h1"][0])}</span><br><span>{e(t["h1"][1])}</span></h1>
@@ -270,10 +283,22 @@ def page(t: dict) -> str:
               <a class="btn btn-secondary" href="{e(DEPLOY)}">{icon("rocket")}{e(t["cta_deploy"])}</a>
             </div>
           </div>
-          <div class="hero-visual">
-            {shot("agenda", "phone phone-left", 'decoding="async"')}
-            {shot("stats", "phone phone-right", 'decoding="async"')}
-            {shot("today-dark", "phone phone-front", 'fetchpriority="high"')}
+          <div class="hero-stage">
+            <figure class="hero-video" data-vertical="/assets/taskly-30s-{lang}-vertical.mp4" data-vertical-poster="/assets/poster-{lang}-vertical.webp">
+              <video src="/assets/taskly-30s-{lang}.mp4" poster="/assets/poster-{lang}.webp" width="1920" height="1080" autoplay muted loop playsinline preload="metadata" aria-label="{e(t["video_label"])}"></video>
+              <button class="video-toggle" type="button" aria-pressed="true" data-play="{e(t["video_play"])}" data-pause="{e(t["video_pause"])}">{icon("player-pause", "icon icon-pause")}{icon("player-play", "icon icon-play")}<span>{e(t["video_pause"])}</span></button>
+              <figcaption class="sr-only">{e(t["video_desc"])}</figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="screens" aria-label="{e(t["screens_label"])}">
+        <div class="wrap">
+          <div class="phones">
+            {shot("agenda", "phone phone-left")}
+            {shot("today-dark", "phone phone-front", 'decoding="async"')}
+            {shot("stats", "phone phone-right")}
           </div>
         </div>
       </section>
@@ -354,6 +379,43 @@ def page(t: dict) -> str:
         <p class="disclaimer">{e(t["disclaimer"])}</p>
       </div>
     </footer>
+    <script>
+      (() => {{
+        const figure = document.querySelector(".hero-video");
+        const video = figure.querySelector("video");
+        const toggle = figure.querySelector(".video-toggle");
+        if (matchMedia("(max-width: 640px)").matches) {{
+          video.poster = figure.dataset.verticalPoster;
+          video.src = figure.dataset.vertical;
+          figure.classList.add("is-vertical");
+        }}
+        if (matchMedia("(prefers-reduced-motion: reduce)").matches) {{
+          video.removeAttribute("autoplay");
+          video.controls = true;
+          toggle.hidden = true;
+          return;
+        }}
+        let wanted = true;
+        const label = () => {{
+          const playing = !video.paused;
+          toggle.setAttribute("aria-pressed", String(playing));
+          toggle.classList.toggle("is-paused", !playing);
+          toggle.querySelector("span").textContent = playing ? toggle.dataset.pause : toggle.dataset.play;
+        }};
+        toggle.addEventListener("click", () => {{
+          wanted = video.paused;
+          if (wanted) video.play();
+          else video.pause();
+        }});
+        video.addEventListener("play", label);
+        video.addEventListener("pause", label);
+        new IntersectionObserver(([entry]) => {{
+          if (!wanted) return;
+          if (entry.isIntersecting) video.play().catch(() => {{}});
+          else video.pause();
+        }}, {{ threshold: 0.2 }}).observe(video);
+      }})();
+    </script>
   </body>
 </html>
 '''
@@ -376,7 +438,7 @@ def versioned(page_html: str) -> str:
 
 def main() -> None:
     ASSETS.mkdir(parents=True, exist_ok=True)
-    for name in SHOTS:
+    for name in SHOTS + POSTERS:
         shutil.copy(ROOT / f"docs/readme/{name}.webp", ASSETS / f"{name}.webp")
     shutil.copy(ROOT / "public/brand/taskly-logo-graphite.svg", ASSETS / "logo-graphite.svg")
     shutil.copy(ROOT / "public/brand/taskly-logo-ivory.svg", ASSETS / "logo-ivory.svg")

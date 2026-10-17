@@ -1,5 +1,9 @@
 <p align="center">
-  <img src="docs/readme/hero-fr.webp" alt="Taskly : ta journée, triée par Claude. Tes mails, ton agenda et tes messages deviennent une checklist, avec des rappels qui sonnent vraiment." width="100%">
+  <a href="site/assets/taskly-30s-fr.mp4"><img src="docs/readme/video-fr.webp" alt="Regarder Taskly en 30 secondes : Claude lit tes mails, ton agenda et tes messages, et les tâches du jour apparaissent dans Taskly, chacune reliée à sa source." width="100%"></a>
+</p>
+
+<p align="center">
+  <sub>▶ <a href="site/assets/taskly-30s-fr.mp4"><b>Regarder la vidéo de 30 secondes</b></a> · <a href="site/assets/taskly-30s-fr-vertical.mp4">version verticale</a> · <a href="https://taskly-day.vercel.app/fr">en lecture sur le site</a></sub>
 </p>
 
 <p align="center">
@@ -300,6 +304,7 @@ src/
 drizzle/            Migrations SQL
 public/sw.js        Service worker : pages hors-ligne, push, actions des notifications
 site/               Landing page statique (EN et FR), générée par scripts/build-site.py
+video/              La vidéo de 30 secondes (FR, EN, paysage, portrait), un projet Remotion
 docs/               Décisions, design, hébergement, connexion à Claude
 ```
 
