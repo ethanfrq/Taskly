@@ -10,7 +10,8 @@
 </p>
 
 <p align="center">
-  <b><a href="#get-started">Get started</a></b> ·
+  <b><a href="https://taskly-day.vercel.app">Website</a></b> ·
+  <a href="#get-started">Get started</a> ·
   <a href="docs/self-hosting.md">Self-hosting</a> ·
   <a href="docs/connect-claude.md">Connect Claude</a> ·
   <a href="CONTRIBUTING.md">Contributing</a> ·

@@ -24,4 +24,8 @@ python3 -m http.server 4180 --directory site
 2. **Root Directory**: `site`. **Framework Preset**: Other. Leave the build and output settings empty.
 3. Deploy. The page is served at `https://<project-name>.vercel.app`.
 
+The official page runs at **https://taskly-day.vercel.app** (Vercel project `taskly`). It isn't connected to Git yet: redeploy with `vercel deploy --prod` from `site/`, or connect the repository in the Vercel dashboard with Root Directory `site` so pushes to `main` redeploy it.
+
+`.vercelignore` keeps this README and any `.env*` file out of the upload: `vercel link` writes a `.env.local` with a Vercel token next to the files, and a static site would publish it.
+
 This project is separate from the app itself: it costs nothing to host and stores no data. `vercel.json` here turns on clean URLs, caches the images for a day and adds basic security headers.

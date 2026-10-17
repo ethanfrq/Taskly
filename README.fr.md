@@ -10,7 +10,8 @@
 </p>
 
 <p align="center">
-  <b><a href="#demarrer">Démarrer</a></b> ·
+  <b><a href="https://taskly-day.vercel.app/fr">Site web</a></b> ·
+  <a href="#demarrer">Démarrer</a> ·
   <a href="docs/self-hosting.md">Héberger</a> ·
   <a href="docs/connect-claude.md">Connecter Claude</a> ·
   <a href="CONTRIBUTING.md">Contribuer</a> ·
