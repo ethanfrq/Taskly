@@ -93,8 +93,8 @@ export async function snoozeTask(deps: ReminderDeps, userId: string, taskId: str
   await insertReminder(deps, { userId, taskId, kind: "task", dueAt: at });
 }
 
-async function todayCounts(db: Database, userId: string, prefs: PreferencesValues) {
-  const today = todayIn(prefs.timeZone);
+async function todayCounts(db: Database, userId: string, prefs: PreferencesValues, now: Date) {
+  const today = todayIn(prefs.timeZone, now);
   const sections = await getTodayTasks(db, userId, today, startOfDayUtc(today, prefs.timeZone));
   const open = [...sections.overdue, ...sections.today];
   return { sections, open, total: open.length + sections.done.length };
@@ -137,7 +137,7 @@ export async function fireReminder(deps: ReminderDeps, reminderId: string): Prom
     .returning({ id: reminders.id });
   if (claimed.length === 0) return "skipped";
 
-  const { sections, open, total } = await todayCounts(db, reminder.userId, prefs);
+  const { sections, open, total } = await todayCounts(db, reminder.userId, prefs, now);
   const badge = open.length;
   let payload: PushPayload;
 
@@ -174,7 +174,8 @@ export async function fireReminder(deps: ReminderDeps, reminderId: string): Prom
     const first = sections.today.find((x) => x.dueTime);
     const title = open.length ? plural(prefs.locale === "en" ? "en" : "fr", open.length, t.reminders.briefingTitle) : t.reminders.briefingEmpty;
     // Claude is connected but hasn't prepared today yet: one tap opens it with the request typed (D-011).
-    const askClaude = !!prefs.claudeSeenAt && !claudeCameToday(prefs.claudeSeenAt, startOfDayUtc(todayIn(prefs.timeZone), prefs.timeZone));
+    // "Today" must come from the injected clock, not the wall clock, or the comparison drifts in tests.
+    const askClaude = !!prefs.claudeSeenAt && !claudeCameToday(prefs.claudeSeenAt, startOfDayUtc(todayIn(prefs.timeZone, now), prefs.timeZone));
     payload = askClaude
       ? {
           title,
