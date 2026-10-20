@@ -24,10 +24,10 @@
 
 <br>
 
-Taskly est une **todo list du jour open source** que tu installes sur ton téléphone. Tu la connectes à Claude une fois ; ensuite, chaque matin, Claude lit tes mails, ton agenda et tes messages et remplit ta journée avec ce qu'il y a vraiment à faire. Taskly prend le relais : une checklist claire, et des rappels à la bonne minute.
+Taskly est une todo list du jour open source que tu installes sur ton téléphone. Connecte-la à Claude une fois, et chaque matin Claude lit tes mails, ton agenda et tes messages et remplit ta journée avec ce qu'il y a vraiment à faire. Taskly prend le relais : une checklist claire, et des rappels à la bonne minute.
 
 > [!NOTE]
-> **Bêta.** Toutes les fonctions prévues sont là, testées et documentées, mais aucune instance publique n'a encore fait tourner Taskly longtemps. [Les retours sont bienvenus.](https://github.com/ethanfrq/Taskly/issues)
+> Taskly est en bêta : toutes les fonctions prévues sont là, testées et documentées, mais aucune instance publique ne l'a encore fait tourner longtemps. [Les retours sont bienvenus.](https://github.com/ethanfrq/Taskly/issues)
 
 ## ✨ Ce que fait Taskly
 
@@ -94,10 +94,10 @@ Quatre courts films, chacun en paysage et en portrait. GitHub les lit dans sa vi
 
 | | Film | Paysage | Portrait |
 |---|---|---|---|
-| 🎬 | **Vue d'ensemble**, 30 s : la pile du matin, une phrase à Claude, la liste se remplit. | [▶ 16:9](site/assets/taskly-30s-fr.mp4) | [▶ 9:16](site/assets/taskly-30s-fr-vertical.mp4) |
-| 🔔 | **Les rappels**, 21 s : à la minute, les relances, les heures calmes, le briefing qui ouvre Claude. | [▶ 16:9](site/assets/taskly-reminders-fr.mp4) | [▶ 9:16](site/assets/taskly-reminders-fr-vertical.mp4) |
-| 🔒 | **Des tâches, pas des mails**, 20 s : qui lit quoi, MCP, pas de clé API, annuler et déconnecter. | [▶ 16:9](site/assets/taskly-privacy-fr.mp4) | [▶ 9:16](site/assets/taskly-privacy-fr-vertical.mp4) |
-| 🌙 | **Ta journée**, 21 s : langage naturel, une seule timeline, le bilan du soir, la semaine. | [▶ 16:9](site/assets/taskly-day-fr.mp4) | [▶ 9:16](site/assets/taskly-day-fr-vertical.mp4) |
+| 🎬 | Vue d'ensemble, 30 s : la pile du matin, une phrase à Claude, la liste se remplit. | [▶ 16:9](site/assets/taskly-30s-fr.mp4) | [▶ 9:16](site/assets/taskly-30s-fr-vertical.mp4) |
+| 🔔 | Les rappels, 21 s : à la minute, les relances, les heures calmes, le briefing qui ouvre Claude. | [▶ 16:9](site/assets/taskly-reminders-fr.mp4) | [▶ 9:16](site/assets/taskly-reminders-fr-vertical.mp4) |
+| 🔒 | Des tâches, pas des mails, 20 s : qui lit quoi, MCP, pas de clé API, annuler et déconnecter. | [▶ 16:9](site/assets/taskly-privacy-fr.mp4) | [▶ 9:16](site/assets/taskly-privacy-fr-vertical.mp4) |
+| 🌙 | Ta journée, 21 s : langage naturel, une seule timeline, le bilan du soir, la semaine. | [▶ 16:9](site/assets/taskly-day-fr.mp4) | [▶ 9:16](site/assets/taskly-day-fr-vertical.mp4) |
 
 <sub>Versions anglaises : remplace <code>-fr</code> par <code>-en</code> dans le nom du fichier, ou ouvre le <a href="README.md">README anglais</a>. Réalisés avec le <a href="video/README.md">projet Remotion dans <code>video/</code></a>.</sub>
 
@@ -107,9 +107,9 @@ Quatre courts films, chacun en paysage et en portrait. GitHub les lit dans sa vi
 
 <table>
 <tr>
-<td valign="top" width="33%"><b>📱 L'utiliser</b><br><sub>Ouvre une instance Taskly sur ton téléphone, ajoute-la à l'écran d'accueil, suis l'onboarding de deux minutes.</sub><br><br>→ <a href="#installer">Installer</a> · <a href="#connecter-claude">Connecter Claude</a></td>
-<td valign="top" width="33%"><b>☁️ L'héberger</b><br><sub>Un clic sur Vercel, ou n'importe quel serveur Node.js avec Postgres. Pour toi, ta famille ou ton équipe.</sub><br><br>→ <a href="#hebergement">Héberger</a></td>
-<td valign="top" width="33%"><b>💻 Le développer</b><br><sub>Clone, <code>npm install</code>, <code>npm run dev</code>. Aucun compte, aucune clé, rien à configurer.</sub><br><br>→ <a href="#developpement">Développer</a></td>
+<td valign="top" width="33%"><b>📱 L'utiliser</b><br><sub>Ouvre une instance Taskly sur ton téléphone, ajoute-la à l'écran d'accueil, suis l'onboarding de deux minutes.</sub><br><br><a href="#installer">Installer</a> · <a href="#connecter-claude">Connecter Claude</a></td>
+<td valign="top" width="33%"><b>☁️ L'héberger</b><br><sub>Un clic sur Vercel, ou n'importe quel serveur Node.js avec Postgres. Pour toi, ta famille ou ton équipe.</sub><br><br><a href="#hebergement">Héberger</a></td>
+<td valign="top" width="33%"><b>💻 Le développer</b><br><sub>Clone, <code>npm install</code>, <code>npm run dev</code>. Ça tourne sans compte ni clé, et sans rien à configurer.</sub><br><br><a href="#developpement">Développer</a></td>
 </tr>
 </table>
 
@@ -160,9 +160,9 @@ flowchart LR
   Q[Planificateur de rappels] -- "Web Push" --> A
 ```
 
-- **Ton plan Claude suffit.** Pas de clé API Anthropic, aucune facture d'IA pour celui qui héberge Taskly.
-- **Taskly ne reçoit jamais tes mails.** Seulement les tâches créées par Claude, avec un lien vers la source.
-- **Taskly marche aussi sans Claude.** Tâches manuelles, rappels et checklist fonctionnent seuls.
+- Ton plan Claude suffit : celui qui héberge Taskly n'a besoin d'aucune clé API Anthropic et ne paie aucune facture d'IA.
+- Taskly ne reçoit jamais tes mails, seulement les tâches créées par Claude, chacune avec un lien vers la source.
+- Taskly marche aussi sans Claude : tâches manuelles, rappels et checklist fonctionnent seuls.
 
 <a id="hebergement"></a>
 
@@ -177,7 +177,7 @@ flowchart LR
 | Clés VAPID | Notifications push | `npx web-push generate-vapid-keys` |
 | Un planificateur | Rappels à la minute près | Upstash QStash, depuis le Marketplace |
 
-Le pas à pas pour Vercel ou ton propre serveur, toutes les variables d'environnement et un tableau de dépannage : **[docs/self-hosting.md](docs/self-hosting.md)** (en anglais).
+Le pas à pas pour Vercel ou ton propre serveur, toutes les variables d'environnement et un tableau de dépannage : [docs/self-hosting.md](docs/self-hosting.md) (en anglais).
 
 > [!WARNING]
 > Le plan Hobby de Vercel est réservé à un usage personnel et non commercial. Pour héberger Taskly pour une entreprise, utilise une équipe Pro.
@@ -219,14 +219,14 @@ Commandes et conventions de branches et de commits : [CONTRIBUTING.md](CONTRIBUT
 
 ## 🔒 Confidentialité et sécurité
 
-- **Des tâches, pas des mails.** Taskly stocke les tâches créées par Claude et un lien vers leur source, jamais le contenu de tes messages.
-- **Tu décides ce que Claude obtient** sur l'écran de consentement de Taskly. **Réglages › Connecte Claude › Déconnecter Claude** le retire immédiatement, même pour les jetons pas encore expirés.
-- **Tes données t'appartiennent.** Exporte tout en JSON ou supprime ton compte depuis les Réglages.
-- **Une faille ?** Signale-la en privé : [SECURITY.md](SECURITY.md).
+- Taskly stocke les tâches créées par Claude et un lien vers leur source, jamais le contenu de tes messages.
+- Tu décides ce que Claude obtient sur l'écran de consentement de Taskly. **Réglages › Connecte Claude › Déconnecter Claude** le retire immédiatement, même pour les jetons pas encore expirés.
+- Exporte tout en JSON ou supprime ton compte depuis les Réglages.
+- Une faille ? Signale-la en privé : [SECURITY.md](SECURITY.md).
 
 ## 🗺️ État du projet et contributions
 
-Les cinq étapes sont livrées : **v0.1** Base · **v0.2** Claude · **v0.3** Rappels · **v0.4** Confort · **v0.5** Partage. Ce que chacune a apporté, avec ses pull requests : [notes de la version 0.5.0](https://github.com/ethanfrq/Taskly/releases/tag/v0.5.0) et [jalons](https://github.com/ethanfrq/Taskly/milestones?state=closed).
+Les cinq étapes sont livrées : v0.1 Base · v0.2 Claude · v0.3 Rappels · v0.4 Confort · v0.5 Partage. Ce que chacune a apporté, avec ses pull requests : [notes de la version 0.5.0](https://github.com/ethanfrq/Taskly/releases/tag/v0.5.0) et [jalons](https://github.com/ethanfrq/Taskly/milestones?state=closed).
 
 Les contributions sont les bienvenues, une petite pull request à la fois : commence par [CONTRIBUTING.md](CONTRIBUTING.md) et le [code de conduite](CODE_OF_CONDUCT.md). Le design est documenté aussi : un [prototype cliquable](https://htmlpreview.github.io/?https://github.com/ethanfrq/Taskly/blob/main/docs/design/prototype.html) de tout le parcours iPhone et chaque décision dans [docs/design](docs/design/README.md) (en anglais).
 
@@ -263,12 +263,12 @@ sequenceDiagram
 
 <br>
 
-- **Taskly est son propre serveur OAuth 2.1** ([Better Auth](https://www.better-auth.com)) : PKCE, enregistrement dynamique des clients et Client ID Metadata Documents, et un écran de consentement que l'utilisateur valide.
-- **Les jetons sont liés au serveur MCP** ([RFC 8707](https://www.rfc-editor.org/rfc/rfc8707)) : des JWT signés, vérifiés à chaque appel (signature, audience, expiration, scopes `tasks:read` et `tasks:write`). Chaque appel ne voit que les données de l'utilisateur qui l'a autorisé.
-- **La révocation est immédiate.** « Déconnecter Claude » supprime les autorisations, et le serveur refuse tout jeton émis avant ce moment, même s'il n'a pas expiré.
-- **Aucun mot de passe stocké.** Passkeys (WebAuthn), ou codes à 6 chiffres par email, valables 10 minutes avec 5 essais.
-- **Chaque appel du planificateur est authentifié.** Les rappels QStash sont vérifiés par signature ; le balayage par cron exige un secret comparé en temps constant.
-- **Échec explicite.** En production, s'il manque le secret d'authentification, le service d'email ou la base, l'app s'arrête avec une erreur claire au lieu de se rabattre en silence.
+- Taskly est son propre serveur OAuth 2.1 ([Better Auth](https://www.better-auth.com)) : PKCE, enregistrement dynamique des clients et Client ID Metadata Documents, et un écran de consentement que l'utilisateur valide.
+- Les jetons sont liés au serveur MCP ([RFC 8707](https://www.rfc-editor.org/rfc/rfc8707)) : des JWT signés, vérifiés à chaque appel (signature, audience, expiration, scopes `tasks:read` et `tasks:write`). Chaque appel ne voit que les données de l'utilisateur qui l'a autorisé.
+- La révocation est immédiate. « Déconnecter Claude » supprime les autorisations, et le serveur refuse tout jeton émis avant ce moment, même s'il n'a pas expiré.
+- Aucun mot de passe n'est stocké : la connexion passe par des passkeys (WebAuthn) ou des codes à 6 chiffres par email, valables 10 minutes avec 5 essais.
+- Chaque appel du planificateur est authentifié. Les rappels QStash sont vérifiés par signature ; le balayage par cron exige un secret comparé en temps constant.
+- En production, s'il manque le secret d'authentification, le service d'email ou la base, l'app s'arrête avec une erreur claire au lieu de se rabattre en silence.
 
 </details>
 
@@ -279,8 +279,8 @@ sequenceDiagram
 
 - La table `reminders` fait foi : chaque modification d'une tâche replanifie ses rappels.
 - Chaque rappel est programmé à sa minute exacte (QStash `notBefore`, dédupliqué). Sans QStash, un balayage les récupère : un cron externe, ou le planificateur intégré toutes les 20 secondes.
-- L'envoi **réserve** d'abord le rappel par un `UPDATE` conditionnel : deux planificateurs réveillés en même temps ne peuvent pas l'envoyer deux fois.
-- Les heures calmes **décalent** un rappel au lieu de le perdre ; les relances suivent le niveau d'insistance ; le badge de l'app affiche ce qui reste.
+- L'envoi réserve d'abord le rappel par un `UPDATE` conditionnel : deux planificateurs réveillés en même temps ne peuvent pas l'envoyer deux fois.
+- Les heures calmes décalent un rappel au lieu de le perdre. Les relances suivent le niveau d'insistance, et le badge de l'app affiche ce qui reste.
 - Chaque « aujourd'hui » est calculé dans le fuseau de l'utilisateur, sans erreur aux changements d'heure.
 
 </details>
@@ -328,10 +328,10 @@ docs/               Décisions, design, hébergement, connexion à Claude
 
 <br>
 
-- La logique métier est testée contre un **vrai Postgres** : [PGlite](https://pglite.dev) tourne en mémoire pour chaque test, donc les requêtes sont vérifiées en SQL, pas simulées.
+- La logique métier est testée contre un vrai Postgres : [PGlite](https://pglite.dev) tourne en mémoire pour chaque test, donc chaque requête est vérifiée en SQL plutôt que simulée.
 - TypeScript strict, ESLint et un build de production avant chaque merge.
-- Chaque choix technique et ses compromis sont écrits dans une [fiche de décision](docs/adr/README.md) ; chaque choix de design dans [docs/design](docs/design/DECISIONS.md) (en anglais).
-- Chaque modification arrive dans sa propre petite pull request avec une description complète : l'[historique](https://github.com/ethanfrq/Taskly/pulls?q=is%3Apr+is%3Amerged) se lit comme un journal des changements.
+- Chaque choix technique et ses compromis sont écrits dans une [fiche de décision](docs/adr/README.md), et chaque choix de design dans [docs/design](docs/design/DECISIONS.md) (en anglais).
+- Les modifications arrivent une par une, chacune dans sa petite pull request avec une description complète, et l'[historique](https://github.com/ethanfrq/Taskly/pulls?q=is%3Apr+is%3Amerged) se lit comme un journal des changements.
 
 </details>
 
