@@ -36,7 +36,7 @@ export async function sendToUser(db: Database, userId: string, payload: PushPayl
         await webpush.sendNotification(
           { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
           JSON.stringify(payload),
-          { vapidDetails: keys, TTL: 60 * 60, urgency: "high", topic: payload.tag?.slice(0, 32) },
+          { vapidDetails: keys, TTL: 60 * 60, urgency: "high", topic: payload.tag?.slice(0, 32), timeout: 10_000 },
         );
         result.sent++;
         await db.update(pushSubscriptions).set({ lastSuccessAt: new Date() }).where(eq(pushSubscriptions.id, sub.id));
