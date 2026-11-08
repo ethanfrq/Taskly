@@ -30,6 +30,8 @@ export async function sendEmail(email: Email): Promise<void> {
       subject: email.subject,
       text: email.text,
     }),
+    // Never let a slow provider hold the function until Vercel's timeout.
+    signal: AbortSignal.timeout(15_000),
   });
   if (!response.ok) {
     throw new Error(`Email not sent (${response.status}): ${await response.text()}`);
