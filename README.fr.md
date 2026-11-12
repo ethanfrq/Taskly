@@ -168,7 +168,7 @@ flowchart LR
 
 ## ☁️ Héberger sa propre instance
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fethanfrq%2FTaskly&project-name=taskly&repository-name=taskly&env=BETTER_AUTH_SECRET,RESEND_API_KEY,EMAIL_FROM,NEXT_PUBLIC_VAPID_PUBLIC_KEY,VAPID_PRIVATE_KEY,VAPID_SUBJECT&envDescription=Secrets%20for%20sign-in%2C%20email%20codes%20and%20push%20notifications.&envLink=https%3A%2F%2Fgithub.com%2Fethanfrq%2FTaskly%2Fblob%2Fmain%2Fdocs%2Fself-hosting.md%23environment-variables&stores=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22neon%22%2C%22productSlug%22%3A%22neon%22%2C%22protocol%22%3A%22storage%22%7D%5D)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fethanfrq%2FTaskly&project-name=taskly&repository-name=taskly&env=BETTER_AUTH_SECRET,RESEND_API_KEY,EMAIL_FROM,NEXT_PUBLIC_VAPID_PUBLIC_KEY,VAPID_PRIVATE_KEY,VAPID_SUBJECT,CRON_SECRET&envDescription=Secrets%20for%20sign-in%2C%20email%20codes%2C%20push%20notifications%20and%20the%20daily%20cron.&envLink=https%3A%2F%2Fgithub.com%2Fethanfrq%2FTaskly%2Fblob%2Fmain%2Fdocs%2Fself-hosting.md%23environment-variables&stores=%5B%7B%22type%22%3A%22integration%22%2C%22integrationSlug%22%3A%22neon%22%2C%22productSlug%22%3A%22neon%22%2C%22protocol%22%3A%22storage%22%7D%5D)
 
 | Il te faut | Pour | Sur Vercel |
 |---|---|---|
@@ -267,7 +267,7 @@ sequenceDiagram
 - **Les jetons sont liés au serveur MCP** ([RFC 8707](https://www.rfc-editor.org/rfc/rfc8707)) : des JWT signés, vérifiés à chaque appel (signature, audience, expiration, scopes `tasks:read` et `tasks:write`). Chaque appel ne voit que les données de l'utilisateur qui l'a autorisé.
 - **La révocation est immédiate.** « Déconnecter Claude » supprime les autorisations, et le serveur refuse tout jeton émis avant ce moment, même s'il n'a pas expiré.
 - **Aucun mot de passe stocké.** Passkeys (WebAuthn), ou codes à 6 chiffres par email, valables 10 minutes avec 5 essais.
-- **Chaque appel du planificateur est authentifié.** Les rappels QStash sont vérifiés par signature ; le balayage par cron exige un secret comparé en temps constant.
+- **Chaque appel du planificateur est authentifié.** Les rappels QStash sont vérifiés par signature ; les points d'entrée cron (balayage des rappels, ménage quotidien) exigent un secret comparé en temps constant.
 - **Échec explicite.** En production, s'il manque le secret d'authentification, le service d'email ou la base, l'app s'arrête avec une erreur claire au lieu de se rabattre en silence.
 
 </details>
@@ -317,7 +317,7 @@ src/
 drizzle/            Migrations SQL
 public/sw.js        Service worker : pages hors-ligne, push, actions des notifications
 site/               Landing page statique (EN et FR), générée par scripts/build-site.py
-video/              La vidéo de 30 secondes (FR, EN, paysage, portrait), un projet Remotion
+video/              Quatre films (vue d'ensemble, rappels, confidentialité, journée) × FR/EN × paysage/portrait, un projet Remotion
 docs/               Décisions, design, hébergement, connexion à Claude
 ```
 

@@ -317,7 +317,7 @@ src/
 drizzle/            SQL migrations
 public/sw.js        Service worker: offline pages, push, notification actions
 site/               Static landing page (EN and FR), built by scripts/build-site.py
-video/              The 30-second video (FR, EN, landscape, portrait), a Remotion project
+video/              Four films (overview, reminders, privacy, day) × FR/EN × landscape/portrait, a Remotion project
 docs/               Decision records, design, self-hosting, Claude connection
 ```
 
