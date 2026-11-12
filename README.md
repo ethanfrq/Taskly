@@ -24,10 +24,10 @@
 
 <br>
 
-Taskly is an **open-source daily to-do app** you install on your phone. You connect it to Claude once; then every morning Claude reads your mail, calendar and messages and fills your day with what actually needs doing. Taskly takes it from there: one clear checklist, and reminders at the right minute.
+Taskly is an open-source daily to-do app you install on your phone. Connect it to Claude once, and every morning Claude reads your mail, calendar and messages and fills your day with what needs doing. Taskly takes it from there: one clear checklist, and reminders at the right minute.
 
 > [!NOTE]
-> **Beta.** Every planned feature is in, tested and documented, but no public instance has run Taskly for long yet. [Feedback welcome.](https://github.com/ethanfrq/Taskly/issues)
+> Taskly is in beta: every planned feature is in, tested and documented, but no public instance has run it for long yet. [Feedback welcome.](https://github.com/ethanfrq/Taskly/issues)
 
 ## ✨ What it does
 
@@ -94,10 +94,10 @@ Four short films, each in landscape and portrait. GitHub plays them in its file 
 
 | | Film | Landscape | Portrait |
 |---|---|---|---|
-| 🎬 | **Overview**, 30 s: the morning pile, one sentence to Claude, the list fills itself. | [▶ 16:9](site/assets/taskly-30s-en.mp4) | [▶ 9:16](site/assets/taskly-30s-en-vertical.mp4) |
-| 🔔 | **Reminders**, 21 s: to the minute, follow-ups, quiet hours, the briefing that opens Claude. | [▶ 16:9](site/assets/taskly-reminders-en.mp4) | [▶ 9:16](site/assets/taskly-reminders-en-vertical.mp4) |
-| 🔒 | **Tasks, not emails**, 20 s: who reads what, MCP, no API key, undo and disconnect. | [▶ 16:9](site/assets/taskly-privacy-en.mp4) | [▶ 9:16](site/assets/taskly-privacy-en-vertical.mp4) |
-| 🌙 | **Your day**, 21 s: natural language, one timeline, the evening review, the week. | [▶ 16:9](site/assets/taskly-day-en.mp4) | [▶ 9:16](site/assets/taskly-day-en-vertical.mp4) |
+| 🎬 | Overview, 30 s: the morning pile, one sentence to Claude, the list fills itself. | [▶ 16:9](site/assets/taskly-30s-en.mp4) | [▶ 9:16](site/assets/taskly-30s-en-vertical.mp4) |
+| 🔔 | Reminders, 21 s: to the minute, follow-ups, quiet hours, the briefing that opens Claude. | [▶ 16:9](site/assets/taskly-reminders-en.mp4) | [▶ 9:16](site/assets/taskly-reminders-en-vertical.mp4) |
+| 🔒 | Tasks, not emails, 20 s: who reads what, MCP, no API key, undo and disconnect. | [▶ 16:9](site/assets/taskly-privacy-en.mp4) | [▶ 9:16](site/assets/taskly-privacy-en-vertical.mp4) |
+| 🌙 | Your day, 21 s: natural language, one timeline, the evening review, the week. | [▶ 16:9](site/assets/taskly-day-en.mp4) | [▶ 9:16](site/assets/taskly-day-en-vertical.mp4) |
 
 <sub>French versions: replace <code>-en</code> with <code>-fr</code> in the file name, or open the <a href="README.fr.md">French README</a>. Made with the <a href="video/README.md">Remotion project in <code>video/</code></a>.</sub>
 
@@ -107,9 +107,9 @@ Four short films, each in landscape and portrait. GitHub plays them in its file 
 
 <table>
 <tr>
-<td valign="top" width="33%"><b>📱 Use it</b><br><sub>Open a Taskly instance on your phone, add it to the home screen, follow the two-minute onboarding.</sub><br><br>→ <a href="#install">Install</a> · <a href="#connect-claude">Connect Claude</a></td>
-<td valign="top" width="33%"><b>☁️ Host it</b><br><sub>One click on Vercel, or any Node.js server with Postgres. For you, your family or your team.</sub><br><br>→ <a href="#self-hosting">Self-hosting</a></td>
-<td valign="top" width="33%"><b>💻 Build it</b><br><sub>Clone, <code>npm install</code>, <code>npm run dev</code>. No account, no key, nothing to configure.</sub><br><br>→ <a href="#development">Development</a></td>
+<td valign="top" width="33%"><b>📱 Use it</b><br><sub>Open a Taskly instance on your phone, add it to the home screen, follow the two-minute onboarding.</sub><br><br><a href="#install">Install</a> · <a href="#connect-claude">Connect Claude</a></td>
+<td valign="top" width="33%"><b>☁️ Host it</b><br><sub>One click on Vercel, or any Node.js server with Postgres. For you, your family or your team.</sub><br><br><a href="#self-hosting">Self-hosting</a></td>
+<td valign="top" width="33%"><b>💻 Build it</b><br><sub>Clone, <code>npm install</code>, <code>npm run dev</code>. It runs without an account, a key or any configuration.</sub><br><br><a href="#development">Development</a></td>
 </tr>
 </table>
 
@@ -160,9 +160,9 @@ flowchart LR
   Q[Reminder scheduler] -- "Web Push" --> A
 ```
 
-- **Your Claude plan is enough.** No Anthropic API key, no AI bill for whoever hosts Taskly.
-- **Taskly never receives your emails.** Only the tasks Claude creates, with a link back to the source.
-- **Taskly works without Claude.** Manual tasks, reminders and the checklist stand on their own.
+- Your Claude plan is enough: whoever hosts Taskly needs no Anthropic API key and pays no AI bill.
+- Taskly never receives your emails, only the tasks Claude creates, each with a link back to the source.
+- Taskly works without Claude: manual tasks, reminders and the checklist stand on their own.
 
 <a id="self-hosting"></a>
 
@@ -177,7 +177,7 @@ flowchart LR
 | VAPID keys | Push notifications | `npx web-push generate-vapid-keys` |
 | A scheduler | Reminders at the exact minute | Upstash QStash, from the Marketplace |
 
-Step by step for Vercel or your own server, every environment variable and a troubleshooting table: **[docs/self-hosting.md](docs/self-hosting.md)**.
+The step-by-step guide for Vercel or your own server, with every environment variable and a troubleshooting table: [docs/self-hosting.md](docs/self-hosting.md).
 
 > [!WARNING]
 > Vercel's Hobby plan is for personal, non-commercial use. To host Taskly for a company, use a Pro team.
@@ -219,14 +219,14 @@ Commands, branch and commit conventions: [CONTRIBUTING.md](CONTRIBUTING.md). Tec
 
 ## 🔒 Privacy and security
 
-- **Tasks, not emails.** Taskly stores the tasks Claude creates and a link to their source, never the content of your messages.
-- **You decide what Claude gets** on Taskly's consent screen. **Settings › Connect Claude › Disconnect Claude** revokes it at once, even tokens that haven't expired.
-- **Your data is yours.** Export everything as JSON or delete your account from Settings.
-- **Found a vulnerability?** Report it privately: [SECURITY.md](SECURITY.md).
+- Taskly stores the tasks Claude creates and a link to their source, never the content of your messages.
+- You decide what Claude gets on Taskly's consent screen. **Settings › Connect Claude › Disconnect Claude** revokes it at once, even tokens that haven't expired.
+- Export everything as JSON or delete your account from Settings.
+- Found a vulnerability? Report it privately: [SECURITY.md](SECURITY.md).
 
 ## 🗺️ Status and contributing
 
-All five milestones are shipped: **v0.1** Core · **v0.2** Claude · **v0.3** Reminders · **v0.4** Comfort · **v0.5** Sharing. What each one brought, with its pull requests: [v0.5.0 release notes](https://github.com/ethanfrq/Taskly/releases/tag/v0.5.0) and [milestones](https://github.com/ethanfrq/Taskly/milestones?state=closed).
+All five milestones are shipped: v0.1 Core · v0.2 Claude · v0.3 Reminders · v0.4 Comfort · v0.5 Sharing. What each one brought, with its pull requests: [v0.5.0 release notes](https://github.com/ethanfrq/Taskly/releases/tag/v0.5.0) and [milestones](https://github.com/ethanfrq/Taskly/milestones?state=closed).
 
 Contributions are welcome, one small pull request at a time: start with [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md). The design is documented too: a [clickable prototype](https://htmlpreview.github.io/?https://github.com/ethanfrq/Taskly/blob/main/docs/design/prototype.html) of the whole iPhone flow and every decision in [docs/design](docs/design/README.md).
 
@@ -263,12 +263,12 @@ sequenceDiagram
 
 <br>
 
-- **Taskly is its own OAuth 2.1 server** ([Better Auth](https://www.better-auth.com)): PKCE, Dynamic Client Registration and Client ID Metadata Documents, and a consent screen the user approves.
-- **Tokens are bound to the MCP endpoint** ([RFC 8707](https://www.rfc-editor.org/rfc/rfc8707)): signed JWTs checked for signature, audience, expiry and scopes (`tasks:read`, `tasks:write`) on every call. Each call only sees the data of the user who approved it.
-- **Revocation is immediate.** “Disconnect Claude” deletes the grants, and the endpoint refuses any token issued before that moment, even one that hasn't expired.
-- **No passwords stored.** Passkeys (WebAuthn), or 6-digit email codes valid 10 minutes with 5 attempts.
-- **Every scheduler call is authenticated.** QStash callbacks are signature-checked; the cron endpoints (reminder sweep, daily housekeeping) need a secret compared in constant time.
-- **Fails closed.** In production, a missing auth secret, email provider or database stops the app with a clear error instead of falling back silently.
+- Taskly is its own OAuth 2.1 server ([Better Auth](https://www.better-auth.com)): PKCE, Dynamic Client Registration and Client ID Metadata Documents, and a consent screen the user approves.
+- Tokens are bound to the MCP endpoint ([RFC 8707](https://www.rfc-editor.org/rfc/rfc8707)): signed JWTs checked for signature, audience, expiry and scopes (`tasks:read`, `tasks:write`) on every call. Each call only sees the data of the user who approved it.
+- Revocation is immediate. “Disconnect Claude” deletes the grants, and the endpoint refuses any token issued before that moment, even one that hasn't expired.
+- No passwords are stored: sign-in uses passkeys (WebAuthn) or 6-digit email codes, valid 10 minutes with 5 attempts.
+- Every scheduler call is authenticated. QStash callbacks are signature-checked; the cron endpoints (reminder sweep, daily housekeeping) need a secret compared in constant time.
+- The app fails closed. In production, a missing auth secret, email provider or database stops it with a clear error instead of falling back silently.
 
 </details>
 
@@ -279,8 +279,8 @@ sequenceDiagram
 
 - The `reminders` table is the source of truth: every change to a task re-plans its reminders.
 - Each reminder is scheduled for its exact minute (QStash `notBefore`, deduplicated). Without QStash, a sweep picks them up: an external cron, or the built-in scheduler every 20 seconds.
-- Sending first **claims** the reminder with a conditional `UPDATE`, so two schedulers waking at once can't send it twice.
-- Quiet hours **defer** a reminder rather than drop it; follow-ups depend on the insistence level; the app badge carries what's left.
+- Sending first claims the reminder with a conditional `UPDATE`, so two schedulers waking at once can't send it twice.
+- Quiet hours defer a reminder rather than drop it. Follow-ups depend on the insistence level, and the app badge shows what's left.
 - Every “today” is computed in the user's time zone, safe across daylight saving changes.
 
 </details>
@@ -328,10 +328,10 @@ docs/               Decision records, design, self-hosting, Claude connection
 
 <br>
 
-- Domain code is tested against a **real Postgres**: [PGlite](https://pglite.dev) runs in memory for each test, so queries are checked as SQL, not mocked.
+- Domain code is tested against a real Postgres: [PGlite](https://pglite.dev) runs in memory for each test, so every query is checked as SQL rather than against a mock.
 - Strict TypeScript, ESLint, and a production build before every merge.
-- Every technical choice and its trade-offs is written down in a [decision record](docs/adr/README.md); every design choice in [docs/design](docs/design/DECISIONS.md).
-- Every change ships as its own small pull request with a full description: the [history](https://github.com/ethanfrq/Taskly/pulls?q=is%3Apr+is%3Amerged) reads like a changelog.
+- Each technical choice and its trade-offs are written down in a [decision record](docs/adr/README.md), and each design choice in [docs/design](docs/design/DECISIONS.md).
+- Changes ship one per pull request, each small and fully described, so the merged [history](https://github.com/ethanfrq/Taskly/pulls?q=is%3Apr+is%3Amerged) reads like a changelog.
 
 </details>
 
